@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doovlab — Aperçu médaillon (démo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Nunito:wght@400;600;700&family=Fredoka:wght@500;600&family=Baloo+2:wght@600;700&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+  :root{ --sunset:#D4692A; --sunset-dark:#A84E1A; --beige:#FDF6EE; --beige-dark:#F0E6D6; --text:#2C1A0E; --muted:#9A7A60; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Nunito',sans-serif;background:var(--beige);color:var(--text);padding:32px;}
+  .wrap{max-width:920px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;}
+  h1{font-family:'Playfair Display',serif;font-size:26px;margin-bottom:6px;}
+  .sub{color:var(--muted);font-size:14px;margin-bottom:24px;}
+
+  /* Aperçu */
+  .preview{background:#fff;border-radius:24px;padding:24px;box-shadow:0 10px 40px rgba(60,20,5,0.08);position:sticky;top:24px;}
+  .preview svg{width:100%;height:auto;display:block;}
+
+  /* Contrôles */
+  .panel label{display:block;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--sunset-dark);margin:0 0 10px;}
+  .field{margin-bottom:26px;}
+  input[type=text]{width:100%;padding:14px 16px;border:1.5px solid var(--beige-dark);border-radius:12px;font-family:'Nunito';font-size:16px;color:var(--text);background:#fff;}
+  input[type=text]:focus{outline:none;border-color:var(--sunset);}
+  .meta{display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:12px;color:var(--muted);min-height:16px;}
+  .warn{color:#C0392B;font-weight:600;display:none;}
+  .warn.show{display:block;}
+
+  .fonts{display:flex;gap:10px;flex-wrap:wrap;}
+  .font-btn{flex:1;min-width:90px;padding:12px 8px;border:1.5px solid var(--beige-dark);border-radius:12px;background:#fff;cursor:pointer;font-size:20px;color:var(--text);transition:all .15s;}
+  .font-btn small{display:block;font-family:'Nunito';font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-top:4px;}
+  .font-btn[aria-pressed=true]{border-color:var(--sunset);background:rgba(212,105,42,0.06);}
+  .f-fredoka{font-family:'Fredoka';}
+  .f-baloo{font-family:'Baloo 2';}
+  .f-pacifico{font-family:'Pacifico';}
+
+  .swatches{display:flex;gap:10px;flex-wrap:wrap;}
+  .sw{width:38px;height:38px;border-radius:50%;cursor:pointer;border:3px solid #fff;box-shadow:0 0 0 1.5px var(--beige-dark);transition:transform .12s;}
+  .sw:hover{transform:scale(1.08);}
+  .sw[aria-pressed=true]{box-shadow:0 0 0 2.5px var(--sunset);transform:scale(1.05);}
+
+  .note{font-size:12px;color:var(--muted);margin-top:14px;line-height:1.6;}
+
+  @media(max-width:760px){ .wrap{grid-template-columns:1fr;} .preview{position:static;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- APERÇU -->
+  <div class="preview">
+    <svg id="paw" viewBox="0 0 400 460" xmlns="http://www.w3.org/2000/svg" style="--c1:#F4F4EF;--c2:#D4692A;">
+      <defs>
+        <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.12"/>
+        </filter>
+      </defs>
+
+      <!-- CORPS / BORDURE = couleur 2 -->
+      <g fill="var(--c2)">
+        <!-- anneau -->
+        <circle cx="200" cy="52" r="24"/>
+        <circle cx="200" cy="52" r="11" fill="#fff"/>
+        <rect x="186" y="58" width="28" height="70" rx="14"/>
+        <!-- toes (corps) -->
+        <ellipse cx="104" cy="205" rx="52" ry="64" transform="rotate(-20 104 205)"/>
+        <ellipse cx="162" cy="156" rx="52" ry="64" transform="rotate(-8 162 156)"/>
+        <ellipse cx="238" cy="156" rx="52" ry="64" transform="rotate(8 238 156)"/>
+        <ellipse cx="296" cy="205" rx="52" ry="64" transform="rotate(20 296 205)"/>
+        <!-- heel (corps) -->
+        <ellipse cx="200" cy="300" rx="108" ry="98"/>
+      </g>
+
+      <!-- COUSSINETS = couleur 1 -->
+      <g fill="var(--c1)" filter="url(#soft)">
+        <ellipse cx="104" cy="205" rx="34" ry="47" transform="rotate(-20 104 205)"/>
+        <ellipse cx="162" cy="156" rx="34" ry="47" transform="rotate(-8 162 156)"/>
+        <ellipse cx="238" cy="156" rx="34" ry="47" transform="rotate(8 238 156)"/>
+        <ellipse cx="296" cy="205" rx="34" ry="47" transform="rotate(20 296 205)"/>
+        <ellipse cx="200" cy="300" rx="86" ry="76"/>
+      </g>
+
+      <!-- PRÉNOM = couleur 2 -->
+      <text id="pawText" x="200" y="306" text-anchor="middle" dominant-baseline="middle"
+            fill="var(--c2)" font-family="Fredoka" font-weight="600" font-size="40">FIERCE</text>
+    </svg>
+  </div>
+
+  <!-- CONTRÔLES -->
+  <div class="panel">
+    <h1>Personnalise ton médaillon</h1>
+    <p class="sub">Aperçu en direct — démo (couleurs et polices d'exemple)</p>
+
+    <div class="field">
+      <label>Prénom du chien</label>
+      <input id="nameInput" type="text" value="FIERCE" maxlength="16" autocomplete="off">
+      <div class="meta">
+        <span id="warn" class="warn">Nom un peu long — privilégie un prénom court (≈ 4 syllabes max) pour un rendu net à l'impression.</span>
+        <span id="count">6 / 16</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Police</label>
+      <div class="fonts">
+        <button class="font-btn f-fredoka" data-font="Fredoka" data-weight="600" aria-pressed="true">Abc<small>Fredoka</small></button>
+        <button class="font-btn f-baloo" data-font="Baloo 2" data-weight="700" aria-pressed="false">Abc<small>Baloo 2</small></button>
+        <button class="font-btn f-pacifico" data-font="Pacifico" data-weight="400" aria-pressed="false">Abc<small>Pacifico</small></button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Couleur 1 — coussinets</label>
+      <div class="swatches" id="sw1"></div>
+    </div>
+
+    <div class="field">
+      <label>Couleur 2 — contour + prénom</label>
+      <div class="swatches" id="sw2"></div>
+    </div>
+
+    <p class="note">Démo de fonctionnement. On remplacera ensuite : la forme exacte de ta patte (si tu me fournis le SVG), tes vrais coloris PLA, et tes 3 polices finales.</p>
+  </div>
+
+</div>
+
+<script>
+  var COLORS = [
+    ["Blanc","#F4F4EF"],["Noir","#1E1E1E"],["Terracotta","#D4692A"],["Bleu","#2E78C7"],
+    ["Rouge","#C0392B"],["Vert","#3E8E5A"],["Jaune","#E8B84B"],["Rose","#E86A9A"],
+    ["Violet","#8B5CF6"],["Gris","#9A9A9A"]
+  ];
+  var svg=document.getElementById('paw');
+  var txt=document.getElementById('pawText');
+  var input=document.getElementById('nameInput');
+  var warn=document.getElementById('warn');
+  var count=document.getElementById('count');
+
+  function sizeFor(n){ n=n.length; if(n<=4)return 44; if(n===5)return 40; if(n===6)return 36; if(n===7)return 32; if(n<=9)return 28; return 23; }
+
+  function render(){
+    var v=input.value || " ";
+    txt.textContent=v;
+    txt.setAttribute('font-size', sizeFor(v));
+    count.textContent=input.value.length+" / 16";
+    warn.classList.toggle('show', input.value.length>8);
+  }
+  input.addEventListener('input', render);
+
+  // polices
+  document.querySelectorAll('.font-btn').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.font-btn').forEach(function(x){x.setAttribute('aria-pressed','false');});
+      b.setAttribute('aria-pressed','true');
+      txt.setAttribute('font-family', b.dataset.font);
+      txt.setAttribute('font-weight', b.dataset.weight);
+    });
+  });
+
+  // swatches
+  function buildSwatches(containerId, varName, defaultHex){
+    var c=document.getElementById(containerId);
+    COLORS.forEach(function(col){
+      var s=document.createElement('button');
+      s.className='sw'; s.style.background=col[1]; s.title=col[0];
+      s.setAttribute('aria-pressed', col[1]===defaultHex ? 'true':'false');
+      s.addEventListener('click', function(){
+        c.querySelectorAll('.sw').forEach(function(x){x.setAttribute('aria-pressed','false');});
+        s.setAttribute('aria-pressed','true');
+        svg.style.setProperty(varName, col[1]);
+      });
+      c.appendChild(s);
+    });
+  }
+  buildSwatches('sw1','--c1','#F4F4EF');
+  buildSwatches('sw2','--c2','#D4692A');
+
+  render();
+</script>
+</body>
+</html>
