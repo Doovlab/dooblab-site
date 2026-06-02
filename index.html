@@ -5,150 +5,161 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Doovlab — Unique comme votre chien</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --sunset: #D4692A;
-    --sunset-light: #F0923A;
-    --sunset-dark: #A84E1A;
-    --beige: #FDF6EE;
-    --beige-dark: #F0E6D6;
-    --brown: #3A2010;
-    --brown-mid: #7A4828;
-    --text: #2C1A0E;
-    --muted: #9A7A60;
-    --white: #FFFFFF;
+    --sunset:#D4692A; --sunset-light:#F0923A; --sunset-dark:#A84E1A;
+    --beige:#FDF6EE; --beige-dark:#F0E6D6; --brown:#3A2010; --brown-mid:#7A4828;
+    --text:#2C1A0E; --muted:#9A7A60; --white:#FFFFFF;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Nunito', sans-serif; background: var(--beige); color: var(--text); overflow-x: hidden; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'Nunito',sans-serif; background:var(--beige); color:var(--text); overflow-x:hidden; }
 
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 48px;
-    background: rgba(253,246,238,0.92);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(201,107,85,0.12);
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:18px 48px; background:rgba(253,246,238,0.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(201,107,85,0.12); }
+  .nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .nav-logo img { width:38px; height:38px; object-fit:contain; }
+  .nav-brand { font-family:'Playfair Display',serif; font-weight:700; font-size:20px; color:var(--text); letter-spacing:2px; }
+  .nav-links { display:flex; gap:36px; list-style:none; }
+  .nav-links a { text-decoration:none; font-size:14px; font-weight:600; color:var(--muted); letter-spacing:1px; text-transform:uppercase; transition:color .2s; }
+  .nav-links a:hover { color:var(--sunset); }
+  .nav-cta { background:var(--sunset); color:var(--beige) !important; padding:10px 24px; border-radius:50px; transition:background .2s !important; }
+  .nav-cta:hover { background:var(--sunset-dark) !important; color:var(--beige) !important; }
+
+  /* ===== HERO ===== */
+  .hero { min-height:100vh; display:grid; grid-template-columns:1.05fr 1fr; align-items:center; gap:40px; padding:130px 64px 80px; position:relative; overflow:hidden; }
+  .hero-bg { position:absolute; inset:0; background:radial-gradient(ellipse at 72% 45%, rgba(212,105,42,0.13), transparent 62%); pointer-events:none; }
+  .hero-paws { position:absolute; left:-50px; bottom:-50px; font-size:230px; opacity:0.045; transform:rotate(-15deg); pointer-events:none; user-select:none; }
+  .hero-content { position:relative; z-index:2; max-width:540px; animation:fadeUp .8s ease both; }
+  @keyframes fadeUp { from {opacity:0; transform:translateY(28px);} to {opacity:1; transform:translateY(0);} }
+  .hero-eyebrow { display:inline-flex; align-items:center; gap:8px; background:rgba(212,105,42,0.1); color:var(--sunset-dark); padding:6px 16px; border-radius:50px; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:24px; }
+  .hero-eyebrow::before { content:''; width:6px; height:6px; background:var(--sunset); border-radius:50%; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(38px,4.8vw,60px); font-weight:700; line-height:1.08; margin-bottom:14px; color:var(--text); }
+  .hero h1 em { font-style:italic; color:var(--sunset); }
+  .hero-tagline { font-family:'Playfair Display',serif; font-style:italic; font-size:19px; color:var(--muted); margin-bottom:26px; }
+  .hero-desc { font-size:17px; line-height:1.7; color:var(--brown-mid); margin-bottom:38px; max-width:440px; }
+  .hero-actions { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:30px; }
+  .btn-primary { background:var(--sunset); color:var(--beige); padding:16px 32px; border-radius:50px; font-size:15px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:8px; border:none; cursor:pointer; transition:all .2s; }
+  .btn-primary:hover { background:var(--sunset-dark); transform:translateY(-2px); }
+  .btn-secondary { background:transparent; padding:16px 32px; border-radius:50px; font-size:15px; font-weight:600; text-decoration:none; border:1.5px solid var(--beige-dark); color:var(--text); transition:all .2s; display:inline-flex; align-items:center; gap:8px; }
+  .btn-secondary:hover { border-color:var(--sunset); color:var(--sunset); }
+  .hero-trust { display:flex; align-items:center; gap:10px; font-size:14px; color:var(--muted); }
+  .hero-trust .stars { color:var(--sunset); letter-spacing:2px; font-size:15px; }
+
+  .hero-visual { position:relative; z-index:2; display:flex; justify-content:center; align-items:center; animation:fadeUp .8s .15s ease both; }
+  .visual-wrap { position:relative; }
+  .photo-main { width:380px; height:470px; border-radius:30px; background:linear-gradient(160deg,#F4E3D2,#E7CFB8); box-shadow:0 28px 64px rgba(60,20,5,0.18); border:2px dashed rgba(168,78,26,0.4); position:relative; overflow:hidden; transform:rotate(-1.5deg); }
+  .photo-main > img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .photo-main .ph-fallback { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:24px; }
+  .photo-main .ic { font-size:58px; opacity:.55; margin-bottom:14px; }
+  .photo-main .lb { font-size:14px; font-weight:700; color:var(--sunset-dark); }
+  .photo-main .sb { font-size:12px; color:var(--muted); margin-top:6px; line-height:1.5; }
+
+  .photo-inset { position:absolute; bottom:-26px; left:-38px; width:158px; height:158px; border-radius:24px; background:linear-gradient(160deg,#FBEDDD,#EFD7C0); box-shadow:0 16px 38px rgba(60,20,5,0.24); border:5px solid var(--beige); position:absolute; overflow:hidden; transform:rotate(5deg); }
+  .photo-inset > img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .photo-inset .ph-fallback { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:10px; outline:2px dashed rgba(168,78,26,0.45); outline-offset:-4px; border-radius:19px; }
+  .photo-inset .ic { font-size:34px; opacity:.55; }
+  .photo-inset .lb { font-size:11px; font-weight:700; color:var(--sunset-dark); margin-top:5px; line-height:1.3; }
+
+  .photo-badge { position:absolute; top:-20px; right:-26px; background:#fff; border-radius:50px; padding:11px 18px; box-shadow:0 12px 32px rgba(60,20,5,0.16); display:flex; align-items:center; gap:9px; z-index:3; }
+  .photo-badge .flag { font-size:18px; }
+  .photo-badge .badge-txt { font-size:12px; font-weight:700; color:var(--text); line-height:1.2; }
+  .photo-badge .badge-txt span { display:block; font-size:11px; font-weight:400; color:var(--muted); }
+
+  /* ===== FEATURES ===== */
+  .features { padding:100px 48px; background:var(--white); }
+  .section-header { text-align:center; margin-bottom:64px; }
+  .section-label { font-size:12px; font-weight:600; letter-spacing:3px; text-transform:uppercase; color:var(--sunset); margin-bottom:16px; display:block; }
+  .section-title { font-family:'Playfair Display',serif; font-size:clamp(32px,4vw,46px); font-weight:700; color:var(--text); line-height:1.2; }
+  .features-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; max-width:1100px; margin:0 auto; }
+  .feature-card { background:var(--beige); border-radius:24px; padding:40px 32px; transition:transform .25s; }
+  .feature-card:hover { transform:translateY(-6px); }
+  .feature-icon { width:56px; height:56px; background:rgba(201,107,85,0.12); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:24px; }
+  .feature-card h3 { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:var(--text); margin-bottom:12px; }
+  .feature-card p { font-size:15px; line-height:1.7; color:var(--muted); }
+
+  /* ===== PRODUCTS ===== */
+  .products { padding:100px 48px; }
+  .products-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:32px; max-width:900px; margin:0 auto; }
+  .product-card { border-radius:28px; overflow:hidden; background:var(--white); box-shadow:0 4px 40px rgba(60,20,5,0.08); transition:transform .25s, box-shadow .25s; }
+  .product-card:hover { transform:translateY(-8px); box-shadow:0 16px 60px rgba(60,20,5,0.14); }
+  .product-img { height:240px; display:flex; align-items:center; justify-content:center; font-size:80px; position:relative; overflow:hidden; }
+  .product-img-1 { background:linear-gradient(135deg, rgba(224,128,112,0.13), rgba(201,107,85,0.2)); }
+  .product-img-2 { background:linear-gradient(135deg, rgba(74,144,217,0.13), rgba(32,96,168,0.2)); }
+  .product-img-4 { background:linear-gradient(135deg, rgba(139,92,246,0.13), rgba(109,58,208,0.2)); }
+  .product-badge { position:absolute; top:16px; right:16px; background:var(--sunset); color:white; font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:4px 12px; border-radius:50px; }
+  .product-info { padding:28px; }
+  .product-info h3 { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; color:var(--text); margin-bottom:8px; }
+  .product-info p { font-size:14px; color:var(--muted); line-height:1.6; margin-bottom:20px; }
+  .product-footer { display:flex; align-items:center; justify-content:space-between; }
+  .product-price { font-family:'Playfair Display',serif; font-size:26px; font-weight:700; color:var(--sunset); }
+  .product-price span { font-family:'Nunito',sans-serif; font-size:14px; font-weight:400; color:var(--muted); }
+  .btn-add { background:var(--text); color:var(--beige); border:none; border-radius:50px; padding:10px 22px; font-size:13px; font-weight:600; cursor:pointer; transition:background .2s; }
+  .btn-add:hover { background:var(--sunset); }
+
+  /* ===== NFC ===== */
+  .nfc-section { padding:100px 48px; background:var(--text); color:var(--beige); position:relative; overflow:hidden; }
+  .nfc-bg { position:absolute; inset:0; opacity:0.04; font-size:300px; display:flex; align-items:center; justify-content:flex-end; padding-right:48px; pointer-events:none; user-select:none; }
+  .nfc-inner { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; position:relative; z-index:2; }
+  .nfc-content h2 { font-family:'Playfair Display',serif; font-size:clamp(32px,4vw,48px); font-weight:700; line-height:1.2; margin-bottom:20px; }
+  .nfc-content h2 em { color:var(--sunset-light); font-style:italic; }
+  .nfc-content p { font-size:16px; line-height:1.8; color:rgba(253,246,238,0.65); margin-bottom:36px; }
+  .nfc-steps { display:flex; flex-direction:column; gap:20px; }
+  .nfc-step { display:flex; align-items:flex-start; gap:16px; }
+  .nfc-step-num { width:36px; height:36px; background:var(--sunset); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0; color:white; }
+  .nfc-step-text strong { display:block; font-size:15px; margin-bottom:4px; color:var(--beige); }
+  .nfc-step-text span { font-size:13px; color:rgba(253,246,238,0.55); line-height:1.5; }
+  .nfc-phone { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:32px; padding:32px; text-align:center; }
+  .nfc-phone-screen { background:var(--beige); border-radius:20px; padding:28px 20px; color:var(--text); }
+  .nfc-dog-bubble { width:80px; height:80px; background:var(--sunset); border-radius:50%; margin:0 auto 16px; display:flex; align-items:center; justify-content:center; font-size:36px; border:3px solid var(--text); }
+  .nfc-dog-name { font-family:'Playfair Display',serif; font-size:28px; font-weight:700; letter-spacing:2px; margin-bottom:16px; }
+  .nfc-info-row { background:rgba(201,107,85,0.08); border-radius:10px; padding:10px 16px; margin-bottom:8px; font-size:13px; text-align:left; display:flex; gap:10px; align-items:center; }
+  .nfc-call-btn { background:var(--text); color:var(--beige); border:none; border-radius:50px; padding:12px 24px; font-size:13px; font-weight:700; letter-spacing:1px; width:100%; margin-top:16px; cursor:pointer; font-family:'Playfair Display',serif; }
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials { padding:100px 48px; background:var(--white); }
+  .testimonials-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; max-width:1100px; margin:0 auto; }
+  .testimonial-card { background:var(--beige); border-radius:20px; padding:32px; }
+  .stars { color:var(--sunset); font-size:18px; margin-bottom:16px; letter-spacing:2px; }
+  .testimonial-card p { font-size:15px; line-height:1.7; color:var(--brown-mid); font-style:italic; margin-bottom:20px; }
+  .testimonial-author { display:flex; align-items:center; gap:12px; }
+  .author-avatar { width:40px; height:40px; border-radius:50%; background:var(--sunset); display:flex; align-items:center; justify-content:center; font-weight:700; color:white; font-size:14px; }
+  .author-name { font-weight:600; font-size:14px; color:var(--text); }
+  .author-dog { font-size:12px; color:var(--muted); }
+
+  /* ===== CTA ===== */
+  .cta-section { padding:100px 48px; text-align:center; background:linear-gradient(135deg, var(--beige-dark), var(--beige)); }
+  .cta-section h2 { font-family:'Playfair Display',serif; font-size:clamp(32px,4vw,52px); font-weight:700; color:var(--text); margin-bottom:16px; }
+  .cta-section p { font-size:17px; color:var(--muted); margin-bottom:40px; }
+
+  /* ===== FOOTER ===== */
+  footer { background:var(--text); color:rgba(253,246,238,0.6); padding:48px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px; }
+  .footer-brand { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--beige); letter-spacing:2px; }
+  .footer-tagline { font-size:13px; font-style:italic; color:var(--sunset-light); margin-top:4px; }
+  footer p { font-size:13px; }
+
+  @media (max-width:900px){
+    nav { padding:16px 24px; }
+    .nav-links { display:none; }
+    .hero { grid-template-columns:1fr; padding:110px 22px 70px; gap:56px; text-align:center; }
+    .hero-content { margin:0 auto; }
+    .hero-actions, .hero-trust { justify-content:center; }
+    .hero-desc { margin-left:auto; margin-right:auto; }
+    .photo-main { width:min(300px,80vw); height:auto; aspect-ratio:4/5; }
+    .photo-inset { width:120px; height:120px; bottom:-20px; left:-16px; }
+    .photo-badge { top:-16px; right:-6px; padding:9px 14px; }
+    .features { padding:60px 24px; }
+    .features-grid { grid-template-columns:1fr; }
+    .products { padding:60px 24px; }
+    .products-grid { grid-template-columns:1fr; }
+    .nfc-section { padding:60px 24px; }
+    .nfc-inner { grid-template-columns:1fr; gap:40px; }
+    .testimonials { padding:60px 24px; }
+    .testimonials-grid { grid-template-columns:1fr; }
+    .cta-section { padding:60px 24px; }
+    footer { padding:32px 24px; flex-direction:column; text-align:center; }
   }
-  .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-  .nav-logo img { width: 38px; height: 38px; object-fit: contain; }
-  .nav-brand { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 20px; color: var(--text); letter-spacing: 2px; }
-  .nav-links { display: flex; gap: 36px; list-style: none; }
-  .nav-links a { text-decoration: none; font-size: 14px; font-weight: 600; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
-  .nav-links a:hover { color: var(--sunset); }
-  .nav-cta { background: var(--sunset); color: var(--beige) !important; padding: 10px 24px; border-radius: 50px; transition: background 0.2s !important; }
-  .nav-cta:hover { background: var(--sunset-dark) !important; color: var(--beige) !important; }
-
-  .hero { min-height: 100vh; display: flex; align-items: center; padding: 120px 48px 80px; position: relative; overflow: hidden; }
-  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 50%, rgba(201,107,85,0.12) 0%, transparent 70%); pointer-events: none; }
-  .hero-paws { position: absolute; right: 0; top: 0; bottom: 0; width: 50%; display: flex; align-items: center; justify-content: center; font-size: 220px; opacity: 0.06; pointer-events: none; user-select: none; }
-  .hero-content { max-width: 600px; position: relative; z-index: 2; animation: fadeUp 0.8s ease both; }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-  .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: rgba(201,107,85,0.1); color: var(--sunset-dark); padding: 6px 16px; border-radius: 50px; font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 24px; }
-  .hero-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--sunset); border-radius: 50%; }
-  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(42px, 6vw, 72px); font-weight: 700; line-height: 1.1; color: var(--text); margin-bottom: 12px; }
-  .hero h1 em { font-style: italic; color: var(--sunset); }
-  .hero-tagline { font-family: 'Playfair Display', serif; font-style: italic; font-size: 20px; color: var(--muted); margin-bottom: 32px; }
-  .hero-desc { font-size: 17px; line-height: 1.7; color: var(--brown-mid); margin-bottom: 48px; max-width: 480px; }
-  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
-  .btn-primary { background: var(--sunset); color: var(--beige); padding: 16px 36px; border-radius: 50px; font-size: 15px; font-weight: 600; text-decoration: none; letter-spacing: 0.5px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer; }
-  .btn-primary:hover { background: var(--sunset-dark); transform: translateY(-2px); }
-  .btn-secondary { background: transparent; color: var(--text); padding: 16px 36px; border-radius: 50px; font-size: 15px; font-weight: 600; text-decoration: none; letter-spacing: 0.5px; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid var(--beige-dark); }
-  .btn-secondary:hover { border-color: var(--sunset); color: var(--sunset); }
-  .hero-visual { position: absolute; right: 6%; top: 50%; transform: translateY(-50%); z-index: 2; animation: fadeUp 0.8s 0.2s ease both; }
-  .medallion-stack { position: relative; width: 320px; height: 380px; }
-  .medallion { position: absolute; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-weight: 700; color: white; box-shadow: 0 20px 60px rgba(60,20,5,0.2); }
-  .medallion-1 { width: 180px; height: 180px; background: var(--sunset); top: 20px; left: 60px; font-size: 22px; letter-spacing: 1px; transform: rotate(-8deg); }
-  .medallion-2 { width: 150px; height: 150px; background: #4A90D9; bottom: 30px; right: 10px; font-size: 18px; transform: rotate(5deg); }
-  .medallion-3 { width: 120px; height: 120px; background: #E8B84B; bottom: 60px; left: 10px; font-size: 16px; transform: rotate(-4deg); }
-  .medallion-inner { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .medallion-paw { font-size: 28px; }
-  .medallion-name { font-size: 14px; letter-spacing: 2px; }
-  .medallion-nfc { font-size: 10px; opacity: 0.7; letter-spacing: 1px; }
-
-  .features { padding: 100px 48px; background: var(--white); }
-  .section-header { text-align: center; margin-bottom: 64px; }
-  .section-label { font-size: 12px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--sunset); margin-bottom: 16px; display: block; }
-  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(32px, 4vw, 46px); font-weight: 700; color: var(--text); line-height: 1.2; }
-  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 1100px; margin: 0 auto; }
-  .feature-card { background: var(--beige); border-radius: 24px; padding: 40px 32px; transition: transform 0.25s; }
-  .feature-card:hover { transform: translateY(-6px); }
-  .feature-icon { width: 56px; height: 56px; background: rgba(201,107,85,0.12); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 24px; }
-  .feature-card h3 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
-  .feature-card p { font-size: 15px; line-height: 1.7; color: var(--muted); }
-
-  .products { padding: 100px 48px; }
-  .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; max-width: 900px; margin: 0 auto; }
-  .product-card { border-radius: 28px; overflow: hidden; background: var(--white); box-shadow: 0 4px 40px rgba(60,20,5,0.08); transition: transform 0.25s, box-shadow 0.25s; }
-  .product-card:hover { transform: translateY(-8px); box-shadow: 0 16px 60px rgba(60,20,5,0.14); }
-  .product-img { height: 240px; display: flex; align-items: center; justify-content: center; font-size: 80px; position: relative; overflow: hidden; }
-  .product-img-1 { background: linear-gradient(135deg, rgba(224,128,112,0.13), rgba(201,107,85,0.2)); }
-  .product-img-2 { background: linear-gradient(135deg, rgba(74,144,217,0.13), rgba(32,96,168,0.2)); }
-  .product-img-4 { background: linear-gradient(135deg, rgba(139,92,246,0.13), rgba(109,58,208,0.2)); }
-  .product-badge { position: absolute; top: 16px; right: 16px; background: var(--sunset); color: white; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 50px; }
-  .product-info { padding: 28px; }
-  .product-info h3 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-  .product-info p { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
-  .product-footer { display: flex; align-items: center; justify-content: space-between; }
-  .product-price { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--sunset); }
-  .product-price span { font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 400; color: var(--muted); }
-  .btn-add { background: var(--text); color: var(--beige); border: none; border-radius: 50px; padding: 10px 22px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-  .btn-add:hover { background: var(--sunset); }
-
-  .nfc-section { padding: 100px 48px; background: var(--text); color: var(--beige); position: relative; overflow: hidden; }
-  .nfc-bg { position: absolute; inset: 0; opacity: 0.04; font-size: 300px; display: flex; align-items: center; justify-content: flex-end; padding-right: 48px; pointer-events: none; user-select: none; }
-  .nfc-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; position: relative; z-index: 2; }
-  .nfc-content h2 { font-family: 'Playfair Display', serif; font-size: clamp(32px, 4vw, 48px); font-weight: 700; line-height: 1.2; margin-bottom: 20px; }
-  .nfc-content h2 em { color: var(--sunset-light); font-style: italic; }
-  .nfc-content p { font-size: 16px; line-height: 1.8; color: rgba(253,246,238,0.65); margin-bottom: 36px; }
-  .nfc-steps { display: flex; flex-direction: column; gap: 20px; }
-  .nfc-step { display: flex; align-items: flex-start; gap: 16px; }
-  .nfc-step-num { width: 36px; height: 36px; background: var(--sunset); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; color: white; }
-  .nfc-step-text strong { display: block; font-size: 15px; margin-bottom: 4px; color: var(--beige); }
-  .nfc-step-text span { font-size: 13px; color: rgba(253,246,238,0.55); line-height: 1.5; }
-  .nfc-phone { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 32px; padding: 32px; text-align: center; }
-  .nfc-phone-screen { background: var(--beige); border-radius: 20px; padding: 28px 20px; color: var(--text); }
-  .nfc-dog-bubble { width: 80px; height: 80px; background: var(--sunset); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 36px; border: 3px solid var(--text); }
-  .nfc-dog-name { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; }
-  .nfc-info-row { background: rgba(201,107,85,0.08); border-radius: 10px; padding: 10px 16px; margin-bottom: 8px; font-size: 13px; text-align: left; display: flex; gap: 10px; align-items: center; }
-  .nfc-call-btn { background: var(--text); color: var(--beige); border: none; border-radius: 50px; padding: 12px 24px; font-size: 13px; font-weight: 700; letter-spacing: 1px; width: 100%; margin-top: 16px; cursor: pointer; font-family: 'Playfair Display', serif; }
-
-  .testimonials { padding: 100px 48px; background: var(--white); }
-  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; max-width: 1100px; margin: 0 auto; }
-  .testimonial-card { background: var(--beige); border-radius: 20px; padding: 32px; }
-  .stars { color: var(--sunset); font-size: 18px; margin-bottom: 16px; letter-spacing: 2px; }
-  .testimonial-card p { font-size: 15px; line-height: 1.7; color: var(--brown-mid); font-style: italic; margin-bottom: 20px; }
-  .testimonial-author { display: flex; align-items: center; gap: 12px; }
-  .author-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--sunset); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 14px; }
-  .author-name { font-weight: 600; font-size: 14px; color: var(--text); }
-  .author-dog { font-size: 12px; color: var(--muted); }
-
-  .cta-section { padding: 100px 48px; text-align: center; background: linear-gradient(135deg, var(--beige-dark), var(--beige)); }
-  .cta-section h2 { font-family: 'Playfair Display', serif; font-size: clamp(32px, 4vw, 52px); font-weight: 700; color: var(--text); margin-bottom: 16px; }
-  .cta-section p { font-size: 17px; color: var(--muted); margin-bottom: 40px; }
-
-  footer { background: var(--text); color: rgba(253,246,238,0.6); padding: 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
-  .footer-brand { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--beige); letter-spacing: 2px; }
-  .footer-tagline { font-size: 13px; font-style: italic; color: var(--sunset-light); margin-top: 4px; }
-  footer p { font-size: 13px; }
-
-  @media (max-width: 900px) {
-    nav { padding: 16px 24px; }
-    .nav-links { display: none; }
-    .hero { padding: 100px 24px 60px; }
-    .hero-visual { display: none; }
-    .features { padding: 60px 24px; }
-    .features-grid { grid-template-columns: 1fr; }
-    .products { padding: 60px 24px; }
-    .products-grid { grid-template-columns: 1fr; }
-    .nfc-section { padding: 60px 24px; }
-    .nfc-inner { grid-template-columns: 1fr; gap: 40px; }
-    .testimonials { padding: 60px 24px; }
-    .testimonials-grid { grid-template-columns: 1fr; }
-    .cta-section { padding: 60px 24px; }
-    footer { padding: 32px 24px; flex-direction: column; text-align: center; }
-  }
+  @media (max-width:380px){ .photo-inset { width:100px; height:100px; left:-8px; } }
 </style>
 </head>
 <body>
@@ -166,58 +177,69 @@
   </ul>
 </nav>
 
+<!-- ===== HERO ===== -->
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-paws">🐾</div>
+
   <div class="hero-content">
-    <div class="hero-eyebrow">Impression 3D artisanale · France</div>
-    <h1>Médaillons faits<br>pour les chiens <em>aimés</em></h1>
+    <div class="hero-eyebrow">Impression 3D · France</div>
+    <h1>Des médaillons<br>à l'image de votre <em>compagnon</em></h1>
     <p class="hero-tagline">Unique comme votre chien</p>
-    <p class="hero-desc">Des médaillons personnalisés imprimés en 3D, avec le prénom de votre compagnon et les couleurs de votre choix. Fabriqués avec soin en France.</p>
+    <p class="hero-desc">Le prénom de votre chien, vos couleurs, une finition soignée. Chaque médaillon est imprimé en 3D en France, rien que pour lui.</p>
     <div class="hero-actions">
       <a href="boutique.html" class="btn-primary">Voir les médaillons 🐾</a>
-      <a href="#nfc" class="btn-secondary">Découvrir le NFC →</a>
+      <a href="a-propos.html" class="btn-secondary">Notre histoire →</a>
+    </div>
+    <div class="hero-trust">
+      <span class="stars">★★★★★</span>
+      <span>Adoré par les maîtres et leurs chiens</span>
     </div>
   </div>
+
   <div class="hero-visual">
-    <div class="medallion-stack">
-      <div class="medallion medallion-1">
-        <div class="medallion-inner"><span class="medallion-paw">🐾</span><span class="medallion-name">HEIKO</span></div>
+    <div class="visual-wrap">
+      <!-- PHOTO PRINCIPALE : pose un fichier nommé hero-chien.jpg à la racine -->
+      <div class="photo-main">
+        <div class="ph-fallback">
+          <div class="ic">🐕</div>
+          <div class="lb">PHOTO PRINCIPALE</div>
+          <div class="sb">hero-chien.jpg<br>format portrait ~ 800×1000</div>
+        </div>
+        <img src="hero-chien.jpg" alt="Chien portant son médaillon Doovlab" onerror="this.remove()">
       </div>
-      <div class="medallion medallion-2">
-        <div class="medallion-inner"><span class="medallion-paw">🐾</span><span class="medallion-name">LUNA</span><span class="medallion-nfc">NFC</span></div>
+
+      <!-- ENCART GROS PLAN : pose un fichier nommé medaillon.jpg à la racine -->
+      <div class="photo-inset">
+        <div class="ph-fallback">
+          <div class="ic">🐾</div>
+          <div class="lb">medaillon.jpg</div>
+        </div>
+        <img src="medaillon.jpg" alt="Gros plan d'un médaillon Doovlab" onerror="this.remove()">
       </div>
-      <div class="medallion medallion-3">
-        <div class="medallion-inner"><span class="medallion-paw">🐾</span><span class="medallion-name">MAX</span></div>
+
+      <div class="photo-badge">
+        <span class="flag">🇫🇷</span>
+        <span class="badge-txt">Fabriqué<span>en France</span></span>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ===== FEATURES ===== -->
 <section class="features">
   <div class="section-header">
     <span class="section-label">Pourquoi Doovlab</span>
     <h2 class="section-title">Fait avec amour,<br>porté avec fierté</h2>
   </div>
   <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">🎨</div>
-      <h3>Entièrement personnalisé</h3>
-      <p>Choisissez le prénom, les couleurs et le style de votre médaillon. Chaque pièce est unique et fabriquée spécialement pour votre chien.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🇫🇷</div>
-      <h3>Fabriqué en France</h3>
-      <p>Chaque médaillon est imprimé en 3D dans notre atelier français. Matériaux de qualité, finition soignée, délai maîtrisé.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">📡</div>
-      <h3>Version NFC connectée</h3>
-      <p>Notre médaillon NFC contient une puce qui affiche les infos de votre chien d'un simple scan de téléphone. Idéal si votre compagnon se perd.</p>
-    </div>
+    <div class="feature-card"><div class="feature-icon">🎨</div><h3>Entièrement personnalisé</h3><p>Choisissez le prénom, les couleurs et le style de votre médaillon. Chaque pièce est unique et fabriquée spécialement pour votre chien.</p></div>
+    <div class="feature-card"><div class="feature-icon">🇫🇷</div><h3>Fabriqué en France</h3><p>Chaque médaillon est imprimé en 3D dans notre atelier français. Matériaux de qualité, finition soignée, délai maîtrisé.</p></div>
+    <div class="feature-card"><div class="feature-icon">📡</div><h3>Version NFC connectée</h3><p>Notre médaillon NFC contient une puce qui affiche les infos de votre chien d'un simple scan de téléphone. Idéal si votre compagnon se perd.</p></div>
   </div>
 </section>
 
+<!-- ===== PRODUCTS ===== -->
 <section class="products" id="produits">
   <div class="section-header">
     <span class="section-label">Notre boutique</span>
@@ -226,51 +248,23 @@
   <div class="products-grid">
     <div class="product-card">
       <div class="product-img product-img-1">🐾</div>
-      <div class="product-info">
-        <h3>Médaillon Patte — Classique</h3>
-        <p>Forme patte de chien, prénom gravé en relief, couleur au choix. Simple, solide et adorable.</p>
-        <div class="product-footer">
-          <div class="product-price">14€ <span>/ pièce</span></div>
-          <button class="btn-add" onclick="window.location.href='commander-classique.html'">Commander</button>
-        </div>
-      </div>
+      <div class="product-info"><h3>Médaillon Patte — Classique</h3><p>Forme patte de chien, prénom gravé en relief, couleur au choix. Simple, solide et adorable.</p>
+        <div class="product-footer"><div class="product-price">14€ <span>/ pièce</span></div><button class="btn-add" onclick="window.location.href='commander-classique.html'">Commander</button></div></div>
     </div>
     <div class="product-card">
-      <div class="product-img product-img-2">
-        <div style="text-align:center">
-          <div style="font-size:60px">🐾</div>
-          <div style="font-size:12px;color:#4A90D9;font-weight:700;letter-spacing:2px;margin-top:8px">BICOLORE</div>
-        </div>
-      </div>
-      <div class="product-info">
-        <h3>Médaillon Patte — Personnalisé</h3>
-        <p>Deux couleurs contrastées pour un rendu encore plus personnalisé. Votre chien aura le plus beau médaillon du parc.</p>
-        <div class="product-footer">
-          <div class="product-price">18€ <span>/ pièce</span></div>
-          <button class="btn-add" onclick="window.location.href='commander-personnalise.html'">Commander</button>
-        </div>
-      </div>
+      <div class="product-img product-img-2"><div style="text-align:center"><div style="font-size:60px">🐾</div><div style="font-size:12px;color:#4A90D9;font-weight:700;letter-spacing:2px;margin-top:8px">BICOLORE</div></div></div>
+      <div class="product-info"><h3>Médaillon Patte — Personnalisé</h3><p>Deux couleurs contrastées pour un rendu encore plus personnalisé. Votre chien aura le plus beau médaillon du parc.</p>
+        <div class="product-footer"><div class="product-price">18€ <span>/ pièce</span></div><button class="btn-add" onclick="window.location.href='commander-personnalise.html'">Commander</button></div></div>
     </div>
-    <div class="product-card" style="grid-column: 1 / -1; max-width: 440px; margin: 0 auto; width: 100%;">
-      <div class="product-img product-img-4" style="position:relative;">
-        <div style="text-align:center">
-          <div style="font-size:60px">🐾</div>
-          <div style="font-size:12px;color:#8B5CF6;font-weight:700;letter-spacing:2px;margin-top:8px">NFC</div>
-        </div>
-        <span class="product-badge">Nouveauté</span>
-      </div>
-      <div class="product-info">
-        <h3>Médaillon Patte — NFC</h3>
-        <p>Puce NFC intégrée : un scan de téléphone affiche les coordonnées du propriétaire. Le médaillon qui ramène à la maison.</p>
-        <div class="product-footer">
-          <div class="product-price">25€ <span>/ pièce</span></div>
-          <button class="btn-add" onclick="window.location.href='commander-nfc.html'">Commander</button>
-        </div>
-      </div>
+    <div class="product-card" style="grid-column:1 / -1; max-width:440px; margin:0 auto; width:100%;">
+      <div class="product-img product-img-4" style="position:relative;"><div style="text-align:center"><div style="font-size:60px">🐾</div><div style="font-size:12px;color:#8B5CF6;font-weight:700;letter-spacing:2px;margin-top:8px">NFC</div></div><span class="product-badge">Nouveauté</span></div>
+      <div class="product-info"><h3>Médaillon Patte — NFC</h3><p>Puce NFC intégrée : un scan de téléphone affiche les coordonnées du propriétaire. Le médaillon qui ramène à la maison.</p>
+        <div class="product-footer"><div class="product-price">25€ <span>/ pièce</span></div><button class="btn-add" onclick="window.location.href='commander-nfc.html'">Commander</button></div></div>
     </div>
   </div>
 </section>
 
+<!-- ===== NFC ===== -->
 <section class="nfc-section" id="nfc">
   <div class="nfc-bg">📡</div>
   <div class="nfc-inner">
@@ -278,27 +272,9 @@
       <h2>Et si votre chien<br>se perdait <em>demain</em> ?</h2>
       <p>Notre médaillon NFC contient une puce invisible. N'importe qui avec un smartphone peut scanner le médaillon et accéder immédiatement à vos coordonnées. Pas d'application requise.</p>
       <div class="nfc-steps">
-        <div class="nfc-step">
-          <div class="nfc-step-num">1</div>
-          <div class="nfc-step-text">
-            <strong>Vous commandez votre médaillon NFC</strong>
-            <span>Vous recevez un lien unique par email pour remplir le profil de votre chien</span>
-          </div>
-        </div>
-        <div class="nfc-step">
-          <div class="nfc-step-num">2</div>
-          <div class="nfc-step-text">
-            <strong>Vous remplissez les infos en 2 minutes</strong>
-            <span>Photo, prénom, votre téléphone, un message personnalisé</span>
-          </div>
-        </div>
-        <div class="nfc-step">
-          <div class="nfc-step-num">3</div>
-          <div class="nfc-step-text">
-            <strong>Quelqu'un trouve votre chien</strong>
-            <span>Il scanne le médaillon avec son téléphone et vous appelle immédiatement</span>
-          </div>
-        </div>
+        <div class="nfc-step"><div class="nfc-step-num">1</div><div class="nfc-step-text"><strong>Vous commandez votre médaillon NFC</strong><span>Vous recevez un lien unique par email pour remplir le profil de votre chien</span></div></div>
+        <div class="nfc-step"><div class="nfc-step-num">2</div><div class="nfc-step-text"><strong>Vous remplissez les infos en 2 minutes</strong><span>Photo, prénom, votre téléphone, un message personnalisé</span></div></div>
+        <div class="nfc-step"><div class="nfc-step-num">3</div><div class="nfc-step-text"><strong>Quelqu'un trouve votre chien</strong><span>Il scanne le médaillon avec son téléphone et vous appelle immédiatement</span></div></div>
       </div>
     </div>
     <div class="nfc-phone">
@@ -314,45 +290,27 @@
   </div>
 </section>
 
+<!-- ===== TESTIMONIALS ===== -->
 <section class="testimonials" id="avis">
   <div class="section-header">
     <span class="section-label">Ils ont adopté Doovlab</span>
     <h2 class="section-title">Nos clients adorent<br>leurs médaillons</h2>
   </div>
   <div class="testimonials-grid">
-    <div class="testimonial-card">
-      <div class="stars">★★★★★</div>
-      <p>"Le médaillon de Luna est magnifique ! Les couleurs sont exactement comme demandé et la qualité est vraiment au rendez-vous. Je recommande à tous les propriétaires de chiens."</p>
-      <div class="testimonial-author">
-        <div class="author-avatar">M</div>
-        <div><div class="author-name">Marie L.</div><div class="author-dog">🐾 Luna, Border Collie</div></div>
-      </div>
-    </div>
-    <div class="testimonial-card">
-      <div class="stars">★★★★★</div>
-      <p>"J'ai pris la version NFC pour mon Berger Malinois. Depuis que Max porte son médaillon je suis beaucoup plus serein lors de nos balades. Un produit vraiment utile."</p>
-      <div class="testimonial-author">
-        <div class="author-avatar">T</div>
-        <div><div class="author-name">Thomas B.</div><div class="author-dog">🐾 Max, Berger Malinois</div></div>
-      </div>
-    </div>
-    <div class="testimonial-card">
-      <div class="stars">★★★★★</div>
-      <p>"Livraison rapide, emballage soigné et médaillon vraiment solide. Mon Ozzie porte le sien tous les jours depuis 3 mois, aucun problème. Merci Doovlab !"</p>
-      <div class="testimonial-author">
-        <div class="author-avatar">S</div>
-        <div><div class="author-name">Sophie D.</div><div class="author-dog">🐾 Ozzie, Labrador</div></div>
-      </div>
-    </div>
+    <div class="testimonial-card"><div class="stars">★★★★★</div><p>"Le médaillon de Luna est magnifique ! Les couleurs sont exactement comme demandé et la qualité est vraiment au rendez-vous. Je recommande à tous les propriétaires de chiens."</p><div class="testimonial-author"><div class="author-avatar">M</div><div><div class="author-name">Marie L.</div><div class="author-dog">🐾 Luna, Border Collie</div></div></div></div>
+    <div class="testimonial-card"><div class="stars">★★★★★</div><p>"J'ai pris la version NFC pour mon Berger Malinois. Depuis que Max porte son médaillon je suis beaucoup plus serein lors de nos balades. Un produit vraiment utile."</p><div class="testimonial-author"><div class="author-avatar">T</div><div><div class="author-name">Thomas B.</div><div class="author-dog">🐾 Max, Berger Malinois</div></div></div></div>
+    <div class="testimonial-card"><div class="stars">★★★★★</div><p>"Livraison rapide, emballage soigné et médaillon vraiment solide. Mon Ozzie porte le sien tous les jours depuis 3 mois, aucun problème. Merci Doovlab !"</p><div class="testimonial-author"><div class="author-avatar">S</div><div><div class="author-name">Sophie D.</div><div class="author-dog">🐾 Ozzie, Labrador</div></div></div></div>
   </div>
 </section>
 
+<!-- ===== CTA ===== -->
 <section class="cta-section">
   <h2>Votre chien mérite<br>un médaillon unique</h2>
   <p>Personnalisé, fabriqué en France, livré en 7 jours.</p>
   <a href="boutique.html" class="btn-primary" style="display:inline-flex">Créer mon médaillon 🐾</a>
 </section>
 
+<!-- ===== FOOTER ===== -->
 <footer>
   <div>
     <div style="display:flex;align-items:center;gap:10px;">
