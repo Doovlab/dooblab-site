@@ -16,7 +16,8 @@
   html { scroll-behavior:smooth; }
   body { font-family:'Nunito',sans-serif; background:var(--beige); color:var(--text); overflow-x:hidden; }
 
-  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:18px 48px; background:rgba(253,246,238,0.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(201,107,85,0.12); }
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:18px 48px; background:transparent; transition:background .3s ease, border-color .3s ease; }
+  nav.scrolled { background:rgba(253,246,238,0.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(201,107,85,0.12); }
   .nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
   .nav-logo img { width:38px; height:38px; object-fit:contain; }
   .nav-brand { font-family:'Playfair Display',serif; font-weight:700; font-size:20px; color:var(--text); letter-spacing:2px; }
@@ -27,18 +28,18 @@
   .nav-cta:hover { background:var(--sunset-dark) !important; color:var(--beige) !important; }
 
   /* ===== HERO ===== */
-  .hero { min-height:100vh; display:grid; grid-template-columns:1.05fr 1fr; align-items:center; gap:40px; padding:130px 64px 80px; position:relative; overflow:hidden; }
+  .hero { min-height:100vh; display:grid; grid-template-columns:1.05fr 1fr; grid-template-areas:"text visual" "actions visual"; align-content:center; gap:24px 40px; padding:130px 64px 80px; position:relative; overflow:hidden; }
   .hero-bg { position:absolute; inset:0; background:radial-gradient(ellipse at 72% 45%, rgba(212,105,42,0.13), transparent 62%); pointer-events:none; }
   .hero-paws { position:absolute; left:-50px; bottom:-50px; font-size:230px; opacity:0.045; transform:rotate(-15deg); pointer-events:none; user-select:none; }
-  .hero-content { position:relative; z-index:2; max-width:540px; animation:fadeUp .8s ease both; }
+  .hero-content { grid-area:text; position:relative; z-index:2; max-width:540px; animation:fadeUp .8s ease both; }
   @keyframes fadeUp { from {opacity:0; transform:translateY(28px);} to {opacity:1; transform:translateY(0);} }
   .hero-eyebrow { display:inline-flex; align-items:center; gap:8px; background:rgba(212,105,42,0.1); color:var(--sunset-dark); padding:6px 16px; border-radius:50px; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:24px; }
   .hero-eyebrow::before { content:''; width:6px; height:6px; background:var(--sunset); border-radius:50%; }
   .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(38px,4.8vw,60px); font-weight:700; line-height:1.08; margin-bottom:14px; color:var(--text); }
   .hero h1 em { font-style:italic; color:var(--sunset); }
   .hero-tagline { font-family:'Playfair Display',serif; font-style:italic; font-size:19px; color:var(--muted); margin-bottom:26px; }
-  .hero-desc { font-size:17px; line-height:1.7; color:var(--brown-mid); margin-bottom:38px; max-width:440px; }
-  .hero-actions { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:30px; }
+  .hero-desc { font-size:17px; line-height:1.7; color:var(--brown-mid); margin-bottom:0; max-width:440px; }
+  .hero-actions { grid-area:actions; display:flex; flex-direction:column; align-items:flex-start; gap:18px; }
   .btn-primary { background:var(--sunset); color:var(--beige); padding:16px 32px; border-radius:50px; font-size:15px; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; gap:8px; border:none; cursor:pointer; transition:all .2s; }
   .btn-primary:hover { background:var(--sunset-dark); transform:translateY(-2px); }
   .btn-secondary { background:transparent; padding:16px 32px; border-radius:50px; font-size:15px; font-weight:600; text-decoration:none; border:1.5px solid var(--beige-dark); color:var(--text); transition:all .2s; display:inline-flex; align-items:center; gap:8px; }
@@ -46,7 +47,7 @@
   .hero-trust { display:flex; align-items:center; gap:10px; font-size:14px; color:var(--muted); }
   .hero-trust .stars { color:var(--sunset); letter-spacing:2px; font-size:15px; }
 
-  .hero-visual { position:relative; z-index:2; display:flex; justify-content:center; align-items:center; animation:fadeUp .8s .15s ease both; }
+  .hero-visual { grid-area:visual; align-self:center; position:relative; z-index:2; display:flex; justify-content:center; align-items:center; animation:fadeUp .8s .15s ease both; }
   .visual-wrap { position:relative; }
   .photo-main { width:380px; height:470px; border-radius:30px; background:linear-gradient(160deg,#F4E3D2,#E7CFB8); box-shadow:0 28px 64px rgba(60,20,5,0.18); border:2px dashed rgba(168,78,26,0.4); position:relative; overflow:hidden; transform:rotate(-1.5deg); }
   .photo-main > img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
@@ -141,9 +142,11 @@
   @media (max-width:900px){
     nav { padding:16px 24px; }
     .nav-links { display:none; }
-    .hero { grid-template-columns:1fr; padding:110px 22px 70px; gap:56px; text-align:center; }
+    .hero { grid-template-columns:1fr; grid-template-areas:"text" "visual" "actions"; min-height:auto; align-content:start; padding:108px 22px 60px; gap:34px; text-align:center; }
     .hero-content { margin:0 auto; }
-    .hero-actions, .hero-trust { justify-content:center; }
+    .hero-actions { align-items:stretch; gap:14px; }
+    .hero-actions .btn-primary { justify-content:center; width:100%; }
+    .hero-trust { justify-content:center; }
     .hero-desc { margin-left:auto; margin-right:auto; }
     .photo-main { width:min(300px,80vw); height:auto; aspect-ratio:4/5; }
     .photo-inset { width:120px; height:120px; bottom:-20px; left:-16px; }
@@ -187,10 +190,10 @@
     <h1>Des médaillons<br>à l'image de votre <em>compagnon</em></h1>
     <p class="hero-tagline">Unique comme votre chien</p>
     <p class="hero-desc">Le prénom de votre chien, vos couleurs, une finition soignée. Chaque médaillon est imprimé en 3D en France, rien que pour lui.</p>
-    <div class="hero-actions">
-      <a href="boutique.html" class="btn-primary">Voir les médaillons 🐾</a>
-      <a href="a-propos.html" class="btn-secondary">Notre histoire →</a>
-    </div>
+  </div>
+
+  <div class="hero-actions">
+    <a href="boutique.html" class="btn-primary">Voir les médaillons 🐾</a>
     <div class="hero-trust">
       <span class="stars">★★★★★</span>
       <span>Adoré par les maîtres et leurs chiens</span>
@@ -330,6 +333,15 @@
     </p>
   </div>
 </footer>
+
+<script>
+  (function(){
+    var n=document.querySelector('nav');
+    function onScroll(){ n.classList.toggle('scrolled', window.scrollY>40); }
+    onScroll();
+    window.addEventListener('scroll', onScroll, {passive:true});
+  })();
+</script>
 
 </body>
 </html>
