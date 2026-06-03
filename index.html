@@ -56,7 +56,7 @@
   .photo-main .lb { font-size:14px; font-weight:700; color:var(--sunset-dark); }
   .photo-main .sb { font-size:12px; color:var(--muted); margin-top:6px; line-height:1.5; }
 
-  .photo-inset { position:absolute; bottom:-26px; left:-38px; width:158px; height:158px; border-radius:24px; background:linear-gradient(160deg,#FBEDDD,#EFD7C0); box-shadow:0 16px 38px rgba(60,20,5,0.24); border:5px solid var(--beige); position:absolute; overflow:hidden; transform:rotate(5deg); }
+  .photo-inset { position:absolute; bottom:-26px; left:-38px; width:158px; height:158px; border-radius:24px; background:linear-gradient(160deg,#FBEDDD,#EFD7C0); box-shadow:0 16px 38px rgba(60,20,5,0.24); border:5px solid var(--beige); overflow:hidden; transform:rotate(5deg); }
   .photo-inset > img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
   .photo-inset .ph-fallback { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:10px; outline:2px dashed rgba(168,78,26,0.45); outline-offset:-4px; border-radius:19px; }
   .photo-inset .ic { font-size:34px; opacity:.55; }
@@ -168,15 +168,15 @@
 <body>
 
 <nav>
-  <a href="#" class="nav-logo">
+  <a href="index.html" class="nav-logo">
     <img src="logo.png" alt="Doovlab logo">
     <span class="nav-brand">DOOVLAB</span>
   </a>
   <ul class="nav-links">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="boutique.html">Boutique</a></li>
     <li><a href="a-propos.html">Notre histoire</a></li>
-    <li><a href="#nfc">Médaillon NFC</a></li>
-    <li><a href="#avis">Avis</a></li>
-    <li><a href="boutique.html" class="nav-cta">Boutique</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact</a></li>
   </ul>
 </nav>
 
@@ -251,12 +251,12 @@
   <div class="products-grid">
     <div class="product-card">
       <div class="product-img product-img-1">🐾</div>
-      <div class="product-info"><h3>Médaillon Patte — Classique</h3><p>Forme patte de chien, prénom gravé en relief, couleur au choix. Simple, solide et adorable.</p>
+      <div class="product-info"><h3>Médaillon Patte — Classique</h3><p>Forme patte de chien bicolore, sans gravure de prénom. Simple, solide et adorable.</p>
         <div class="product-footer"><div class="product-price">14€ <span>/ pièce</span></div><button class="btn-add" onclick="window.location.href='commander-classique.html'">Commander</button></div></div>
     </div>
     <div class="product-card">
       <div class="product-img product-img-2"><div style="text-align:center"><div style="font-size:60px">🐾</div><div style="font-size:12px;color:#4A90D9;font-weight:700;letter-spacing:2px;margin-top:8px">BICOLORE</div></div></div>
-      <div class="product-info"><h3>Médaillon Patte — Personnalisé</h3><p>Deux couleurs contrastées pour un rendu encore plus personnalisé. Votre chien aura le plus beau médaillon du parc.</p>
+      <div class="product-info"><h3>Médaillon Patte — Personnalisé</h3><p>Médaillon bicolore avec le prénom de votre chien gravé en relief. Unique, personnalisé, fait pour lui.</p>
         <div class="product-footer"><div class="product-price">18€ <span>/ pièce</span></div><button class="btn-add" onclick="window.location.href='commander-personnalise.html'">Commander</button></div></div>
     </div>
     <div class="product-card" style="grid-column:1 / -1; max-width:440px; margin:0 auto; width:100%;">
@@ -317,10 +317,12 @@
 <footer>
   <div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <img src="logo.png" alt="Doovlab" style="width:36px;height:36px;object-fit:contain;">
-      <div class="footer-brand">DOOVLAB</div>
+      <img src="logo.png" alt="Doovlab" style="width:36px;height:36px;object-fit:contain;filter:brightness(10);">
+      <div>
+        <div class="footer-brand">DOOVLAB</div>
+        <div class="footer-tagline">Unique comme votre chien</div>
+      </div>
     </div>
-    <div class="footer-tagline">Unique comme votre chien</div>
   </div>
   <p>© 2026 Doovlab · Impression 3D artisanale · France</p>
   <p>contact@doovlab.fr</p>
