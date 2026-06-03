@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Doovlab — Notre histoire</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --sunset: #D4692A;
@@ -29,59 +30,63 @@
   .nav-logo img { width:36px; height:36px; object-fit:contain; }
   .nav-brand { font-family:'Playfair Display',serif; font-weight:700; font-size:20px; color:var(--text); letter-spacing:2px; }
   .nav-links { display:flex; align-items:center; gap:32px; list-style:none; }
-  .nav-links a { text-decoration:none; color:var(--muted); font-size:13px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; transition:color 0.2s; }
-  .nav-links a:hover { color:var(--sunset); }
-  .nav-cta { background:var(--sunset) !important; color:var(--beige) !important; padding:10px 24px !important; border-radius:50px !important; transition: all 0.2s !important; }
+  .nav-links a { text-decoration:none; font-size:14px; font-weight:600; color:var(--muted); letter-spacing:1px; text-transform:uppercase; transition:color .2s; }
+  .nav-links a:hover, .nav-links a.active { color:var(--sunset); }
+  .nav-cta { background:var(--sunset); color:var(--beige) !important; padding:10px 24px; border-radius:50px; transition:background .2s !important; }
   .nav-cta:hover { background:var(--sunset-dark) !important; color:var(--beige) !important; }
 
-  .hero { padding: 140px 48px 80px; max-width: 900px; margin: 0 auto; text-align: center; }
-  .hero-label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--sunset); background: rgba(212,105,42,0.08); padding: 8px 20px; border-radius: 50px; margin-bottom: 28px; }
-  .hero h1 { font-family: 'Playfair Display', serif; font-size: 56px; font-weight: 700; color: var(--text); line-height: 1.15; margin-bottom: 24px; }
+  /* HERO */
+  .hero { padding: 130px 48px 72px; text-align: center; }
+  .hero-label { font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--sunset); display: inline-block; background: rgba(212,105,42,0.1); padding: 6px 18px; border-radius: 50px; margin-bottom: 24px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 58px); font-weight: 700; color: var(--text); line-height: 1.15; }
   .hero h1 em { font-style: italic; color: var(--sunset); }
-  .hero p { font-size: 18px; color: var(--muted); line-height: 1.8; max-width: 640px; margin: 0 auto; }
+  .hero p { font-size: 18px; color: var(--muted); max-width: 560px; margin: 20px auto 0; line-height: 1.8; }
 
-  .divider { width: 60px; height: 3px; background: var(--sunset); border-radius: 2px; margin: 48px auto; }
-
-  .story-section { max-width: 800px; margin: 0 auto; padding: 0 48px 80px; }
-  .story-block { display: grid; grid-template-columns: 1fr 3fr; gap: 32px; align-items: start; margin-bottom: 56px; padding-bottom: 56px; border-bottom: 1px solid var(--beige-dark); }
-  .story-block:last-child { border-bottom: none; }
-  .story-icon { width: 72px; height: 72px; background: var(--text); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; }
-  .story-year { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--sunset); margin-bottom: 10px; display: block; }
-  .story-block h2 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 14px; line-height: 1.3; }
+  /* STORY SECTION */
+  .story-section { max-width: 780px; margin: 0 auto 80px; padding: 0 48px; display: flex; flex-direction: column; gap: 48px; }
+  .story-block { display: grid; grid-template-columns: 72px 1fr; gap: 28px; align-items: start; }
+  .story-icon { width: 72px; height: 72px; background: var(--beige-dark); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; }
+  .story-content { }
+  .story-content .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--sunset); margin-bottom: 6px; }
+  .story-content h2 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 14px; line-height: 1.3; }
   .story-block p { font-size: 16px; color: var(--muted); line-height: 1.8; }
 
-  /* DOGS SECTION — sans photos */
+  /* DOGS SECTION */
   .dogs-section { background: var(--text); padding: 72px 48px; text-align: center; margin-bottom: 80px; }
   .dogs-section h2 { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--beige); margin-bottom: 16px; }
-  .dogs-section p { font-size: 16px; color: rgba(253,246,238,0.6); max-width: 560px; margin: 0 auto 48px; line-height: 1.8; }
+  .dogs-section > p { font-size: 16px; color: rgba(253,246,238,0.6); max-width: 560px; margin: 0 auto 48px; line-height: 1.8; }
   .dogs-grid { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; }
   .dog-card { background: rgba(253,246,238,0.06); border: 1px solid rgba(253,246,238,0.12); border-radius: 24px; padding: 32px 40px; text-align: center; min-width: 180px; }
   .dog-emoji { font-size: 52px; margin-bottom: 16px; display: block; }
   .dog-name { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--beige); letter-spacing: 2px; margin-bottom: 8px; }
-  .dog-desc { font-size: 13px; color: var(--sunset-light); font-style: italic; }
+  .dog-breed { font-size: 13px; color: rgba(253,246,238,0.5); }
 
-  .values-section { max-width: 900px; margin: 0 auto; padding: 0 48px 80px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .value-card { background: white; border-radius: 20px; padding: 32px 24px; text-align: center; box-shadow: 0 2px 20px rgba(60,20,5,0.06); }
-  .value-icon { font-size: 36px; margin-bottom: 16px; display: block; }
-  .value-card h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--text); margin-bottom: 10px; }
+  /* VALUES */
+  .values-section { max-width: 900px; margin: 0 auto 80px; padding: 0 48px; display: grid; grid-template-columns: repeat(3,1fr); gap: 28px; }
+  .value-card { background: var(--white); border-radius: 20px; padding: 32px 24px; text-align: center; }
+  .value-icon { font-size: 36px; margin-bottom: 16px; }
+  .value-card h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
   .value-card p { font-size: 14px; color: var(--muted); line-height: 1.7; }
 
+  /* CTA */
   .cta-section { text-align: center; padding: 0 48px 100px; }
-  .cta-section h2 { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--text); margin-bottom: 16px; }
-  .cta-section p { font-size: 16px; color: var(--muted); margin-bottom: 36px; line-height: 1.7; }
-  .cta-btn { display: inline-block; background: var(--sunset); color: white; padding: 18px 48px; border-radius: 50px; font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; text-decoration: none; letter-spacing: 1px; transition: all 0.2s; }
-  .cta-btn:hover { background: var(--sunset-dark); transform: translateY(-2px); }
+  .cta-section h2 { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+  .cta-section p { font-size: 16px; color: var(--muted); margin-bottom: 32px; }
+  .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--sunset); color: var(--beige); padding: 16px 32px; border-radius: 50px; font-size: 15px; font-weight: 700; text-decoration: none; transition: all .2s; }
+  .btn-primary:hover { background: var(--sunset-dark); transform: translateY(-2px); }
 
-  footer { background: var(--text); color: rgba(253,246,238,0.6); padding: 40px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-  .footer-brand { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--beige); letter-spacing:2px; }
-  .footer-tagline { font-size:13px; font-style:italic; color:var(--sunset-light); margin-top:4px; }
+  /* FOOTER */
+  footer { background: var(--text); color: rgba(253,246,238,0.6); padding: 48px; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .footer-brand { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--beige); letter-spacing: 2px; }
+  .footer-tagline { font-size: 13px; font-style: italic; color: var(--sunset-light); margin-top: 4px; }
+  footer p { font-size: 13px; }
 
-  @media(max-width:768px) {
+  @media (max-width: 900px) {
     nav { padding: 14px 20px; }
-    .hero { padding: 110px 20px 60px; }
-    .hero h1 { font-size: 36px; }
-    .story-section { padding: 0 20px 60px; }
-    .story-block { grid-template-columns: 1fr; gap: 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 20px 60px; }
+    .story-section { padding: 0 20px; gap: 36px; }
+    .story-block { grid-template-columns: 1fr; }
     .dogs-section { padding: 60px 20px; }
     .values-section { grid-template-columns: 1fr; padding: 0 20px 60px; }
     .cta-section { padding: 0 20px 80px; }
@@ -98,46 +103,48 @@
   </a>
   <ul class="nav-links">
     <li><a href="index.html">Accueil</a></li>
-    <li><a href="boutique.html" class="nav-cta">Boutique</a></li>
+    <li><a href="boutique.html">Boutique</a></li>
+    <li><a href="a-propos.html" class="active">Notre histoire</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact</a></li>
   </ul>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
   <span class="hero-label">Notre histoire</span>
   <h1>Créé avec passion,<br>offert avec <em>amour</em></h1>
   <p>Doovlab est né d'une passion pour l'impression 3D et d'un amour profond pour les chiens. Chaque médaillon raconte une histoire.</p>
 </section>
 
-<div class="divider"></div>
-
+<!-- STORY SECTION -->
 <section class="story-section">
   <div class="story-block">
     <div class="story-icon">🖨️</div>
-    <div>
-      <span class="story-year">2021 — Les débuts</span>
+    <div class="story-content">
+      <div class="eyebrow">2021 — Les débuts</div>
       <h2>Une passion qui change tout</h2>
       <p>L'impression 3D est entrée dans ma vie comme une révélation. Plus qu'un simple loisir, elle est devenue un espace de liberté — un moyen de canaliser mes pensées, de me dépasser et de cultiver mon imagination. Créer quelque chose de concret avec ses mains, voir une idée prendre forme couche par couche, c'est une satisfaction que rien d'autre ne remplace.</p>
     </div>
   </div>
   <div class="story-block">
     <div class="story-icon">🐾</div>
-    <div>
-      <span class="story-year">L'idée fondatrice</span>
+    <div class="story-content">
+      <div class="eyebrow">L'idée fondatrice</div>
       <h2>Protéger ce qu'on aime</h2>
       <p>Propriétaire de deux chiens, Monir et Penny, j'ai voulu leur apporter plus qu'un simple accessoire. L'idée était simple : leur donner élégance et identité, tout en s'assurant que si l'un d'eux venait à se perdre, il puisse être aidé à retrouver son domicile le plus vite possible. Un médaillon qui a du sens.</p>
     </div>
   </div>
   <div class="story-block">
     <div class="story-icon">❤️</div>
-    <div>
-      <span class="story-year">La mission</span>
+    <div class="story-content">
+      <div class="eyebrow">La mission</div>
       <h2>Réunir les familles</h2>
       <p>Chaque minute compte quand un chien est perdu. L'angoisse d'un maître, l'incertitude, les heures qui s'étirent — Doovlab est né pour réduire ce temps d'inquiétude. Aider les maîtres et leurs animaux à se retrouver, c'est la raison d'être de chaque médaillon que je fabrique.</p>
     </div>
   </div>
 </section>
 
-<!-- DOGS SECTION — sans photos -->
+<!-- DOGS SECTION -->
 <section class="dogs-section">
   <h2>Les inspirateurs</h2>
   <p>Monir et Penny, les deux chiens d'Enzo, sont à l'origine de tout. Ce sont eux qui ont donné naissance à l'idée Doovlab.</p>
@@ -145,52 +152,59 @@
     <div class="dog-card">
       <span class="dog-emoji">🐺</span>
       <div class="dog-name">MONIR</div>
-      <div class="dog-desc">Berger norvégien · Le premier, l'inspirateur</div>
+      <div class="dog-breed">Berger norvégien · Le premier, l'inspirateur</div>
     </div>
     <div class="dog-card">
       <span class="dog-emoji">🐕</span>
       <div class="dog-name">PENNY</div>
-      <div class="dog-desc">Malinois · La complice, la muse</div>
+      <div class="dog-breed">Malinois · La complice, la muse</div>
     </div>
   </div>
 </section>
 
+<!-- VALUES -->
 <section class="values-section">
   <div class="value-card">
-    <span class="value-icon">🇫🇷</span>
+    <div class="value-icon">🇫🇷</div>
     <h3>Fabriqué en France</h3>
     <p>Chaque médaillon est imprimé à la main dans mon atelier, avec soin et précision.</p>
   </div>
   <div class="value-card">
-    <span class="value-icon">♻️</span>
+    <div class="value-icon">♻️</div>
     <h3>PLA écologique</h3>
     <p>Des matériaux durables et respectueux de l'environnement pour chaque création.</p>
   </div>
   <div class="value-card">
-    <span class="value-icon">🎨</span>
+    <div class="value-icon">🎨</div>
     <h3>100% personnalisé</h3>
     <p>Le prénom de votre chien, vos couleurs. Unique comme lui.</p>
   </div>
 </section>
 
+<!-- CTA -->
 <section class="cta-section">
   <h2>Offrez-leur un médaillon unique</h2>
   <p>Chaque commande est fabriquée avec soin.<br>Parce que votre chien mérite le meilleur.</p>
-  <a href="boutique.html" class="cta-btn">🐾 Découvrir les médaillons</a>
+  <a href="boutique.html" class="btn-primary">🐾 Découvrir les médaillons</a>
 </section>
 
+<!-- FOOTER -->
 <footer>
   <div>
     <div style="display:flex;align-items:center;gap:10px">
-      <img src="logo.png" alt="Doovlab" style="width:32px;height:32px;object-fit:contain;">
-      <div class="footer-brand">DOOVLAB</div>
+      <img src="logo.png" alt="Doovlab" style="width:32px;height:32px;object-fit:contain;filter:brightness(10)">
+      <div>
+        <div class="footer-brand">DOOVLAB</div>
+        <div class="footer-tagline">Unique comme votre chien</div>
+      </div>
     </div>
-    <div class="footer-tagline">Unique comme votre chien</div>
   </div>
-  <p>© 2026 Doovlab · France</p>
-  <p><a href="mailto:contact@doovlab.fr" style="color:rgba(253,246,238,0.6)">contact@doovlab.fr</a></p>
-  <div style="text-align:center;width:100%;margin-top:8px">
+  <p>© 2026 Doovlab · Impression 3D artisanale · France</p>
+  <p>contact@doovlab.fr</p>
+  <div style="text-align:center;width:100%;margin-top:16px">
     <p style="font-size:12px">
+      <a href="a-propos.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Notre histoire</a>
+      <a href="contact.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Contact</a>
       <a href="mentions-legales.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Mentions légales</a>
       <a href="cgv.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">CGV</a>
       <a href="confidentialite.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Confidentialité</a>
