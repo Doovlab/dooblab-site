@@ -164,7 +164,7 @@
         <ellipse id="paw-body" cx="100" cy="138" rx="52" ry="48" fill="#D4692A"/>
         <!-- Prénom -->
         <text id="paw-text" x="100" y="148" text-anchor="middle" dominant-baseline="middle"
-              font-size="22" font-weight="700" fill="white" font-family="'Playfair Display', serif">MAX</text>
+              font-size="22" font-weight="700" fill="#D4692A" font-family="'Playfair Display', serif">MAX</text>
       </svg>
     </div>
 
@@ -319,6 +319,10 @@ function selectColor(which, color, btn, gridId, statusId) {
   if (which === 1) {
     selectedColor1 = color;
     document.getElementById('paw-body').style.fill = color.hex;
+    // Le texte gravé est toujours de la couleur principale
+    const textEl = document.getElementById('paw-text');
+    // Contraste : si couleur très claire, texte sombre
+    textEl.style.fill = color.hex === '#FFFFFF' || color.hex === '#F1C40F' ? '#2C1A0E' : color.hex;
   } else {
     selectedColor2 = color;
     ['pad-tl','pad-tr','pad-bl','pad-br'].forEach(id => {

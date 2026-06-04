@@ -167,7 +167,7 @@
         <!-- Icône NFC discrète -->
         <text x="100" y="125" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.5)" font-family="'Nunito',sans-serif" font-weight="700" letter-spacing="1">NFC</text>
         <text id="paw-text" x="100" y="152" text-anchor="middle" dominant-baseline="middle"
-              font-size="22" font-weight="700" fill="white" font-family="'Playfair Display', serif">MAX</text>
+              font-size="22" font-weight="700" fill="#D4692A" font-family="'Playfair Display', serif">MAX</text>
       </svg>
     </div>
 
@@ -334,6 +334,8 @@ function selectColor(which, color, btn, gridId, statusId) {
   if (which === 1) {
     selectedColor1 = color;
     document.getElementById('paw-body').style.fill = color.hex;
+    const textEl = document.getElementById('paw-text');
+    textEl.style.fill = color.hex === '#FFFFFF' || color.hex === '#F1C40F' ? '#2C1A0E' : color.hex;
   } else {
     selectedColor2 = color;
     ['pad-tl','pad-tr','pad-bl','pad-br'].forEach(id => {
