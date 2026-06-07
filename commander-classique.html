@@ -105,9 +105,24 @@
     .form-row { grid-template-columns:1fr; }
     footer { padding:28px 20px; flex-direction:column; text-align:center; }
   }
+
+  /* ===== Dynamisme Doovlab : apparitions, survols, progression ===== */
+  html.js .reveal, html.js .reveal-left, html.js .reveal-right { opacity:0; transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+  html.js .reveal { transform:translateY(30px); }
+  html.js .reveal-left { transform:translateX(-46px); }
+  html.js .reveal-right { transform:translateX(46px); }
+  html.js .reveal.in, html.js .reveal-left.in, html.js .reveal-right.in { opacity:1; transform:none; }
+  .reveal.d1{transition-delay:.08s;} .reveal.d2{transition-delay:.16s;} .reveal.d3{transition-delay:.24s;} .reveal.d4{transition-delay:.32s;} .reveal.d5{transition-delay:.40s;}
+  .scroll-progress { position:fixed; top:0; left:0; height:3px; width:0; background:linear-gradient(90deg,#F0923A,#D4692A); z-index:9999; transition:width .12s linear; }
+  nav { transition:box-shadow .3s ease; }
+  nav.scrolled { box-shadow:0 6px 24px -10px rgba(60,30,10,0.20); }
+  @media (prefers-reduced-motion: reduce){ html.js .reveal, html.js .reveal-left, html.js .reveal-right { opacity:1 !important; transform:none !important; } }
+
 </style>
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <nav>
   <a href="index.html" class="nav-logo">
@@ -120,10 +135,10 @@
 <div class="page-wrap">
   <!-- LEFT -->
   <div class="product-info">
-    <span class="product-tag">Médaillon personnalisé</span>
-    <h1 class="product-title">Médaillon Patte — Classique</h1>
-    <p class="product-desc">Forme patte de chien bicolore, sans gravure. Simple, solide et adorable.</p>
-    <div class="product-price">14€ <span>/ pièce</span></div>
+    <span class="product-tag reveal">Médaillon personnalisé</span>
+    <h1 class="product-title reveal">Médaillon Patte — Classique</h1>
+    <p class="product-desc reveal d1">Forme patte de chien bicolore, sans gravure. Simple, solide et adorable.</p>
+    <div class="product-price reveal d1">14€ <span>/ pièce</span></div>
     <ul class="features-list"><li>Sans gravure de prénom</li><li>Couleur au choix</li><li>Anneau de fixation inclus</li><li>PLA haute résistance</li></ul>
     <div class="delivery-info">
       <span>🚚 Livraison 5-7 jours</span>
@@ -152,7 +167,7 @@
       <input type="text" id="order-dogname" placeholder="Ex : Heiko, Luna, Max...">
     </div>
 
-    <div class="color-section">
+    <div class="color-section reveal">
       <label>Couleur principale <span style="font-size:11px;font-weight:400">(contour)</span></label>
       <p class="color-note">Le fond de base est Blanc Pur par défaut.</p>
       <div class="color-picker" id="color-picker-1">
@@ -175,7 +190,7 @@
 
     </div>
 
-    <div class="color-section">
+    <div class="color-section reveal">
       <label>Deuxième couleur <span style="font-size:11px;font-weight:400">(coussinets)</span></label>
       <div class="color-picker" id="color-picker-2">
   <div class="color-option" style="background:#F5F5F5" data-color="Blanc Pur" onclick="selectColor(this,2)" title="Blanc Pur"></div>
@@ -204,7 +219,7 @@
       <input type="email" id="order-email" placeholder="votre@email.fr">
     </div>
 
-    <button class="submit-btn" id="submit-btn" onclick="submitAndPay()">🐾 Valider et payer</button>
+    <button class="submit-btn reveal" id="submit-btn" onclick="submitAndPay()">🐾 Valider et payer</button>
     <p class="form-note">Vous serez redirigé vers notre page de paiement sécurisé Stripe. Votre commande sera confirmée après paiement.</p>
 
     <div class="success-msg" id="success-msg">
@@ -343,35 +358,19 @@ async function submitOrder() {
   }
 }
 </script>
-<!-- ===== Doovlab — Dynamisme (coller avant </body>) ===== -->
-<style>
-  .dv-progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,#F0923A,#D4692A);z-index:9999;transition:width .12s linear;}
-  .dv-reveal{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);}
-  .dv-reveal.dv-in{opacity:1;transform:none;}
-  nav{transition:box-shadow .3s ease;}
-  nav.dv-scrolled{box-shadow:0 6px 24px -10px rgba(60,30,10,0.20);}
-  @media (prefers-reduced-motion: reduce){.dv-reveal{opacity:1!important;transform:none!important;}}
-</style>
 <script>
 (function(){
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var bar=document.createElement('div'); bar.className='dv-progress'; document.body.appendChild(bar);
-  var nv=document.querySelector('nav');
-  function onScroll(){var d=document.documentElement,st=d.scrollTop||document.body.scrollTop,sh=d.scrollHeight-d.clientHeight;bar.style.width=(sh>0?st/sh*100:0)+'%';if(nv)nv.classList.toggle('dv-scrolled',st>10);}
-  onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
-  if(reduce) return;
-  var SEL='section, .card, [class*="-card"], [class*="-block"], [class*="-item"], [class*="-box"], .step, .page-wrap h2, .product';
-  function init(){
-    var vh=window.innerHeight;
-    var all=[].slice.call(document.querySelectorAll(SEL));
-    var cands=all.filter(function(el){ return !(el.parentElement && el.parentElement.closest(SEL)); });
-    var hidden=[];
-    cands.forEach(function(el){ var r=el.getBoundingClientRect(); if(r.top > vh*0.92){ el.classList.add('dv-reveal'); hidden.push(el); } });
-    if(!('IntersectionObserver' in window)){ hidden.forEach(function(e){e.classList.add('dv-in');}); return; }
-    var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('dv-in');io.unobserve(e.target);}});},{threshold:0.12,rootMargin:'0px 0px -6% 0px'});
-    hidden.forEach(function(e){io.observe(e);});
+  var els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  if(reduce || !('IntersectionObserver' in window)){ els.forEach(function(e){e.classList.add('in');}); }
+  else {
+    var io = new IntersectionObserver(function(en){ en.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {threshold:0.14, rootMargin:'0px 0px -6% 0px'});
+    els.forEach(function(e){ io.observe(e); });
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+  var bar=document.getElementById('scrollProgress'), nv=document.querySelector('nav');
+  function onScroll(){ var d=document.documentElement, st=d.scrollTop||document.body.scrollTop, sh=d.scrollHeight-d.clientHeight; if(bar) bar.style.width=(sh>0?st/sh*100:0)+'%'; if(nv) nv.classList.toggle('scrolled', st>10); }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
 })();
-</script></body>
+</script>
+</body>
 </html>
