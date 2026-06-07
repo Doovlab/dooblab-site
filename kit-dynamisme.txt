@@ -1,0 +1,53 @@
+═══════════════════════════════════════════════════════════════
+  KIT DYNAMISME DOOVLAB — à coller dans les pages restantes
+═══════════════════════════════════════════════════════════════
+
+COMMENT FAIRE (très simple) :
+1. Ouvre la page sur GitHub (ex. boutique.html).
+2. Tout en bas du fichier, trouve la balise </body>.
+3. Colle TOUT le bloc ci-dessous JUSTE AVANT </body>.
+4. Enregistre. C'est tout.
+
+Pages concernées : boutique.html, commander-classique.html,
+chien.html, editer.html, confidentialite.html
+
+Ce que ça fait : apparition au défilement (cartes, sections),
+barre de progression terracotta en haut, ombre douce sous le menu.
+Aucune classe à ajouter, rien à régler. Respecte le mode
+« réduire les animations » des téléphones.
+
+───────────────── COPIER À PARTIR D'ICI ─────────────────
+
+<!-- ===== Doovlab — Dynamisme (coller avant </body>) ===== -->
+<style>
+  .dv-progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,#F0923A,#D4692A);z-index:9999;transition:width .12s linear;}
+  .dv-reveal{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);}
+  .dv-reveal.dv-in{opacity:1;transform:none;}
+  nav{transition:box-shadow .3s ease;}
+  nav.dv-scrolled{box-shadow:0 6px 24px -10px rgba(60,30,10,0.20);}
+  @media (prefers-reduced-motion: reduce){.dv-reveal{opacity:1!important;transform:none!important;}}
+</style>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var bar=document.createElement('div'); bar.className='dv-progress'; document.body.appendChild(bar);
+  var nv=document.querySelector('nav');
+  function onScroll(){var d=document.documentElement,st=d.scrollTop||document.body.scrollTop,sh=d.scrollHeight-d.clientHeight;bar.style.width=(sh>0?st/sh*100:0)+'%';if(nv)nv.classList.toggle('dv-scrolled',st>10);}
+  onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
+  if(reduce) return;
+  var SEL='section, .card, [class*="-card"], [class*="-block"], [class*="-item"], [class*="-box"], .step, .page-wrap h2, .product';
+  function init(){
+    var vh=window.innerHeight;
+    var all=[].slice.call(document.querySelectorAll(SEL));
+    var cands=all.filter(function(el){ return !(el.parentElement && el.parentElement.closest(SEL)); });
+    var hidden=[];
+    cands.forEach(function(el){ var r=el.getBoundingClientRect(); if(r.top > vh*0.92){ el.classList.add('dv-reveal'); hidden.push(el); } });
+    if(!('IntersectionObserver' in window)){ hidden.forEach(function(e){e.classList.add('dv-in');}); return; }
+    var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('dv-in');io.unobserve(e.target);}});},{threshold:0.12,rootMargin:'0px 0px -6% 0px'});
+    hidden.forEach(function(e){io.observe(e);});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>
+
+───────────────── COPIER JUSQU'ICI ─────────────────

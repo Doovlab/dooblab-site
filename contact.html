@@ -409,9 +409,28 @@
     footer { padding: 32px 24px; flex-direction: column; text-align: center; }
     .footer-links { justify-content: center; }
   }
+
+  /* ===== Dynamisme Doovlab : apparitions, survols, progression ===== */
+  html.js .reveal, html.js .reveal-left, html.js .reveal-right { opacity:0; transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+  html.js .reveal { transform:translateY(30px); }
+  html.js .reveal-left { transform:translateX(-46px); }
+  html.js .reveal-right { transform:translateX(46px); }
+  html.js .reveal.in, html.js .reveal-left.in, html.js .reveal-right.in { opacity:1; transform:none; }
+  .reveal.d1{transition-delay:.08s;} .reveal.d2{transition-delay:.16s;} .reveal.d3{transition-delay:.24s;} .reveal.d4{transition-delay:.32s;} .reveal.d5{transition-delay:.40s;}
+  .scroll-progress { position:fixed; top:0; left:0; height:3px; width:0; background:linear-gradient(90deg,#F0923A,#D4692A); z-index:9999; transition:width .12s linear; }
+  nav { transition:box-shadow .3s ease; }
+  nav.scrolled { box-shadow:0 6px 24px -10px rgba(60,30,10,0.20); }
+  @media (prefers-reduced-motion: reduce){ html.js .reveal, html.js .reveal-left, html.js .reveal-right { opacity:1 !important; transform:none !important; } }
+  .info-card { transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s; }
+  .info-card:hover { transform:translateY(-6px); box-shadow:0 18px 38px -18px rgba(60,20,5,0.22); }
+  .submit-btn { transition:transform .2s ease, box-shadow .2s ease, background .2s ease; }
+  .submit-btn:hover { transform:translateY(-2px); box-shadow:0 12px 26px -10px rgba(212,105,42,0.5); }
+
 </style>
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <nav>
   <a href="index.html" class="nav-logo">
@@ -429,14 +448,14 @@
 <!-- PAGE HEADER -->
 <div class="page-header">
   <div class="breadcrumb"><a href="index.html">Accueil</a> → Contact</div>
-  <h1>Nous contacter</h1>
-  <p>Une question sur nos médaillons, un délai, un matériau ? On vous répond sous 24h.</p>
+  <h1 class="reveal">Nous contacter</h1>
+  <p class="reveal d1">Une question sur nos médaillons, un délai, un matériau ? On vous répond sous 24h.</p>
 </div>
 
 <div class="main-content">
 
   <!-- LEFT : FORMULAIRE DE CONTACT -->
-  <div class="form-card">
+  <div class="form-card reveal-left">
     <span class="section-eyebrow">Nous écrire</span>
     <div class="section-title">Une question ?</div>
     <p class="section-desc">Délais, tailles, matériaux, livraison... On est là pour vous répondre.</p>
@@ -476,7 +495,7 @@
   <div class="right-col">
 
     <!-- INFOS PRATIQUES -->
-    <div class="info-card">
+    <div class="info-card reveal-right">
       <h3>📋 Infos pratiques</h3>
       <div class="info-row">
         <div class="info-icon">✉️</div>
@@ -511,23 +530,23 @@
     <!-- FAQ -->
     <div class="info-card">
       <h3>❓ Questions fréquentes</h3>
-      <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-item reveal d1" onclick="toggleFaq(this)">
         <div class="faq-q">Comment passer une commande ? <span class="faq-toggle">+</span></div>
         <div class="faq-a">Rendez-vous sur notre <a href="boutique.html" style="color:var(--sunset)">boutique</a> et choisissez votre médaillon. Chaque page produit vous guide pas à pas pour personnaliser et commander.</div>
       </div>
-      <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-item reveal d2" onclick="toggleFaq(this)">
         <div class="faq-q">Comment fonctionne le médaillon NFC ? <span class="faq-toggle">+</span></div>
         <div class="faq-a">Après votre commande, vous recevez un lien unique pour remplir le profil de votre chien. Toute personne qui scanne le médaillon avec un smartphone accède à cette page sans application.</div>
       </div>
-      <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-item reveal d3" onclick="toggleFaq(this)">
         <div class="faq-q">Puis-je modifier le profil NFC après réception ? <span class="faq-toggle">+</span></div>
         <div class="faq-a">Oui, le profil est modifiable à tout moment via votre lien unique reçu par email. Vous pouvez changer la photo, le numéro de téléphone et le message.</div>
       </div>
-      <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-item reveal d4" onclick="toggleFaq(this)">
         <div class="faq-q">Quelle est la résistance du médaillon ? <span class="faq-toggle">+</span></div>
         <div class="faq-a">Nos médaillons sont imprimés en PLA haute résistance. Ils supportent l'eau, les chocs du quotidien et les balades extérieures. Ils ne sont pas conçus pour être mâchés.</div>
       </div>
-      <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-item reveal d5" onclick="toggleFaq(this)">
         <div class="faq-q">Livrez-vous en dehors de France ? <span class="faq-toggle">+</span></div>
         <div class="faq-a">Pour l'instant nous livrons uniquement en France métropolitaine. Contactez-nous par email pour toute demande internationale.</div>
       </div>
@@ -606,5 +625,19 @@ function toggleFaq(el) {
 }
 </script>
 
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  if(reduce || !('IntersectionObserver' in window)){ els.forEach(function(e){e.classList.add('in');}); }
+  else {
+    var io = new IntersectionObserver(function(en){ en.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {threshold:0.14, rootMargin:'0px 0px -6% 0px'});
+    els.forEach(function(e){ io.observe(e); });
+  }
+  var bar=document.getElementById('scrollProgress'), nv=document.querySelector('nav');
+  function onScroll(){ var d=document.documentElement, st=d.scrollTop||document.body.scrollTop, sh=d.scrollHeight-d.clientHeight; if(bar) bar.style.width=(sh>0?st/sh*100:0)+'%'; if(nv) nv.classList.toggle('scrolled', st>10); }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+})();
+</script>
 </body>
 </html>

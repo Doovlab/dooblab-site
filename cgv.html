@@ -31,9 +31,25 @@
   .footer-tagline { font-size:13px; font-style:italic; color:#F0923A; margin-top:4px; }
   footer p { font-size:13px; }
   @media (max-width:900px) { nav { padding:14px 20px; } .nav-links { display:none; } .page-wrap { padding:90px 20px 60px; } footer { padding:28px 20px; flex-direction:column; text-align:center; } }
+
+  /* ===== Dynamisme Doovlab : apparitions, survols, progression ===== */
+  html.js .reveal, html.js .reveal-left, html.js .reveal-right { opacity:0; transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+  html.js .reveal { transform:translateY(30px); }
+  html.js .reveal-left { transform:translateX(-46px); }
+  html.js .reveal-right { transform:translateX(46px); }
+  html.js .reveal.in, html.js .reveal-left.in, html.js .reveal-right.in { opacity:1; transform:none; }
+  .reveal.d1{transition-delay:.08s;} .reveal.d2{transition-delay:.16s;} .reveal.d3{transition-delay:.24s;} .reveal.d4{transition-delay:.32s;} .reveal.d5{transition-delay:.40s;}
+  .scroll-progress { position:fixed; top:0; left:0; height:3px; width:0; background:linear-gradient(90deg,#F0923A,#D4692A); z-index:9999; transition:width .12s linear; }
+  nav { transition:box-shadow .3s ease; }
+  nav.scrolled { box-shadow:0 6px 24px -10px rgba(60,30,10,0.20); }
+  @media (prefers-reduced-motion: reduce){ html.js .reveal, html.js .reveal-left, html.js .reveal-right { opacity:1 !important; transform:none !important; } }
+  .page-wrap h2 { transition:color .2s ease; }
+
 </style>
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <nav>
   <a href="index.html" class="nav-logo">
@@ -49,16 +65,16 @@
 </nav>
 
 <div class="page-wrap">
-  <h1>Conditions Générales de Vente</h1>
+  <h1 class="reveal">Conditions Générales de Vente</h1>
   <p class="date">Dernière mise à jour : mai 2026</p>
 
-  <h2>Article 1 — Objet</h2>
+  <h2 class="reveal">Article 1 — Objet</h2>
   <p>Les présentes Conditions Générales de Vente (CGV) régissent les ventes de produits effectuées par KOBYLKO Enzo (auto-entrepreneur, SIRET 907 569 792 000 19) via le site doovlab.fr. Toute commande implique l'acceptation sans réserve des présentes CGV.</p>
 
-  <h2>Article 2 — Produits</h2>
+  <h2 class="reveal">Article 2 — Produits</h2>
   <p>Doovlab propose des médaillons pour animaux de compagnie fabriqués par impression 3D en France. Les produits sont personnalisés selon les choix du client (prénom, couleurs, modèle). En raison de leur caractère personnalisé, les produits ne peuvent pas faire l'objet d'un droit de rétractation (conformément à l'article L221-28 du Code de la consommation).</p>
 
-  <h2>Article 3 — Prix</h2>
+  <h2 class="reveal">Article 3 — Prix</h2>
   <p>Les prix sont indiqués en euros toutes taxes comprises (TTC). Doovlab se réserve le droit de modifier ses prix à tout moment, étant entendu que le prix applicable est celui en vigueur au moment de la commande.</p>
   <ul>
     <li>Médaillon Classique : 14€ / pièce</li>
@@ -67,25 +83,25 @@
   </ul>
   <p>Les frais de port sont offerts à partir de 2 médaillons commandés. En dessous, les frais de livraison sont calculés lors de la commande.</p>
 
-  <h2>Article 4 — Commande</h2>
+  <h2 class="reveal">Article 4 — Commande</h2>
   <p>La commande est validée après paiement complet via la plateforme sécurisée Stripe. Un email de confirmation est envoyé à l'adresse fournie lors de la commande.</p>
 
-  <h2>Article 5 — Livraison</h2>
+  <h2 class="reveal">Article 5 — Livraison</h2>
   <p>Les commandes sont expédiées sous 2 à 3 jours ouvrés après validation. La livraison s'effectue via Colissimo avec suivi, sous 5 à 7 jours ouvrés à compter de l'expédition.</p>
 
-  <h2>Article 6 — Rétractation</h2>
+  <h2 class="reveal">Article 6 — Rétractation</h2>
   <p>Conformément à l'article L221-28 du Code de la consommation, les produits personnalisés (prénom, couleurs), aucune rétractation ni remboursement ne peut être accordé sauf défaut de fabrication avéré.</p>
 
-  <h2>Article 7 — Garantie</h2>
+  <h2 class="reveal">Article 7 — Garantie</h2>
   <p>En cas de défaut de fabrication avéré, Doovlab s'engage à remplacer le produit sans frais supplémentaires.</p>
 
-  <h2>Article 8 — Service après-vente</h2>
+  <h2 class="reveal">Article 8 — Service après-vente</h2>
   <p>Pour toute réclamation : contact@doovlab.fr. Doovlab s'engage à répondre sous 48h ouvrées.</p>
 
-  <h2>Article 9 — Données personnelles</h2>
+  <h2 class="reveal">Article 9 — Données personnelles</h2>
   <p>Les données collectées lors de la commande sont utilisées uniquement pour son traitement. Conformément au RGPD, vous disposez d'un droit d'accès et de suppression en écrivant à contact@doovlab.fr.</p>
 
-  <h2>Article 10 — Droit applicable</h2>
+  <h2 class="reveal">Article 10 — Droit applicable</h2>
   <p>Les présentes CGV sont soumises au droit français. En cas de litige, une solution amiable sera recherchée en priorité. À défaut, le litige sera porté devant les tribunaux compétents.</p>
 </div>
 
@@ -112,5 +128,19 @@
   </div>
 </footer>
 
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  if(reduce || !('IntersectionObserver' in window)){ els.forEach(function(e){e.classList.add('in');}); }
+  else {
+    var io = new IntersectionObserver(function(en){ en.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {threshold:0.14, rootMargin:'0px 0px -6% 0px'});
+    els.forEach(function(e){ io.observe(e); });
+  }
+  var bar=document.getElementById('scrollProgress'), nv=document.querySelector('nav');
+  function onScroll(){ var d=document.documentElement, st=d.scrollTop||document.body.scrollTop, sh=d.scrollHeight-d.clientHeight; if(bar) bar.style.width=(sh>0?st/sh*100:0)+'%'; if(nv) nv.classList.toggle('scrolled', st>10); }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+})();
+</script>
 </body>
 </html>

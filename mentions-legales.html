@@ -30,9 +30,25 @@
   .footer-tagline { font-size:13px; font-style:italic; color:#F0923A; margin-top:4px; }
   footer p { font-size:13px; }
   @media (max-width:900px) { nav { padding:14px 20px; } .nav-links { display:none; } .page-wrap { padding:90px 20px 60px; } footer { padding:28px 20px; flex-direction:column; text-align:center; } }
+
+  /* ===== Dynamisme Doovlab : apparitions, survols, progression ===== */
+  html.js .reveal, html.js .reveal-left, html.js .reveal-right { opacity:0; transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+  html.js .reveal { transform:translateY(30px); }
+  html.js .reveal-left { transform:translateX(-46px); }
+  html.js .reveal-right { transform:translateX(46px); }
+  html.js .reveal.in, html.js .reveal-left.in, html.js .reveal-right.in { opacity:1; transform:none; }
+  .reveal.d1{transition-delay:.08s;} .reveal.d2{transition-delay:.16s;} .reveal.d3{transition-delay:.24s;} .reveal.d4{transition-delay:.32s;} .reveal.d5{transition-delay:.40s;}
+  .scroll-progress { position:fixed; top:0; left:0; height:3px; width:0; background:linear-gradient(90deg,#F0923A,#D4692A); z-index:9999; transition:width .12s linear; }
+  nav { transition:box-shadow .3s ease; }
+  nav.scrolled { box-shadow:0 6px 24px -10px rgba(60,30,10,0.20); }
+  @media (prefers-reduced-motion: reduce){ html.js .reveal, html.js .reveal-left, html.js .reveal-right { opacity:1 !important; transform:none !important; } }
+  .page-wrap h2 { transition:color .2s ease; }
+
 </style>
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <nav>
   <a href="index.html" class="nav-logo">
@@ -48,10 +64,10 @@
 </nav>
 
 <div class="page-wrap">
-  <h1>Mentions Légales</h1>
+  <h1 class="reveal">Mentions Légales</h1>
   <p class="date">Dernière mise à jour : mai 2026</p>
 
-  <h2>Éditeur du site</h2>
+  <h2 class="reveal">Éditeur du site</h2>
   <p>Le site doovlab.fr est édité par :</p>
   <p>
     KOBYLKO Enzo<br>
@@ -62,7 +78,7 @@
     Email : <a href="mailto:contact@doovlab.fr">contact@doovlab.fr</a>
   </p>
 
-  <h2>Hébergement</h2>
+  <h2 class="reveal">Hébergement</h2>
   <p>
     Le site est hébergé par :<br>
     Vercel Inc.<br>
@@ -70,16 +86,16 @@
     <a href="https://vercel.com" target="_blank" rel="noopener">vercel.com</a>
   </p>
 
-  <h2>Propriété intellectuelle</h2>
+  <h2 class="reveal">Propriété intellectuelle</h2>
   <p>L'ensemble des contenus présents sur le site doovlab.fr (textes, images, logo, design) est la propriété exclusive de KOBYLKO Enzo. Toute reproduction, même partielle, est interdite sans autorisation préalable.</p>
 
-  <h2>Données personnelles</h2>
+  <h2 class="reveal">Données personnelles</h2>
   <p>Les données collectées via les formulaires de commande (nom, email, prénom du chien) sont utilisées uniquement pour le traitement des commandes. Elles ne sont jamais revendues à des tiers. Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données en contactant : <a href="mailto:contact@doovlab.fr">contact@doovlab.fr</a>.</p>
 
-  <h2>Cookies</h2>
+  <h2 class="reveal">Cookies</h2>
   <p>Ce site n'utilise pas de cookies publicitaires. Des cookies techniques peuvent être utilisés pour assurer le bon fonctionnement du site.</p>
 
-  <h2>Responsabilité</h2>
+  <h2 class="reveal">Responsabilité</h2>
   <p>Doovlab ne peut être tenu responsable des dommages directs ou indirects liés à l'utilisation du site. Les informations présentes sur le site sont fournies à titre indicatif et peuvent être modifiées à tout moment.</p>
 </div>
 
@@ -106,5 +122,19 @@
   </div>
 </footer>
 
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  if(reduce || !('IntersectionObserver' in window)){ els.forEach(function(e){e.classList.add('in');}); }
+  else {
+    var io = new IntersectionObserver(function(en){ en.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {threshold:0.14, rootMargin:'0px 0px -6% 0px'});
+    els.forEach(function(e){ io.observe(e); });
+  }
+  var bar=document.getElementById('scrollProgress'), nv=document.querySelector('nav');
+  function onScroll(){ var d=document.documentElement, st=d.scrollTop||document.body.scrollTop, sh=d.scrollHeight-d.clientHeight; if(bar) bar.style.width=(sh>0?st/sh*100:0)+'%'; if(nv) nv.classList.toggle('scrolled', st>10); }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+})();
+</script>
 </body>
 </html>
