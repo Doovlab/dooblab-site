@@ -92,9 +92,28 @@
     .cta-section { padding: 0 20px 80px; }
     footer { padding: 28px 20px; flex-direction: column; text-align: center; }
   }
+
+  /* ===== Dynamisme : apparitions au défilement, survols, progression ===== */
+  html.js .reveal, html.js .reveal-left, html.js .reveal-right { opacity:0; transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+  html.js .reveal { transform:translateY(30px); }
+  html.js .reveal-left { transform:translateX(-46px); }
+  html.js .reveal-right { transform:translateX(46px); }
+  html.js .reveal.in, html.js .reveal-left.in, html.js .reveal-right.in { opacity:1; transform:none; }
+  .reveal.d1{transition-delay:.1s;} .reveal.d2{transition-delay:.2s;} .reveal.d3{transition-delay:.3s;}
+  .scroll-progress { position:fixed; top:0; left:0; height:3px; width:0; background:linear-gradient(90deg,var(--sunset-light),var(--sunset)); z-index:200; transition:width .12s linear; }
+  nav { transition:box-shadow .3s ease; }
+  nav.scrolled { box-shadow:0 6px 24px -10px rgba(60,30,10,0.20); }
+  .value-card, .dog-card { transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s, background .35s; }
+  .value-card:hover { transform:translateY(-8px); box-shadow:0 20px 42px -18px rgba(60,20,5,0.25); }
+  .dog-card:hover { transform:translateY(-8px); background:rgba(253,246,238,0.10); }
+  .story-icon { transition:transform .4s cubic-bezier(.2,.7,.2,1); }
+  .story-block:hover .story-icon { transform:scale(1.08) rotate(-6deg); }
+  @media (prefers-reduced-motion: reduce){ html.js .reveal, html.js .reveal-left, html.js .reveal-right { opacity:1 !important; transform:none !important; } }
 </style>
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <nav>
   <a href="index.html" class="nav-logo">
@@ -111,14 +130,14 @@
 
 <!-- HERO -->
 <section class="hero">
-  <span class="hero-label">Notre histoire</span>
-  <h1>Créé avec passion,<br>offert avec <em>amour</em></h1>
-  <p>Doovlab est né d'une passion pour l'impression 3D et d'un amour profond pour les chiens. Chaque médaillon raconte une histoire.</p>
+  <span class="hero-label reveal">Notre histoire</span>
+  <h1 class="reveal d1">Créé avec passion,<br>offert avec <em>amour</em></h1>
+  <p class="reveal d2">Doovlab est né d'une passion pour l'impression 3D et d'un amour profond pour les chiens. Chaque médaillon raconte une histoire.</p>
 </section>
 
 <!-- STORY SECTION -->
 <section class="story-section">
-  <div class="story-block">
+  <div class="story-block reveal-left">
     <div class="story-icon">🖨️</div>
     <div class="story-content">
       <div class="eyebrow">2021 — Les débuts</div>
@@ -126,7 +145,7 @@
       <p>L'impression 3D est entrée dans ma vie comme une révélation. Plus qu'un simple loisir, elle est devenue un espace de liberté — un moyen de canaliser mes pensées, de me dépasser et de cultiver mon imagination. Créer quelque chose de concret avec ses mains, voir une idée prendre forme couche par couche, c'est une satisfaction que rien d'autre ne remplace.</p>
     </div>
   </div>
-  <div class="story-block">
+  <div class="story-block reveal-right">
     <div class="story-icon">🐾</div>
     <div class="story-content">
       <div class="eyebrow">L'idée fondatrice</div>
@@ -134,7 +153,7 @@
       <p>Propriétaire de deux chiens, Monir et Penny, j'ai voulu leur apporter plus qu'un simple accessoire. L'idée était simple : leur donner élégance et identité, tout en s'assurant que si l'un d'eux venait à se perdre, il puisse être aidé à retrouver son domicile le plus vite possible. Un médaillon qui a du sens.</p>
     </div>
   </div>
-  <div class="story-block">
+  <div class="story-block reveal-left">
     <div class="story-icon">❤️</div>
     <div class="story-content">
       <div class="eyebrow">La mission</div>
@@ -146,15 +165,15 @@
 
 <!-- DOGS SECTION -->
 <section class="dogs-section">
-  <h2>Les inspirateurs</h2>
-  <p>Monir et Penny, les deux chiens d'Enzo, sont à l'origine de tout. Ce sont eux qui ont donné naissance à l'idée Doovlab.</p>
+  <h2 class="reveal">Les inspirateurs</h2>
+  <p class="reveal d1">Monir et Penny, les deux chiens d'Enzo, sont à l'origine de tout. Ce sont eux qui ont donné naissance à l'idée Doovlab.</p>
   <div class="dogs-grid">
-    <div class="dog-card">
+    <div class="dog-card reveal-left">
       <span class="dog-emoji">🐺</span>
       <div class="dog-name">MONIR</div>
       <div class="dog-breed">Berger norvégien · Le premier, l'inspirateur</div>
     </div>
-    <div class="dog-card">
+    <div class="dog-card reveal-right">
       <span class="dog-emoji">🐕</span>
       <div class="dog-name">PENNY</div>
       <div class="dog-breed">Malinois · La complice, la muse</div>
@@ -164,17 +183,17 @@
 
 <!-- VALUES -->
 <section class="values-section">
-  <div class="value-card">
+  <div class="value-card reveal">
     <div class="value-icon">🇫🇷</div>
     <h3>Fabriqué en France</h3>
     <p>Chaque médaillon est imprimé à la main dans mon atelier, avec soin et précision.</p>
   </div>
-  <div class="value-card">
+  <div class="value-card reveal d1">
     <div class="value-icon">♻️</div>
     <h3>PLA écologique</h3>
     <p>Des matériaux durables et respectueux de l'environnement pour chaque création.</p>
   </div>
-  <div class="value-card">
+  <div class="value-card reveal d2">
     <div class="value-icon">🎨</div>
     <h3>100% personnalisé</h3>
     <p>Le prénom de votre chien, vos couleurs. Unique comme lui.</p>
@@ -183,9 +202,9 @@
 
 <!-- CTA -->
 <section class="cta-section">
-  <h2>Offrez-leur un médaillon unique</h2>
-  <p>Chaque commande est fabriquée avec soin.<br>Parce que votre chien mérite le meilleur.</p>
-  <a href="boutique.html" class="btn-primary">🐾 Découvrir les médaillons</a>
+  <h2 class="reveal">Offrez-leur un médaillon unique</h2>
+  <p class="reveal d1">Chaque commande est fabriquée avec soin.<br>Parce que votre chien mérite le meilleur.</p>
+  <a href="boutique.html" class="btn-primary reveal d2">🐾 Découvrir les médaillons</a>
 </section>
 
 <!-- FOOTER -->
@@ -212,5 +231,19 @@
   </div>
 </footer>
 
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  if(reduce || !('IntersectionObserver' in window)){ els.forEach(function(e){e.classList.add('in');}); }
+  else {
+    var io = new IntersectionObserver(function(en){ en.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {threshold:0.14, rootMargin:'0px 0px -6% 0px'});
+    els.forEach(function(e){ io.observe(e); });
+  }
+  var bar=document.getElementById('scrollProgress'), nv=document.querySelector('nav');
+  function onScroll(){ var d=document.documentElement, st=d.scrollTop||document.body.scrollTop, sh=d.scrollHeight-d.clientHeight; if(bar) bar.style.width=(sh>0?st/sh*100:0)+'%'; if(nv) nv.classList.toggle('scrolled', st>10); }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+})();
+</script>
 </body>
 </html>
