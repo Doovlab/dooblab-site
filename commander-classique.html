@@ -343,5 +343,35 @@ async function submitOrder() {
   }
 }
 </script>
-</body>
+<!-- ===== Doovlab — Dynamisme (coller avant </body>) ===== -->
+<style>
+  .dv-progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,#F0923A,#D4692A);z-index:9999;transition:width .12s linear;}
+  .dv-reveal{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1);}
+  .dv-reveal.dv-in{opacity:1;transform:none;}
+  nav{transition:box-shadow .3s ease;}
+  nav.dv-scrolled{box-shadow:0 6px 24px -10px rgba(60,30,10,0.20);}
+  @media (prefers-reduced-motion: reduce){.dv-reveal{opacity:1!important;transform:none!important;}}
+</style>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var bar=document.createElement('div'); bar.className='dv-progress'; document.body.appendChild(bar);
+  var nv=document.querySelector('nav');
+  function onScroll(){var d=document.documentElement,st=d.scrollTop||document.body.scrollTop,sh=d.scrollHeight-d.clientHeight;bar.style.width=(sh>0?st/sh*100:0)+'%';if(nv)nv.classList.toggle('dv-scrolled',st>10);}
+  onScroll(); window.addEventListener('scroll',onScroll,{passive:true});
+  if(reduce) return;
+  var SEL='section, .card, [class*="-card"], [class*="-block"], [class*="-item"], [class*="-box"], .step, .page-wrap h2, .product';
+  function init(){
+    var vh=window.innerHeight;
+    var all=[].slice.call(document.querySelectorAll(SEL));
+    var cands=all.filter(function(el){ return !(el.parentElement && el.parentElement.closest(SEL)); });
+    var hidden=[];
+    cands.forEach(function(el){ var r=el.getBoundingClientRect(); if(r.top > vh*0.92){ el.classList.add('dv-reveal'); hidden.push(el); } });
+    if(!('IntersectionObserver' in window)){ hidden.forEach(function(e){e.classList.add('dv-in');}); return; }
+    var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('dv-in');io.unobserve(e.target);}});},{threshold:0.12,rootMargin:'0px 0px -6% 0px'});
+    hidden.forEach(function(e){io.observe(e);});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script></body>
 </html>
