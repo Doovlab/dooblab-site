@@ -215,17 +215,17 @@
       <div class="font-options" id="fontOptions">
         <label class="font-option selected" id="font-opt-playfair">
           <input type="radio" name="fontChoice" value="playfair" checked>
-          <span class="font-preview-name playfair" id="fp-playfair">Max</span>
+          <span class="font-preview-name playfair" id="fp-playfair">Monir</span>
           <span class="font-label">Playfair — Élégant</span>
         </label>
         <label class="font-option" id="font-opt-pacifico">
           <input type="radio" name="fontChoice" value="pacifico">
-          <span class="font-preview-name pacifico" id="fp-pacifico">Max</span>
+          <span class="font-preview-name pacifico" id="fp-pacifico">Monir</span>
           <span class="font-label">Pacifico — Arrondi</span>
         </label>
         <label class="font-option" id="font-opt-comfortaa">
           <input type="radio" name="fontChoice" value="comfortaa">
-          <span class="font-preview-name comfortaa" id="fp-comfortaa">Max</span>
+          <span class="font-preview-name comfortaa" id="fp-comfortaa">Monir</span>
           <span class="font-label">Comfortaa — Épais</span>
         </label>
       </div>
@@ -324,7 +324,7 @@ function selectColor(which, color, btn, gridId, statusId) {
 
 function updateFontPreview() {
   const _raw = document.getElementById('dogName').value.trim();
-  const dog = _raw ? _raw.charAt(0).toUpperCase() + _raw.slice(1).toLowerCase() : 'Max';
+  const dog = _raw ? _raw.charAt(0).toUpperCase() + _raw.slice(1).toLowerCase() : 'Monir';
   if (window.medaillonViewer) {
     window.medaillonViewer.setName(dog);
     window.medaillonViewer.setFont(selectedFont);
@@ -431,7 +431,7 @@ if (container) {
 
   let bodyMat=null, padMat=null;
   let bodyHex="#D4692A", padHex="#F2F2F0";
-  let currentName = (()=>{ const r=((document.getElementById('dogName')||{}).value||'').trim(); return r ? r.charAt(0).toUpperCase()+r.slice(1).toLowerCase() : "Max"; })();
+  let currentName = (()=>{ const r=((document.getElementById('dogName')||{}).value||'').trim(); return r ? r.charAt(0).toUpperCase()+r.slice(1).toLowerCase() : "Monir"; })();
   let curFont = FONT_CSS.playfair;
 
   const textCanvas = document.createElement('canvas'); textCanvas.width=768; textCanvas.height=384;
