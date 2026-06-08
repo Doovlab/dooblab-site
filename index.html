@@ -184,6 +184,10 @@
   .stat-num { font-family:'Playfair Display',serif; font-size:46px; font-weight:700; color:var(--sunset-light); line-height:1; }
   .stat-label { font-size:13px; letter-spacing:1px; text-transform:uppercase; color:rgba(253,246,238,0.55); margin-top:10px; }
   @media (max-width:900px){ .stats-inner { grid-template-columns:1fr; gap:26px; } }
+
+  /* ===== Médaillons 3D dans les cartes ===== */
+  .product-img.med3d{position:relative;width:100%;padding-bottom:100%;height:0;min-height:0;overflow:hidden;background:transparent;}
+  .med3d canvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block;}
 </style>
 </head>
 <body>
@@ -263,17 +267,17 @@
   </div>
   <div class="products-grid">
     <div class="product-card reveal-scale">
-      <div class="product-img product-img-1">🐾</div>
+      <div class="product-img product-img-1 med3d" data-body="#E7D6BC" data-pad="#E9A6B6" data-name="" data-font="playfair"></div>
       <div class="product-info"><h3>Médaillon Patte — Classique</h3><p>Forme patte de chien bicolore, sans gravure de prénom. Simple, solide et adorable.</p>
         <div class="product-footer"><div class="product-price">14€ <span>/ pièce</span></div><button class="btn-add" onclick="window.location.href='commander-classique.html'">Commander</button></div></div>
     </div>
     <div class="product-card reveal-scale">
-      <div class="product-img product-img-2"><div style="text-align:center"><div style="font-size:60px">🐾</div><div style="font-size:12px;color:#4A90D9;font-weight:700;letter-spacing:2px;margin-top:8px">BICOLORE</div></div></div>
+      <div class="product-img product-img-2 med3d" data-body="#3E8E41" data-pad="#E7D6BC" data-name="Fiorck" data-font="playfair"></div>
       <div class="product-info"><h3>Médaillon Patte — Personnalisé</h3><p>Médaillon bicolore avec le prénom de votre chien gravé en relief. Unique, personnalisé, fait pour lui.</p>
         <div class="product-footer"><div class="product-price">18€ <span>/ pièce</span></div><button class="btn-add" onclick="window.location.href='commander-personnalise.html'">Commander</button></div></div>
     </div>
     <div class="product-card reveal-scale" style="grid-column:1 / -1; max-width:440px; margin:0 auto; width:100%;">
-      <div class="product-img product-img-4" style="position:relative;"><div style="text-align:center"><div style="font-size:60px">🐾</div><div style="font-size:12px;color:#8B5CF6;font-weight:700;letter-spacing:2px;margin-top:8px">NFC</div></div><span class="product-badge">Nouveauté</span></div>
+      <div class="product-img product-img-4 med3d" style="position:relative;" data-body="#87CEEB" data-pad="#F4F2EE" data-name="Poco" data-font="playfair"><span class="product-badge" style="z-index:3">Nouveauté</span></div>
       <div class="product-info"><h3>Médaillon Patte — NFC</h3><p>Puce NFC intégrée : un scan de téléphone affiche les coordonnées du propriétaire. Le médaillon qui ramène à la maison.</p>
         <div class="product-footer"><div class="product-price">25€ <span>/ pièce</span></div><button class="btn-add" onclick="window.location.href='commander-nfc.html'">Commander</button></div></div>
     </div>
@@ -501,6 +505,38 @@ if (el) {
     camera.aspect = W/H; camera.updateProjectionMatrix(); renderer.setSize(W,H);
   });
 }
+
+/* ===== Médaillons 3D des cartes produit ===== */
+const _PAD={cx:0,cy:-12.9,topZ:3.0,planeW:27,planeH:14};
+const _FONTS={playfair:{family:"'Playfair Display',serif",weight:"700"},pacifico:{family:"'Pacifico',cursive",weight:"400"},comfortaa:{family:"'Comfortaa',cursive",weight:"700"}};
+let _baseScene=null,_waiters=[];
+function _onModel(cb){if(_baseScene)cb();else _waiters.push(cb);}
+function _loadModel(){if(window.__dvLoading)return;window.__dvLoading=1;new GLTFLoader().load(GLB_URI,(g)=>{_baseScene=g.scene;_waiters.forEach(f=>f());_waiters=[];});}
+function dvMakeMedaillon(container,opt){
+  const W=container.clientWidth||240,H=container.clientHeight||240;
+  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.setSize(W,H);
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;container.appendChild(renderer.domElement);
+  const scene=new THREE.Scene();
+  const pmrem=new THREE.PMREMGenerator(renderer);scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture;
+  const camera=new THREE.PerspectiveCamera(35,W/H,0.1,1000);camera.position.set(0,2,125);
+  scene.add(new THREE.AmbientLight(0xffffff,0.22));
+  const k=new THREE.DirectionalLight(0xffffff,1.5);k.position.set(-45,55,80);scene.add(k);
+  const fl=new THREE.DirectionalLight(0xffffff,0.55);fl.position.set(55,-10,50);scene.add(fl);
+  const font=_FONTS[opt.font]||_FONTS.playfair,name=(opt.name||'').trim();
+  const tc=document.createElement('canvas');tc.width=768;tc.height=384;const tctx=tc.getContext('2d');
+  const tex=new THREE.CanvasTexture(tc);tex.colorSpace=THREE.SRGBColorSpace;tex.anisotropy=renderer.capabilities.getMaxAnisotropy();
+  const plane=new THREE.Mesh(new THREE.PlaneGeometry(_PAD.planeW,_PAD.planeH),new THREE.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false}));
+  plane.position.set(_PAD.cx,_PAD.cy,_PAD.topZ+0.12);plane.renderOrder=3;scene.add(plane);
+  function drawText(){const Wc=tc.width,Hc=tc.height;tctx.clearRect(0,0,Wc,Hc);if(name){tctx.fillStyle=opt.body;tctx.textAlign='center';tctx.textBaseline='middle';let s=240;tctx.font=`${font.weight} ${s}px ${font.family}`;const mw=Wc*0.86;let w=tctx.measureText(name).width;if(w>mw)s=Math.max(40,Math.floor(s*mw/w));s=Math.min(s,Math.floor(Hc*0.78));tctx.font=`${font.weight} ${s}px ${font.family}`;tctx.fillText(name,Wc/2,Hc/2+s*0.04);}tex.needsUpdate=true;}
+  function render(){renderer.render(scene,camera);}
+  _onModel(()=>{const model=_baseScene.clone(true);model.traverse(o=>{if(o.isMesh&&o.material){o.material=o.material.clone();const n=(o.name||o.material.name||'').toLowerCase();if(n.includes('body'))o.material.color.set(opt.body);else if(n.includes('pad'))o.material.color.set(opt.pad);o.material.metalness=0.0;o.material.roughness=0.6;}});scene.add(model);drawText();render();let n=0;const iv=setInterval(()=>{render();if(++n>8)clearInterval(iv);},120);});
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{drawText();render();});
+  window.addEventListener('resize',()=>{const w=container.clientWidth||W,h=container.clientHeight||H;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h);render();});
+}
+function dvInitMedaillons(){const cs=document.querySelectorAll('.med3d');if(!cs.length)return;_loadModel();cs.forEach(c=>{if(c.dataset.dvInit)return;c.dataset.dvInit='1';dvMakeMedaillon(c,{body:c.dataset.body,pad:c.dataset.pad,name:c.dataset.name||'',font:c.dataset.font||'playfair'});});}
+if(document.readyState!=='loading')dvInitMedaillons();else document.addEventListener('DOMContentLoaded',dvInitMedaillons);
+
 </script>
 
 <script>
