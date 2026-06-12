@@ -385,13 +385,33 @@ function handleSubmit() {
     return;
   }
 
-  // Encoder les options en paramètres pour Stripe
-  const params = new URLSearchParams({
-    prefilled_email: email,
-    'client_reference_id': `${dog}_${selectedColor1.name}_${selectedColor2.name}_${selectedFont}_${first}_${last}`,
-  });
+  const btn = document.getElementById('submitBtn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Validation en cours...'; }
 
-  window.location.href = 'https://buy.stripe.com/14AaEQ7DE4nH7v024u4c801?' + params.toString();
+  const goToPayment = function() {
+    const params = new URLSearchParams({
+      prefilled_email: email,
+      client_reference_id: `${dog}_${selectedColor1.name}_${selectedColor2.name}_${selectedFont}_${first}_${last}`.replace(/[^a-zA-Z0-9_-]/g, '')
+    });
+    window.location.href = 'https://buy.stripe.com/14AaEQ7DE4nH7v024u4c801?' + params.toString();
+  };
+
+  // On t'envoie d'abord un mail avec les infos de la commande, puis on va au paiement
+  fetch('https://formspree.io/f/xeedrlpe', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      _subject: 'Commande Personnalise - ' + dog + ' (' + first + ' ' + last + ')',
+      Produit: 'Medaillon Patte Personnalise (18 EUR)',
+      Prenom: first,
+      Nom: last,
+      Email: email,
+      Chien: dog,
+      Couleur_1: selectedColor1.name,
+      Couleur_2: selectedColor2.name,
+      Police: selectedFont
+    })
+  }).then(goToPayment).catch(goToPayment);
 }
 
 // Init
