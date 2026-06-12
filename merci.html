@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merci pour votre commande — Doovlab</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --sunset:#D4692A; --sunset-light:#F0923A; --sunset-dark:#A84E1A; --beige:#FDF6EE; --beige-dark:#F0E6D6; --text:#2C1A0E; --muted:#9A7A60; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Nunito',sans-serif; background:var(--beige); color:var(--text); }
+  nav { display:flex; align-items:center; justify-content:space-between; padding:18px 24px; border-bottom:1px solid var(--beige-dark); }
+  .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .nav-brand { font-family:'Playfair Display',serif; font-weight:700; font-size:20px; color:var(--text); letter-spacing:2px; }
+  .back-link { font-size:14px; color:var(--muted); text-decoration:none; font-weight:600; }
+  .back-link:hover { color:var(--sunset); }
+  .wrap { max-width:560px; margin:0 auto; padding:70px 24px 60px; text-align:center; }
+  .paw { font-size:64px; line-height:1; margin-bottom:18px; }
+  h1 { font-family:'Playfair Display',serif; font-size:34px; margin-bottom:14px; }
+  p { color:var(--muted); line-height:1.7; font-size:16px; }
+  p + p { margin-top:14px; }
+  .btn-shop { display:inline-block; margin-top:28px; background:var(--sunset); color:#fff; text-decoration:none; padding:14px 30px; border-radius:12px; font-weight:700; }
+  .btn-shop:hover { background:var(--sunset-dark); }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo"><span style="font-size:22px">🐾</span><span class="nav-brand">DOOVLAB</span></a>
+  <a href="boutique.html" class="back-link">← Boutique</a>
+</nav>
+
+<div class="wrap">
+  <div class="paw">🐾</div>
+  <h1>Merci pour ta commande !</h1>
+  <p>Ton paiement a bien été reçu. Tu vas recevoir un email de confirmation avec ton reçu.</p>
+  <p>On lance la fabrication de ton (ou tes) médaillon(s) avec soin — tu recevras un suivi dès l'expédition. À très vite ! 🐶</p>
+  <a class="btn-shop" href="index.html">Retour à l'accueil</a>
+</div>
+
+<script>
+  // Le paiement est validé : on vide le panier
+  try { localStorage.removeItem('doovlab_cart_v1'); } catch(e){}
+</script>
+</body>
+</html>
