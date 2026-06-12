@@ -397,12 +397,35 @@ function handleSubmit() {
     return;
   }
 
-  const params = new URLSearchParams({
-    prefilled_email: email,
-    'client_reference_id': `${dog}_${selectedColor1.name}_${selectedColor2.name}_${selectedFont}_${first}_${last}_${phone}`,
-  });
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Validation en cours...';
 
-  window.location.href = 'https://buy.stripe.com/00w9AM4rsbQ94iOeRg4c802?' + params.toString();
+  const goToPayment = function() {
+    const params = new URLSearchParams({
+      prefilled_email: email,
+      client_reference_id: (dog + '-' + first + '-' + last).replace(/[^a-zA-Z0-9_-]/g, '')
+    });
+    window.location.href = 'https://buy.stripe.com/00w9AM4rsbQ94iOeRg4c802?' + params.toString();
+  };
+
+  // On t'envoie d'abord un mail avec toutes les infos de la commande, puis on va au paiement
+  fetch('https://formspree.io/f/xeedrlpe', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      _subject: 'Commande NFC - ' + dog + ' (' + first + ' ' + last + ')',
+      Produit: 'Medaillon NFC connecte (25 EUR)',
+      Prenom: first,
+      Nom: last,
+      Email: email,
+      Telephone: phone,
+      Chien: dog,
+      Couleur_1: selectedColor1.name,
+      Couleur_2: selectedColor2.name,
+      Police: selectedFont
+    })
+  }).then(goToPayment).catch(goToPayment);
 }
 
 buildColorGrid('color1Grid', 'color1Status', 1);
