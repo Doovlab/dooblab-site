@@ -4,17 +4,32 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Votre panier — Doovlab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root { --sunset:#D4692A; --sunset-light:#F0923A; --sunset-dark:#A84E1A; --beige:#FDF6EE; --beige-dark:#F0E6D6; --text:#2C1A0E; --muted:#9A7A60; }
   * { box-sizing:border-box; margin:0; padding:0; }
   body { font-family:'Nunito',sans-serif; background:var(--beige); color:var(--text); }
-  nav { display:flex; align-items:center; justify-content:space-between; padding:18px 24px; border-bottom:1px solid var(--beige-dark); }
-  .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+
+  /* --- Navigation (identique au reste du site) --- */
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 48px; background:rgba(253,246,238,0.94);
+    backdrop-filter:blur(8px); border-bottom:1px solid rgba(212,105,42,0.12);
+    transition:box-shadow .3s ease;
+  }
+  nav.scrolled { box-shadow:0 6px 24px -10px rgba(60,30,10,0.20); }
+  .nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .nav-logo img { width:36px; height:36px; object-fit:contain; }
   .nav-brand { font-family:'Playfair Display',serif; font-weight:700; font-size:20px; color:var(--text); letter-spacing:2px; }
-  .back-link { font-size:14px; color:var(--muted); text-decoration:none; font-weight:600; }
-  .back-link:hover { color:var(--sunset); }
-  .wrap { max-width:720px; margin:0 auto; padding:32px 20px 60px; }
+  .nav-links { display:flex; align-items:center; gap:32px; list-style:none; }
+  .nav-links a { text-decoration:none; font-size:14px; font-weight:600; color:var(--muted); letter-spacing:1px; text-transform:uppercase; transition:color .2s; }
+  .nav-links a:hover, .nav-links a.active { color:var(--sunset); }
+  .nav-cta { background:var(--sunset); color:var(--beige) !important; padding:10px 24px; border-radius:50px; transition:background .2s !important; }
+  .nav-cta:hover { background:var(--sunset-dark) !important; color:var(--beige) !important; }
+
+  .wrap { max-width:720px; margin:0 auto; padding:120px 20px 70px; }
   h1 { font-family:'Playfair Display',serif; font-size:34px; margin-bottom:6px; }
   .sub { color:var(--muted); margin-bottom:28px; }
   .item { background:#fff; border:1px solid var(--beige-dark); border-radius:16px; padding:18px; display:flex; gap:14px; align-items:flex-start; margin-bottom:14px; box-shadow:0 6px 16px rgba(44,26,14,.05); }
@@ -28,17 +43,22 @@
   .qty span { min-width:22px; text-align:center; font-weight:700; }
   .remove { display:block; background:none; border:none; color:var(--muted); cursor:pointer; font-size:13px; text-decoration:underline; margin-top:8px; padding:0; }
   .remove:hover { color:#C0392B; }
-  .ship-bar-wrap { background:#fff; border:1px solid var(--beige-dark); border-radius:14px; padding:16px; margin:8px 0 22px; }
-  .ship-msg { font-size:14px; font-weight:600; margin-bottom:10px; }
-  .ship-track { height:8px; background:var(--beige-dark); border-radius:99px; overflow:hidden; }
-  .ship-fill { height:100%; background:linear-gradient(90deg,var(--sunset),var(--sunset-light)); width:0; transition:width .3s; }
+  .ship-bar-wrap { background:#fff; border:1px solid var(--beige-dark); border-radius:14px; padding:16px; margin:8px 0 14px; }
+  .ship-msg { font-size:14px; font-weight:700; margin-bottom:10px; }
+  .ship-track { height:10px; background:var(--beige-dark); border-radius:99px; overflow:hidden; }
+  .ship-fill { height:100%; background:linear-gradient(90deg,var(--sunset),var(--sunset-light)); width:0; border-radius:99px; transition:width .45s cubic-bezier(.4,0,.2,1); }
+  .nudge { background:linear-gradient(135deg,#FFF3E8,#FDEBD9); border:1px dashed var(--sunset-light); border-radius:14px; padding:14px 16px; margin-bottom:22px; font-size:14px; }
+  .nudge a { color:var(--sunset-dark); font-weight:700; text-decoration:none; white-space:nowrap; }
+  .nudge a:hover { text-decoration:underline; }
   .summary { background:#fff; border:1px solid var(--beige-dark); border-radius:16px; padding:20px; }
   .row { display:flex; justify-content:space-between; margin-bottom:10px; font-size:15px; }
+  .row .free { color:#2D7a3a; font-weight:700; }
   .row.total { font-size:19px; font-weight:700; border-top:1px solid var(--beige-dark); padding-top:14px; margin-top:14px; margin-bottom:0; }
   .pay-btn { width:100%; margin-top:18px; background:var(--sunset); color:#fff; border:none; border-radius:12px; padding:16px; font-size:17px; font-weight:700; font-family:'Nunito',sans-serif; cursor:pointer; }
   .pay-btn:hover { background:var(--sunset-dark); }
   .pay-btn:disabled { background:var(--muted); cursor:not-allowed; }
   .note { text-align:center; font-size:12px; color:var(--muted); margin-top:12px; }
+  .badges { display:flex; flex-wrap:wrap; gap:14px; justify-content:center; margin-top:20px; font-size:12.5px; color:var(--muted); }
   .empty { text-align:center; padding:60px 0; }
   .empty p { color:var(--muted); margin-bottom:20px; font-size:17px; }
   .btn-shop { display:inline-block; background:var(--sunset); color:#fff; text-decoration:none; padding:13px 26px; border-radius:12px; font-weight:700; }
@@ -46,12 +66,27 @@
   .err { background:#fdecea; border:1px solid #f0b6ae; color:#a02617; border-radius:10px; padding:12px; font-size:14px; margin-top:14px; display:none; }
   .cont { display:inline-block; margin-top:18px; color:var(--muted); text-decoration:none; font-weight:600; }
   .cont:hover { color:var(--sunset); }
+
+  @media (max-width:760px){
+    nav { padding:14px 20px; }
+    .nav-links { display:none; }
+    .wrap { padding-top:96px; }
+  }
 </style>
 </head>
 <body>
 <nav>
-  <a href="index.html" class="nav-logo"><span style="font-size:22px">🐾</span><span class="nav-brand">DOOVLAB</span></a>
-  <a href="boutique.html" class="back-link">← Boutique</a>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Doovlab">
+    <span class="nav-brand">DOOVLAB</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="boutique.html">Boutique</a></li>
+    <li><a href="a-propos.html">Notre histoire</a></li>
+    <li><a href="panier.html" id="nav-cart" class="active">🛒 Panier</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact</a></li>
+  </ul>
 </nav>
 
 <div class="wrap">
@@ -75,6 +110,7 @@ function render(){
 
   if (!cart.length){
     root.innerHTML = '<div class="empty"><p>Votre panier est vide.</p><a class="btn-shop" href="boutique.html">Voir la boutique</a></div>';
+    updateNavCount();
     return;
   }
 
@@ -96,25 +132,53 @@ function render(){
 
   const remaining = Math.max(0, FREE_THRESHOLD - subtotal);
   const pct = Math.min(100, (subtotal / FREE_THRESHOLD) * 100);
-  const shipMsg = remaining > 0
-    ? 'Plus que <strong>' + eur(remaining) + '</strong> pour la livraison offerte 🎁'
-    : '🎉 Vous avez la livraison offerte !';
+  const freeReached = subtotal >= FREE_THRESHOLD;
+
+  const shipMsg = freeReached
+    ? '🎉 Bravo, la livraison est offerte ! <span style="color:#2D7a3a">Tu économises ' + eur(SHIPPING_FEE) + '</span>'
+    : 'Plus que <strong>' + eur(remaining) + '</strong> pour la livraison offerte 🎁';
   html += '<div class="ship-bar-wrap"><div class="ship-msg">' + shipMsg + '</div>'
         + '<div class="ship-track"><div class="ship-fill" style="width:' + pct + '%"></div></div></div>';
 
-  const shipping = subtotal >= FREE_THRESHOLD ? 0 : SHIPPING_FEE;
+  if (!freeReached){
+    if (remaining <= 14){
+      html += '<div class="nudge">Un <strong>médaillon Classique à 14€</strong> et la livraison passe offerte 😉 '
+            + '<a href="commander-classique.html">Ajouter un Classique →</a></div>';
+    } else {
+      html += '<div class="nudge">Il te manque <strong>' + eur(remaining) + '</strong> pour la livraison offerte. '
+            + '<a href="boutique.html">Compléter ma commande →</a></div>';
+    }
+  }
+
+  const shipping = freeReached ? 0 : SHIPPING_FEE;
   const total = subtotal + shipping;
   html += '<div class="summary">'
     + '<div class="row"><span>Sous-total</span><span>' + eur(subtotal) + '</span></div>'
-    + '<div class="row"><span>Livraison</span><span>' + (shipping === 0 ? 'Offerte' : eur(shipping)) + '</span></div>'
+    + '<div class="row"><span>Livraison</span>' + (shipping === 0 ? '<span class="free">Offerte</span>' : '<span>' + eur(shipping) + '</span>') + '</div>'
     + '<div class="row total"><span>Total</span><span>' + eur(total) + '</span></div>'
     + '<button class="pay-btn" id="pay-btn" onclick="checkout()">Commander et payer</button>'
     + '<div class="err" id="err"></div>'
     + '<p class="note">Paiement 100% sécurisé via Stripe · Adresse de livraison demandée juste après</p>'
+    + '<div class="badges"><span>🇫🇷 Fabriqué en France</span><span>🔒 Paiement sécurisé</span><span>♻️ PLA écologique</span></div>'
   + '</div>'
   + '<a class="cont" href="boutique.html">← Continuer mes achats</a>';
 
   root.innerHTML = html;
+  updateNavCount();
+
+  if (freeReached && !window.__celebrated){
+    window.__celebrated = true;
+    setTimeout(fireConfetti, 150);
+  }
+  if (!freeReached){ window.__celebrated = false; }
+}
+
+function updateNavCount(){
+  try {
+    var c = getCart();
+    var el = document.getElementById('nav-cart');
+    if (el) el.textContent = '🛒 Panier' + (c.length ? ' (' + c.length + ')' : '');
+  } catch(e){}
 }
 
 function chQty(i, d){
@@ -156,6 +220,46 @@ async function checkout(){
     btn.textContent = 'Commander et payer';
   }
 }
+
+// Petit feu d'artifice maison (sans librairie externe)
+function fireConfetti(){
+  const c = document.createElement('canvas');
+  c.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999';
+  document.body.appendChild(c);
+  const ctx = c.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  c.width = innerWidth * dpr; c.height = innerHeight * dpr; ctx.scale(dpr, dpr);
+  const colors = ['#D4692A','#F0923A','#2D5A27','#E8C020','#4A90D9','#C0392B','#9B7FD4'];
+  const parts = [];
+  for (let i = 0; i < 130; i++){
+    parts.push({ x: Math.random()*innerWidth, y: -20 - Math.random()*innerHeight*0.4, r: 4+Math.random()*6,
+      col: colors[(Math.random()*colors.length)|0], vx:(Math.random()-0.5)*3, vy:2+Math.random()*4,
+      rot:Math.random()*6.28, vr:(Math.random()-0.5)*0.3 });
+  }
+  let start = null;
+  function frame(t){
+    if (!start) start = t;
+    const el = t - start;
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    parts.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.vy += 0.05; p.rot += p.vr;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      ctx.globalAlpha = Math.max(0, 1 - el / 2400);
+      ctx.fillStyle = p.col;
+      ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 0.6);
+      ctx.restore();
+    });
+    if (el < 2400) requestAnimationFrame(frame);
+    else c.remove();
+  }
+  requestAnimationFrame(frame);
+}
+
+// Ombre de la nav au scroll (comme les autres pages)
+window.addEventListener('scroll', function(){
+  var n = document.querySelector('nav');
+  if (n) n.classList.toggle('scrolled', window.scrollY > 10);
+});
 
 render();
 </script>

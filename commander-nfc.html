@@ -154,6 +154,7 @@
     <li><a href="index.html">Accueil</a></li>
     <li><a href="boutique.html">Boutique</a></li>
     <li><a href="a-propos.html">Notre histoire</a></li>
+    <li><a href="panier.html" id="nav-cart">🛒 Panier</a></li>
     <li><a href="contact.html" class="nav-cta">Contact</a></li>
   </ul>
 </nav>
@@ -200,18 +201,7 @@
       <span class="nfc-info-icon">📡</span>
       <div class="nfc-info-text">
         <strong>Comment fonctionne le médaillon NFC ?</strong>
-        <p>Après réception, vous recevrez un lien par email pour activer votre puce NFC. Ce lien vous permettra de créer votre page de profil — celle qui s'affiche quand quelqu'un scanne le médaillon de votre chien. C'est pourquoi on vous demande ces informations et une photo dès maintenant.</p>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div>
-        <label>Votre prénom</label>
-        <input type="text" id="ownerFirst" placeholder="Prénom">
-      </div>
-      <div>
-        <label>Votre nom</label>
-        <input type="text" id="ownerLast" placeholder="Nom">
+        <p>Après réception, vous recevrez un lien par email pour activer votre puce NFC. Ce lien vous permettra de créer la page de profil de votre chien — photo et infos comprises — celle qui s'affiche quand quelqu'un scanne le médaillon. Ici, choisissez simplement le prénom à graver et les couleurs.</p>
       </div>
     </div>
 
@@ -219,11 +209,6 @@
       <label>Prénom de votre chien</label>
       <input type="text" id="dogName" placeholder="Ex : Heiko, Luna, Max..." maxlength="12">
       <div class="warning-msg" id="nameWarning">⚠️ Plus de 8 caractères — le rendu peut être serré. On fera de notre mieux !</div>
-    </div>
-
-    <div class="form-group">
-      <label>Votre numéro de téléphone</label>
-      <input type="tel" id="ownerPhone" placeholder="+33 6 12 34 56 78">
     </div>
 
     <!-- Couleur principale -->
@@ -264,13 +249,8 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <label>Votre email</label>
-      <input type="email" id="ownerEmail" placeholder="votre@email.fr">
-    </div>
-
-    <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">
-      Commander — 25€ 🐾
+    <button class="btn-submit" id="submitBtn" onclick="addToCart()">
+      🛒 Ajouter au panier — 25€
     </button>
   </div>
 
@@ -385,48 +365,39 @@ document.getElementById('dogName').addEventListener('input', function() {
   updateFontPreview();
 });
 
-function handleSubmit() {
-  const first = document.getElementById('ownerFirst').value.trim();
-  const last = document.getElementById('ownerLast').value.trim();
+function addToCart() {
   const dog = document.getElementById('dogName').value.trim();
-  const phone = document.getElementById('ownerPhone').value.trim();
-  const email = document.getElementById('ownerEmail').value.trim();
-
-  if (!first || !last || !dog || !email || !selectedColor1 || !selectedColor2) {
-    alert('Merci de remplir tous les champs et de choisir vos 2 couleurs.');
+  if (!dog || !selectedColor1 || !selectedColor2) {
+    alert('Merci d\'indiquer le prénom du chien et de choisir vos 2 couleurs.');
     return;
   }
+  const fonts = { playfair: 'Playfair', pacifico: 'Pacifico', comfortaa: 'Comfortaa' };
+  const police = fonts[selectedFont] || selectedFont;
 
-  const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = 'Validation en cours...';
-
-  const goToPayment = function() {
-    const params = new URLSearchParams({
-      prefilled_email: email,
-      client_reference_id: (dog + '-' + first + '-' + last).replace(/[^a-zA-Z0-9_-]/g, '')
-    });
-    window.location.href = 'https://buy.stripe.com/00w9AM4rsbQ94iOeRg4c802?' + params.toString();
+  const item = {
+    id: 'nfc',
+    name: 'Médaillon Patte — NFC Connecté',
+    price: 25,
+    qty: 1,
+    options: 'Chien : ' + dog + ' · Contour : ' + selectedColor1.name + ' · Coussinets : ' + selectedColor2.name + ' · Police : ' + police
   };
 
-  // On t'envoie d'abord un mail avec toutes les infos de la commande, puis on va au paiement
-  fetch('https://formspree.io/f/xeedrlpe', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({
-      _subject: 'Commande NFC - ' + dog + ' (' + first + ' ' + last + ')',
-      Produit: 'Medaillon NFC connecte (25 EUR)',
-      Prenom: first,
-      Nom: last,
-      Email: email,
-      Telephone: phone,
-      Chien: dog,
-      Couleur_1: selectedColor1.name,
-      Couleur_2: selectedColor2.name,
-      Police: selectedFont
-    })
-  }).then(goToPayment).catch(goToPayment);
+  const KEY = 'doovlab_cart_v1';
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem(KEY)) || []; } catch(e) { cart = []; }
+  cart.push(item);
+  localStorage.setItem(KEY, JSON.stringify(cart));
+
+  window.location.href = 'panier.html';
 }
+
+(function updateCartCount(){
+  try {
+    var cart = JSON.parse(localStorage.getItem('doovlab_cart_v1')) || [];
+    var el = document.getElementById('nav-cart');
+    if (el) el.textContent = '🛒 Panier' + (cart.length ? ' (' + cart.length + ')' : '');
+  } catch(e){}
+})();
 
 buildColorGrid('color1Grid', 'color1Status', 1);
 buildColorGrid('color2Grid', 'color2Status', 2);

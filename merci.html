@@ -4,42 +4,127 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Merci pour votre commande — Doovlab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root { --sunset:#D4692A; --sunset-light:#F0923A; --sunset-dark:#A84E1A; --beige:#FDF6EE; --beige-dark:#F0E6D6; --text:#2C1A0E; --muted:#9A7A60; }
   * { box-sizing:border-box; margin:0; padding:0; }
   body { font-family:'Nunito',sans-serif; background:var(--beige); color:var(--text); }
-  nav { display:flex; align-items:center; justify-content:space-between; padding:18px 24px; border-bottom:1px solid var(--beige-dark); }
-  .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 48px; background:rgba(253,246,238,0.94);
+    backdrop-filter:blur(8px); border-bottom:1px solid rgba(212,105,42,0.12);
+  }
+  .nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .nav-logo img { width:36px; height:36px; object-fit:contain; }
   .nav-brand { font-family:'Playfair Display',serif; font-weight:700; font-size:20px; color:var(--text); letter-spacing:2px; }
-  .back-link { font-size:14px; color:var(--muted); text-decoration:none; font-weight:600; }
-  .back-link:hover { color:var(--sunset); }
-  .wrap { max-width:560px; margin:0 auto; padding:70px 24px 60px; text-align:center; }
-  .paw { font-size:64px; line-height:1; margin-bottom:18px; }
-  h1 { font-family:'Playfair Display',serif; font-size:34px; margin-bottom:14px; }
-  p { color:var(--muted); line-height:1.7; font-size:16px; }
-  p + p { margin-top:14px; }
-  .btn-shop { display:inline-block; margin-top:28px; background:var(--sunset); color:#fff; text-decoration:none; padding:14px 30px; border-radius:12px; font-weight:700; }
-  .btn-shop:hover { background:var(--sunset-dark); }
+  .nav-links { display:flex; align-items:center; gap:32px; list-style:none; }
+  .nav-links a { text-decoration:none; font-size:14px; font-weight:600; color:var(--muted); letter-spacing:1px; text-transform:uppercase; transition:color .2s; }
+  .nav-links a:hover, .nav-links a.active { color:var(--sunset); }
+  .nav-cta { background:var(--sunset); color:var(--beige) !important; padding:10px 24px; border-radius:50px; transition:background .2s !important; }
+  .nav-cta:hover { background:var(--sunset-dark) !important; color:var(--beige) !important; }
+
+  .wrap { max-width:600px; margin:0 auto; padding:130px 24px 70px; }
+  .head { text-align:center; }
+  .paw { font-size:60px; line-height:1; margin-bottom:14px; }
+  h1 { font-family:'Playfair Display',serif; font-size:32px; margin-bottom:12px; }
+  .lead { color:var(--muted); line-height:1.7; font-size:16px; }
+  .steps { background:#fff; border:1px solid var(--beige-dark); border-radius:18px; padding:24px; margin:30px 0; box-shadow:0 8px 20px rgba(44,26,14,.05); }
+  .steps h2 { font-family:'Playfair Display',serif; font-size:20px; margin-bottom:18px; }
+  .step { display:flex; gap:14px; align-items:flex-start; margin-bottom:18px; }
+  .step:last-child { margin-bottom:0; }
+  .step .n { flex:none; width:30px; height:30px; border-radius:50%; background:var(--sunset); color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:14px; }
+  .step .t { font-size:15px; line-height:1.6; }
+  .step .t strong { display:block; }
+  .step .t span { color:var(--muted); }
+  .nfc-note { background:#EAF4FF; border:1px solid #BFD9F5; border-radius:14px; padding:14px 16px; font-size:14px; line-height:1.6; color:#2c4a66; margin-bottom:26px; }
+  .insta { text-align:center; }
+  .insta p { color:var(--muted); margin-bottom:14px; }
+  .insta a { display:inline-block; background:linear-gradient(135deg,#D4692A,#F0923A); color:#fff; text-decoration:none; padding:13px 26px; border-radius:12px; font-weight:700; }
+  .home { display:block; text-align:center; margin-top:26px; color:var(--muted); text-decoration:none; font-weight:600; }
+  .home:hover { color:var(--sunset); }
+
+  @media (max-width:760px){
+    nav { padding:14px 20px; }
+    .nav-links { display:none; }
+    .wrap { padding-top:104px; }
+  }
 </style>
 </head>
 <body>
 <nav>
-  <a href="index.html" class="nav-logo"><span style="font-size:22px">🐾</span><span class="nav-brand">DOOVLAB</span></a>
-  <a href="boutique.html" class="back-link">← Boutique</a>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Doovlab">
+    <span class="nav-brand">DOOVLAB</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="boutique.html">Boutique</a></li>
+    <li><a href="a-propos.html">Notre histoire</a></li>
+    <li><a href="panier.html" id="nav-cart">🛒 Panier</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact</a></li>
+  </ul>
 </nav>
 
 <div class="wrap">
-  <div class="paw">🐾</div>
-  <h1>Merci pour ta commande !</h1>
-  <p>Ton paiement a bien été reçu. Tu vas recevoir un email de confirmation avec ton reçu.</p>
-  <p>On lance la fabrication de ton (ou tes) médaillon(s) avec soin — tu recevras un suivi dès l'expédition. À très vite ! 🐶</p>
-  <a class="btn-shop" href="index.html">Retour à l'accueil</a>
+  <div class="head">
+    <div class="paw">🐾</div>
+    <h1>Merci pour ta commande !</h1>
+    <p class="lead">Ton paiement a bien été reçu. On est super contents de fabriquer le médaillon de ton compagnon. 🐶</p>
+  </div>
+
+  <div class="steps">
+    <h2>Et maintenant ?</h2>
+    <div class="step"><div class="n">1</div><div class="t"><strong>Email de confirmation</strong><span>Tu reçois ton reçu et le récap de commande dans les minutes qui viennent (pense à vérifier les spams).</span></div></div>
+    <div class="step"><div class="n">2</div><div class="t"><strong>Fabrication artisanale</strong><span>On imprime ton médaillon en 3D avec soin, dans les couleurs choisies. Compte quelques jours de préparation.</span></div></div>
+    <div class="step"><div class="n">3</div><div class="t"><strong>Expédition & suivi</strong><span>Dès l'envoi, tu reçois un email avec le suivi de ton colis.</span></div></div>
+  </div>
+
+  <div class="nfc-note">
+    📡 <strong>Tu as commandé un médaillon NFC ?</strong> Tu recevras un email séparé avec un lien pour créer la page de profil de ton chien (photo, infos, contact) — celle qui s'affiche quand on scanne le médaillon.
+  </div>
+
+  <div class="insta">
+    <p>Suis l'aventure Doovlab et partage la photo de ton chien avec son médaillon :</p>
+    <a href="https://www.instagram.com/doovlab" target="_blank" rel="noopener">📸 Nous suivre sur Instagram</a>
+  </div>
+
+  <a class="home" href="index.html">Retour à l'accueil</a>
 </div>
 
 <script>
-  // Le paiement est validé : on vide le panier
+  // Paiement validé : on vide le panier
   try { localStorage.removeItem('doovlab_cart_v1'); } catch(e){}
+
+  function fireConfetti(){
+    const c = document.createElement('canvas');
+    c.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999';
+    document.body.appendChild(c);
+    const ctx = c.getContext('2d');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    c.width = innerWidth * dpr; c.height = innerHeight * dpr; ctx.scale(dpr, dpr);
+    const colors = ['#D4692A','#F0923A','#2D5A27','#E8C020','#4A90D9','#C0392B','#9B7FD4'];
+    const parts = [];
+    for (let i = 0; i < 150; i++){
+      parts.push({ x: Math.random()*innerWidth, y: -20 - Math.random()*innerHeight*0.4, r: 4+Math.random()*6,
+        col: colors[(Math.random()*colors.length)|0], vx:(Math.random()-0.5)*3, vy:2+Math.random()*4,
+        rot:Math.random()*6.28, vr:(Math.random()-0.5)*0.3 });
+    }
+    let start = null;
+    function frame(t){
+      if(!start) start=t; const el=t-start;
+      ctx.clearRect(0,0,innerWidth,innerHeight);
+      parts.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=0.05; p.rot+=p.vr;
+        ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+        ctx.globalAlpha=Math.max(0,1-el/2600); ctx.fillStyle=p.col;
+        ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*0.6); ctx.restore(); });
+      if(el<2600) requestAnimationFrame(frame); else c.remove();
+    }
+    requestAnimationFrame(frame);
+  }
+  setTimeout(fireConfetti, 300);
 </script>
 </body>
 </html>

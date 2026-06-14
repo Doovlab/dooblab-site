@@ -150,6 +150,7 @@
     <li><a href="index.html">Accueil</a></li>
     <li><a href="boutique.html">Boutique</a></li>
     <li><a href="a-propos.html">Notre histoire</a></li>
+    <li><a href="panier.html" id="nav-cart">🛒 Panier</a></li>
     <li><a href="contact.html" class="nav-cta">Contact</a></li>
   </ul>
 </nav>
@@ -191,17 +192,6 @@
   <!-- COLONNE DROITE — FORMULAIRE -->
   <div class="form-card reveal-right">
     <h2>Personnalisez votre médaillon</h2>
-
-    <div class="form-row">
-      <div>
-        <label>Votre prénom</label>
-        <input type="text" id="ownerFirst" placeholder="Prénom">
-      </div>
-      <div>
-        <label>Votre nom</label>
-        <input type="text" id="ownerLast" placeholder="Nom">
-      </div>
-    </div>
 
     <div class="form-group">
       <label>Prénom de votre chien</label>
@@ -247,13 +237,8 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <label>Votre email</label>
-      <input type="email" id="ownerEmail" placeholder="votre@email.fr">
-    </div>
-
-    <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">
-      Commander — 18€ 🐾
+    <button class="btn-submit" id="submitBtn" onclick="addToCart()">
+      🛒 Ajouter au panier — 18€
     </button>
   </div>
 
@@ -374,45 +359,39 @@ document.getElementById('dogName').addEventListener('input', function() {
   updateFontPreview();
 });
 
-function handleSubmit() {
-  const first = document.getElementById('ownerFirst').value.trim();
-  const last = document.getElementById('ownerLast').value.trim();
+function addToCart() {
   const dog = document.getElementById('dogName').value.trim();
-  const email = document.getElementById('ownerEmail').value.trim();
-
-  if (!first || !last || !dog || !email || !selectedColor1 || !selectedColor2) {
-    alert('Merci de remplir tous les champs et de choisir vos 2 couleurs.');
+  if (!dog || !selectedColor1 || !selectedColor2) {
+    alert('Merci d\'indiquer le prénom du chien et de choisir vos 2 couleurs.');
     return;
   }
+  const fonts = { playfair: 'Playfair', pacifico: 'Pacifico', comfortaa: 'Comfortaa' };
+  const police = fonts[selectedFont] || selectedFont;
 
-  const btn = document.getElementById('submitBtn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Validation en cours...'; }
-
-  const goToPayment = function() {
-    const params = new URLSearchParams({
-      prefilled_email: email,
-      client_reference_id: `${dog}_${selectedColor1.name}_${selectedColor2.name}_${selectedFont}_${first}_${last}`.replace(/[^a-zA-Z0-9_-]/g, '')
-    });
-    window.location.href = 'https://buy.stripe.com/14AaEQ7DE4nH7v024u4c801?' + params.toString();
+  const item = {
+    id: 'personnalise',
+    name: 'Médaillon Patte — Personnalisé',
+    price: 18,
+    qty: 1,
+    options: 'Chien : ' + dog + ' · Contour : ' + selectedColor1.name + ' · Coussinets : ' + selectedColor2.name + ' · Police : ' + police
   };
 
-  // On t'envoie d'abord un mail avec les infos de la commande, puis on va au paiement
-  fetch('https://formspree.io/f/xeedrlpe', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({
-      _subject: 'Commande Personnalise - ' + dog + ' (' + first + ' ' + last + ')',
-      Produit: 'Medaillon Patte Personnalise (18 EUR)',
-      Prenom: first,
-      Nom: last,
-      Email: email,
-      Chien: dog,
-      Couleur_1: selectedColor1.name,
-      Couleur_2: selectedColor2.name,
-      Police: selectedFont
-    })
-  }).then(goToPayment).catch(goToPayment);
+  const KEY = 'doovlab_cart_v1';
+  let cart = [];
+  try { cart = JSON.parse(localStorage.getItem(KEY)) || []; } catch(e) { cart = []; }
+  cart.push(item);
+  localStorage.setItem(KEY, JSON.stringify(cart));
+
+  window.location.href = 'panier.html';
 }
+
+(function updateCartCount(){
+  try {
+    var cart = JSON.parse(localStorage.getItem('doovlab_cart_v1')) || [];
+    var el = document.getElementById('nav-cart');
+    if (el) el.textContent = '🛒 Panier' + (cart.length ? ' (' + cart.length + ')' : '');
+  } catch(e){}
+})();
 
 // Init
 buildColorGrid('color1Grid', 'color1Status', 1);
