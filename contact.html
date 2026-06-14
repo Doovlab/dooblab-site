@@ -441,6 +441,7 @@
     <li><a href="index.html">Accueil</a></li>
     <li><a href="boutique.html">Boutique</a></li>
     <li><a href="a-propos.html">Notre histoire</a></li>
+    <li><a href="panier.html" id="nav-cart">🛒 Panier</a></li>
     <li><a href="contact.html" class="active">Contact</a></li>
   </ul>
 </nav>
@@ -645,5 +646,6 @@ function toggleFaq(el) {
   onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
 })();
 </script>
+<script>(function(){try{var c=JSON.parse(localStorage.getItem("doovlab_cart_v1"))||[];var e=document.getElementById("nav-cart");if(e)e.textContent="🛒 Panier"+(c.length?" ("+c.length+")":"");}catch(e){}})();</script>
 </body>
 </html>
