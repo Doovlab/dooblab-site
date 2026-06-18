@@ -215,6 +215,7 @@
     <li><a href="index.html">Accueil</a></li>
     <li><a href="boutique.html">Boutique</a></li>
     <li><a href="a-propos.html">Notre histoire</a></li>
+    <li><a href="avis.html">Avis</a></li>
     <li><a href="panier.html" id="nav-cart">🛒 Panier</a></li>
     <li><a href="contact.html" class="nav-cta">Contact</a></li>
   </ul>
@@ -343,6 +344,48 @@
   <p>Personnalisé, fabriqué en France, livré en 5 à 7 jours ouvrés.</p>
   <a href="boutique.html" class="btn-primary" style="display:inline-flex">Créer mon médaillon 🐾</a>
 </section>
+
+<!-- ===== AVIS (aperçu) ===== -->
+<style>
+  .avis-teaser { padding:70px 24px; text-align:center; background:var(--beige,#FDF6EE); }
+  .avis-teaser h2 { font-family:'Playfair Display',serif; font-size:32px; color:var(--sunset-dark,#A84E1A); margin-bottom:8px; }
+  .avis-teaser .sub { color:var(--muted,#7a6552); margin-bottom:34px; }
+  .avis-teaser .row { display:flex; gap:18px; justify-content:center; flex-wrap:wrap; max-width:980px; margin:0 auto 30px; }
+  .avis-teaser .c { background:#fff; border:1px solid #F0E6D6; border-radius:16px; padding:18px; width:290px; text-align:left; box-shadow:0 6px 16px rgba(44,26,14,.05); display:flex; flex-direction:column; gap:10px; }
+  .avis-teaser .c img { width:100%; height:150px; object-fit:cover; border-radius:10px; }
+  .avis-teaser .st { color:#E8A020; letter-spacing:2px; }
+  .avis-teaser .m { font-size:14.5px; line-height:1.5; color:var(--text,#2C1A0E); }
+  .avis-teaser .w { font-size:13px; color:var(--muted,#7a6552); }
+  .avis-teaser .w b { color:var(--text,#2C1A0E); }
+  .avis-teaser a.more { display:inline-block; background:var(--sunset,#D4692A); color:#fff; text-decoration:none; padding:13px 28px; border-radius:50px; font-weight:700; }
+  .avis-teaser a.more:hover { background:var(--sunset-dark,#A84E1A); }
+</style>
+<section class="avis-teaser" id="avis-teaser" style="display:none">
+  <h2>Ils nous font confiance</h2>
+  <p class="sub">Les retours de nos clients et de leurs compagnons 🐾</p>
+  <div class="row" id="avis-teaser-row"></div>
+  <a class="more" href="avis.html">Voir tous les avis</a>
+</section>
+<script>
+(async function(){
+  const U='https://ycsskzxbtaoekfpocgoz.supabase.co', K='sb_publishable_ESbSaBIVfAA463W4GTDihg_77jF03Of';
+  const esc=s=>(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+  const stars=n=>{n=Math.max(1,Math.min(5,n||5));return '★★★★★'.slice(0,n)+'<span style="color:#E6DCCB">'+'★★★★★'.slice(0,5-n)+'</span>';};
+  try{
+    const r=await fetch(`${U}/rest/v1/avis?approuve=eq.true&order=created_at.desc&limit=3&select=*`,{headers:{apikey:K,Authorization:'Bearer '+K}});
+    const d=await r.json();
+    if(Array.isArray(d)&&d.length){
+      document.getElementById('avis-teaser-row').innerHTML=d.map(a=>{
+        const ph=a.photo_url?`<img src="${esc(a.photo_url)}" alt="Chien d'un client Doovlab" loading="lazy">`:'';
+        const who=a.chien?`<b>${esc(a.auteur)}</b> &amp; ${esc(a.chien)}`:`<b>${esc(a.auteur)}</b>`;
+        const m=esc(a.message);
+        return `<div class="c">${ph}<div class="st">${stars(a.note)}</div><div class="m">${m.length>140?m.slice(0,140)+'…':m}</div><div class="w">${who}</div></div>`;
+      }).join('');
+      document.getElementById('avis-teaser').style.display='block';
+    }
+  }catch(e){}
+})();
+</script>
 
 <!-- ===== FOOTER ===== -->
 <footer>
