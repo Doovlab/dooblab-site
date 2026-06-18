@@ -325,19 +325,6 @@
   </div>
 </section>
 
-<!-- ===== TESTIMONIALS ===== -->
-<section class="testimonials" id="avis">
-  <div class="section-header reveal">
-    <span class="section-label">Ils ont adopté Doovlab</span>
-    <h2 class="section-title">Nos clients adorent<br>leurs médaillons</h2>
-  </div>
-  <div class="testimonials-grid">
-    <div class="testimonial-card reveal"><div class="stars">★★★★★</div><p>"Le médaillon de Luna est magnifique ! Les couleurs sont exactement comme demandé et la qualité est vraiment au rendez-vous. Je recommande à tous les propriétaires de chiens."</p><div class="testimonial-author"><div class="author-avatar">M</div><div><div class="author-name">Marie L.</div><div class="author-dog">🐾 Luna, Border Collie</div></div></div></div>
-    <div class="testimonial-card reveal"><div class="stars">★★★★★</div><p>"J'ai pris la version NFC pour mon Berger Malinois. Depuis que Max porte son médaillon je suis beaucoup plus serein lors de nos balades. Un produit vraiment utile."</p><div class="testimonial-author"><div class="author-avatar">T</div><div><div class="author-name">Thomas B.</div><div class="author-dog">🐾 Max, Berger Malinois</div></div></div></div>
-    <div class="testimonial-card reveal"><div class="stars">★★★★★</div><p>"Livraison rapide, emballage soigné et médaillon vraiment solide. Mon Ozzie porte le sien tous les jours depuis 3 mois, aucun problème. Merci Doovlab !"</p><div class="testimonial-author"><div class="author-avatar">S</div><div><div class="author-name">Sophie D.</div><div class="author-dog">🐾 Ozzie, Labrador</div></div></div></div>
-  </div>
-</section>
-
 <!-- ===== CTA ===== -->
 <section class="cta-section">
   <h2>Votre chien mérite<br>un médaillon unique</h2>
@@ -372,9 +359,10 @@
   const esc=s=>(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
   const stars=n=>{n=Math.max(1,Math.min(5,n||5));return '★★★★★'.slice(0,n)+'<span style="color:#E6DCCB">'+'★★★★★'.slice(0,5-n)+'</span>';};
   try{
-    const r=await fetch(`${U}/rest/v1/avis?approuve=eq.true&order=created_at.desc&limit=3&select=*`,{headers:{apikey:K,Authorization:'Bearer '+K}});
-    const d=await r.json();
+    const r=await fetch(`${U}/rest/v1/avis?approuve=eq.true&order=created_at.desc&limit=20&select=*`,{headers:{apikey:K,Authorization:'Bearer '+K}});
+    let d=await r.json();
     if(Array.isArray(d)&&d.length){
+      d.sort((a,b)=>(b.photo_url?1:0)-(a.photo_url?1:0)); d=d.slice(0,3);
       document.getElementById('avis-teaser-row').innerHTML=d.map(a=>{
         const ph=a.photo_url?`<img src="${esc(a.photo_url)}" alt="Chien d'un client Doovlab" loading="lazy">`:'';
         const who=a.chien?`<b>${esc(a.auteur)}</b> &amp; ${esc(a.chien)}`:`<b>${esc(a.auteur)}</b>`;
