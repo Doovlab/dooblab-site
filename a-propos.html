@@ -49,11 +49,11 @@
   .nav-cta:hover { background:var(--sunset-dark) !important; color:var(--beige) !important; }
 
   /* HERO */
-  .hero { padding: 130px 48px 72px; text-align: center; }
-  .hero-label { font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--sunset); display: inline-block; background: rgba(212,105,42,0.1); padding: 6px 18px; border-radius: 50px; margin-bottom: 24px; }
-  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 58px); font-weight: 700; color: var(--text); line-height: 1.15; }
+  .hero { padding: 130px 48px 90px; text-align: center; min-height: 62vh; background: linear-gradient(rgba(20,12,6,0.55), rgba(20,12,6,0.68)), url('atelier.jpg'); background-size: cover; background-position: center; }
+  .hero-label { font-size: 12px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #F0923A; display: inline-block; background: rgba(253,246,238,0.14); padding: 6px 18px; border-radius: 50px; margin-bottom: 24px; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(36px, 5vw, 58px); font-weight: 700; color: #FDF6EE; line-height: 1.15; text-shadow: 0 2px 18px rgba(0,0,0,.45); }
   .hero h1 em { font-style: italic; color: var(--sunset); }
-  .hero p { font-size: 18px; color: var(--muted); max-width: 560px; margin: 20px auto 0; line-height: 1.8; }
+  .hero p { font-size: 18px; color: rgba(253,246,238,0.9); max-width: 560px; margin: 20px auto 0; line-height: 1.8; text-shadow: 0 1px 10px rgba(0,0,0,.4); }
 
   /* STORY SECTION */
   .story-section { max-width: 780px; margin: 0 auto 80px; padding: 0 48px; display: flex; flex-direction: column; gap: 48px; }
@@ -71,6 +71,7 @@
   .dogs-grid { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; }
   .dog-card { background: rgba(253,246,238,0.06); border: 1px solid rgba(253,246,238,0.12); border-radius: 24px; padding: 32px 40px; text-align: center; min-width: 180px; }
   .dog-emoji { font-size: 52px; margin-bottom: 16px; display: block; }
+  .dog-photo { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; display: block; margin: 0 auto 18px; border: 3px solid rgba(253,246,238,0.25); box-shadow: 0 8px 20px rgba(0,0,0,.25); }
   .dog-name { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--beige); letter-spacing: 2px; margin-bottom: 8px; }
   .dog-breed { font-size: 13px; color: rgba(253,246,238,0.5); }
 
@@ -184,12 +185,12 @@
   <p class="reveal d1">Monir et Penny, les deux chiens d'Enzo, sont à l'origine de tout. Ce sont eux qui ont donné naissance à l'idée Doovlab.</p>
   <div class="dogs-grid">
     <div class="dog-card reveal-left">
-      <span class="dog-emoji">🐺</span>
+      <img class="dog-photo" src="monir.jpg" alt="Monir, le Berger norvégien de Doovlab, portant son médaillon">
       <div class="dog-name">MONIR</div>
       <div class="dog-breed">Berger norvégien · Le premier, l'inspirateur</div>
     </div>
     <div class="dog-card reveal-right">
-      <span class="dog-emoji">🐕</span>
+      <img class="dog-photo" src="penny.jpg" alt="Penny, la Malinois de Doovlab, portant son médaillon">
       <div class="dog-name">PENNY</div>
       <div class="dog-breed">Malinois · La complice, la muse</div>
     </div>
