@@ -21,8 +21,33 @@ const CATALOG = {
 const SHIPPING_FEE_CENTS      = 490;   // 4,90 € sous le seuil  ← AJUSTE ce montant après avoir pesé un colis
 const FREE_SHIPPING_THRESHOLD = 5000;  // 50,00 € : port offert au-dessus (ne pas changer, c'est ton offre)
 
+// --- Série de lancement limitée -------------------------------
+const LAUNCH_LIMIT = 100;   // nombre total de médaillons de la série de lancement
+
 // --- Ton domaine (sert aux pages de retour) -------------------
 const SITE = 'https://doovlab.fr';
+
+// Compte combien de médaillons de la "série de lancement" ont déjà été PAYÉS.
+// Source de vérité = Stripe (on additionne metadata.units des sessions terminées).
+async function countLaunchSold(key) {
+  let sold = 0, startingAfter = null, pages = 0;
+  do {
+    let url = 'https://api.stripe.com/v1/checkout/sessions?status=complete&limit=100';
+    if (startingAfter) url += '&starting_after=' + startingAfter;
+    const r = await fetch(url, { headers: { 'Authorization': 'Bearer ' + key } });
+    const d = await r.json();
+    if (!r.ok) throw new Error('Stripe list error');
+    const arr = d.data || [];
+    for (const s of arr) {
+      if (s.metadata && s.metadata.series === 'launch') {
+        sold += parseInt(s.metadata.units, 10) || 0;
+      }
+    }
+    startingAfter = (d.has_more && arr.length) ? arr[arr.length - 1].id : null;
+    pages++;
+  } while (startingAfter && pages < 10);
+  return sold;
+}
 
 module.exports = async function handler(req, res) {
   // On n'accepte que les requêtes POST
@@ -59,11 +84,13 @@ module.exports = async function handler(req, res) {
     // Lignes du panier (prix recalculés côté serveur)
     let subtotal = 0;
     let n = 0;
+    let totalUnits = 0;
     items.forEach((it) => {
       const prod = CATALOG[it && it.id];
       if (!prod) return; // identifiant inconnu → ignoré
       const qty = Math.max(1, Math.min(20, parseInt(it.qty, 10) || 1));
       subtotal += prod.amount * qty;
+      totalUnits += qty;
 
       // Détail des options (couleurs, nom du chien…) affiché sur le reçu
       const desc = (it.options || '').toString().slice(0, 250);
@@ -80,6 +107,35 @@ module.exports = async function handler(req, res) {
       res.status(400).json({ error: 'Aucun article valide dans le panier' });
       return;
     }
+
+    // ===== VERROU SÉRIE DE LANCEMENT (100 exemplaires) ==========
+    // On compte ce qui est déjà vendu AVANT de créer la page de paiement.
+    // Si la série est épuisée (ou si la commande dépasse le restant),
+    // on bloque ICI : le client ne voit jamais la page de paiement,
+    // donc aucun risque de paiement à rembourser.
+    const sold = await countLaunchSold(key);
+    const remaining = LAUNCH_LIMIT - sold;
+    if (remaining <= 0) {
+      res.status(409).json({
+        error: 'SERIES_SOLD_OUT',
+        message: 'La série de lancement (100 exemplaires) est épuisée. Merci pour votre engouement \u{1F43E}',
+        remaining: 0,
+      });
+      return;
+    }
+    if (totalUnits > remaining) {
+      res.status(409).json({
+        error: 'NOT_ENOUGH_LEFT',
+        message: 'Il ne reste que ' + remaining + ' exemplaire(s) de la série de lancement. Réduisez la quantité pour finaliser.',
+        remaining: remaining,
+      });
+      return;
+    }
+
+    // On marque cette commande comme faisant partie de la série + les numéros à graver
+    params.append('metadata[series]', 'launch');
+    params.append('metadata[units]', String(totalUnits));
+    params.append('metadata[numeros]', (sold + 1) + (totalUnits > 1 ? ('-' + (sold + totalUnits)) : '') + '/' + LAUNCH_LIMIT);
 
     // Frais de port : offerts si le seuil est atteint, sinon forfait
     const fee = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE_CENTS;
