@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liste d'attente — Doovlab</title>
+<meta name="description" content="La série de lancement Doovlab est complète. Inscrivez-vous pour être prévenu·e en priorité de la prochaine ouverture.">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
+<meta property="og:title" content="Liste d'attente — Doovlab">
+<meta property="og:description" content="La série de lancement est complète. Inscrivez-vous pour la prochaine ouverture.">
+<meta property="og:image" content="/og-image.jpg">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+  :root{ --sunset:#D4692A; --sunset-light:#F0923A; --sunset-dark:#A84E1A; --beige:#FDF6EE; --beige-dark:#F0E6D6; --line:#E4D6C3; --text:#2C1A0E; --muted:#7a6552; }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{ font-family:'Nunito',sans-serif; color:var(--text); background:var(--beige); min-height:100vh; display:flex; flex-direction:column; }
+  .nav{ display:flex; align-items:center; justify-content:center; padding:22px; border-bottom:1px solid var(--line); }
+  .nav img{ height:46px; }
+  .nav .brand{ font-family:'Playfair Display',serif; font-weight:800; font-size:24px; letter-spacing:3px; color:var(--sunset-dark); margin-left:12px; }
+  .wrap{ flex:1; display:flex; align-items:center; justify-content:center; padding:48px 22px; }
+  .card{ max-width:540px; width:100%; text-align:center; }
+  .badge{ display:inline-block; background:var(--beige-dark); color:var(--sunset-dark); font-size:12px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:7px 18px; border-radius:50px; margin-bottom:22px; }
+  h1{ font-family:'Playfair Display',serif; font-size:clamp(28px,5vw,40px); line-height:1.15; color:var(--text); margin-bottom:16px; }
+  h1 b{ color:var(--sunset-dark); }
+  .lead{ font-size:16px; line-height:1.7; color:var(--muted); margin-bottom:30px; }
+  form{ display:flex; flex-direction:column; gap:14px; text-align:left; }
+  label{ font-size:13px; font-weight:700; color:var(--text); margin-bottom:5px; display:block; }
+  input[type=email], input[type=text]{ width:100%; padding:13px 16px; border:1.5px solid var(--line); border-radius:12px; font-family:inherit; font-size:15px; background:#fff; }
+  input:focus{ outline:none; border-color:var(--sunset); }
+  .row{ display:flex; gap:12px; }
+  .row > div{ flex:1; }
+  .consent{ display:flex; gap:10px; align-items:flex-start; font-size:13px; color:var(--muted); line-height:1.5; }
+  .consent input{ margin-top:3px; flex:none; }
+  button{ background:var(--sunset); color:#fff; border:none; padding:15px; border-radius:50px; font-family:inherit; font-size:16px; font-weight:800; cursor:pointer; transition:background .2s, transform .2s; margin-top:4px; }
+  button:hover{ background:var(--sunset-dark); transform:translateY(-2px); }
+  button:disabled{ opacity:.6; cursor:not-allowed; transform:none; }
+  .msg{ margin-top:18px; font-size:15px; font-weight:700; display:none; }
+  .msg.ok{ color:#2e7d32; display:block; }
+  .msg.err{ color:#c0392b; display:block; }
+  .done{ display:none; }
+  .done h1{ margin-bottom:14px; }
+  .foot{ text-align:center; padding:22px; font-size:12px; color:var(--muted); border-top:1px solid var(--line); }
+  .foot a{ color:var(--sunset-dark); }
+</style>
+</head>
+<body>
+  <div class="nav">
+    <a href="index.html" style="display:flex;align-items:center;text-decoration:none;">
+      <img src="logo.png" alt="Doovlab"><span class="brand">DOOVLAB</span>
+    </a>
+  </div>
+
+  <div class="wrap">
+    <!-- FORMULAIRE -->
+    <div class="card" id="form-card">
+      <span class="badge">✦ Série de lancement complète</span>
+      <h1>Les 100 médaillons ont trouvé <b>leur compagnon</b> 🐾</h1>
+      <p class="lead">Un immense merci ! La série de lancement numérotée est épuisée. Laissez votre email pour être prévenu·e <b>en priorité</b> de la prochaine ouverture — cette fois sans limite de quantité.</p>
+      <form id="wait-form">
+        <div>
+          <label for="email">Votre email *</label>
+          <input type="email" id="email" required placeholder="vous@exemple.fr">
+        </div>
+        <div class="row">
+          <div>
+            <label for="prenom">Votre prénom</label>
+            <input type="text" id="prenom" placeholder="Optionnel">
+          </div>
+          <div>
+            <label for="chien">Le prénom de votre chien</label>
+            <input type="text" id="chien" placeholder="Optionnel">
+          </div>
+        </div>
+        <label class="consent">
+          <input type="checkbox" id="consent" required>
+          <span>J'accepte d'être recontacté·e par email au sujet de la prochaine ouverture. Pas de spam, désinscription possible à tout moment.</span>
+        </label>
+        <button type="submit" id="submit-btn">Me prévenir à la réouverture</button>
+      </form>
+      <div class="msg" id="msg"></div>
+    </div>
+
+    <!-- CONFIRMATION -->
+    <div class="card done" id="done-card">
+      <span class="badge">✦ C'est noté !</span>
+      <h1>Vous êtes sur la <b>liste</b> 🐾</h1>
+      <p class="lead">Merci ! On vous écrit dès la réouverture de la boutique. En attendant, suivez les coulisses sur Instagram <b>@doovlab</b>.</p>
+    </div>
+  </div>
+
+  <div class="foot">
+    Doovlab · Médaillons personnalisés pour chiens · <a href="index.html">Accueil</a>
+  </div>
+
+<script>
+  const SUPABASE_URL = 'https://ycsskzxbtaoekfpocgoz.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_ESbSaBIVfAA463W4GTDihg_77jF03Of';
+
+  const form = document.getElementById('wait-form');
+  const msg = document.getElementById('msg');
+  const btn = document.getElementById('submit-btn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msg.className = 'msg';
+    const email = document.getElementById('email').value.trim();
+    const prenom = document.getElementById('prenom').value.trim();
+    const chien = document.getElementById('chien').value.trim();
+    if (!email || !document.getElementById('consent').checked) {
+      msg.textContent = 'Merci de renseigner votre email et de cocher la case.';
+      msg.classList.add('err');
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Enregistrement…';
+    try {
+      const res = await fetch(SUPABASE_URL + '/rest/v1/attente', {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ email: email, prenom: prenom || null, chien: chien || null })
+      });
+      if (!res.ok) throw new Error('insert');
+      document.getElementById('form-card').style.display = 'none';
+      document.getElementById('done-card').style.display = 'block';
+    } catch (err) {
+      msg.textContent = "Oups, une erreur est survenue. Réessayez ou écrivez-nous à contact@doovlab.fr.";
+      msg.classList.add('err');
+      btn.disabled = false;
+      btn.textContent = 'Me prévenir à la réouverture';
+    }
+  });
+</script>
+</body>
+</html>
