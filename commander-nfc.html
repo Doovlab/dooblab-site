@@ -155,19 +155,6 @@
 .care-info{margin-top:22px;padding:15px 17px;background:#F0E6D6;border-radius:14px;}.care-info h3{font-family:'Playfair Display',serif;font-size:15px;margin-bottom:6px;color:var(--text);}.care-info p{font-size:12.5px;line-height:1.6;color:var(--muted);margin:0;}
 .info-row{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:20px;margin-top:28px;align-items:flex-start;}.info-row>*{flex:1 1 240px;margin:0;}
 
-/* --- Aperçu collant sur mobile --- */
-.page-wrap{grid-template-areas:"meta form" "preview form" "info info";}
-.product-meta,.product-info{grid-area:meta;}
-.preview-wrap{grid-area:preview;}
-.form-card{grid-area:form;}
-.info-row{grid-area:info;}
-.sticky-scope{display:contents;}
-@media (max-width:900px){
-  .page-wrap{grid-template-areas:none;}
-  .sticky-scope{display:block;}
-  .preview-wrap{position:sticky;top:var(--stick-top,120px);z-index:50;background:#FDF6EE;margin:0 0 10px;padding:6px 0 10px;box-shadow:0 10px 14px -10px rgba(20,12,6,.22);border-radius:0 0 14px 14px;transform:none;opacity:1;animation:none;}
-  #viewer3d{height:190px;}
-}
 </style>
 <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -209,14 +196,14 @@
 
     <!-- Prévisualisation SVG -->
 
-  </div>
-
-      <div class="sticky-scope">
-  <div class="preview-wrap reveal d2">
+  
+          <div class="preview-wrap reveal d2">
       <p class="preview-label">Aperçu en temps réel</p>
       <div id="viewer3d"><div class="viewer-loading">Chargement de l'aperçu 3D…</div></div>
       <p class="viewer-hint">Glissez pour incliner · aperçu indicatif</p>
     </div>
+  </div>
+
 
   <!-- COLONNE DROITE — FORMULAIRE -->
   <div class="form-card reveal-right">
@@ -277,7 +264,6 @@
     <button class="btn-submit" id="submitBtn" onclick="addToCart()">
       🛒 Ajouter au panier — 25€
     </button>
-  </div>
   </div>
 
   <div class="info-row">
@@ -578,6 +564,5 @@ if (container) {
 </script>
 <script defer src="/series-launch.js"></script>
 
-<script>(function(){function s(){var n=document.querySelector("nav"),b=document.getElementById("series-banner");var h=(n?n.offsetHeight:60)+(b?b.offsetHeight:0)+8;document.documentElement.style.setProperty("--stick-top",h+"px");}s();window.addEventListener("load",s);window.addEventListener("resize",s);setTimeout(s,1400);try{new MutationObserver(s).observe(document.body,{childList:true});}catch(e){}})();</script>
 </body>
 </html>
