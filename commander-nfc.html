@@ -161,8 +161,10 @@
 .preview-wrap{grid-area:preview;}
 .form-card{grid-area:form;}
 .info-row{grid-area:info;}
+.sticky-scope{display:contents;}
 @media (max-width:900px){
-  .page-wrap{grid-template-areas:"meta" "preview" "form" "info";}
+  .page-wrap{grid-template-areas:none;}
+  .sticky-scope{display:block;}
   .preview-wrap{position:sticky;top:var(--stick-top,120px);z-index:50;background:#FDF6EE;margin:0 0 10px;padding:6px 0 10px;box-shadow:0 10px 14px -10px rgba(20,12,6,.22);border-radius:0 0 14px 14px;transform:none;opacity:1;animation:none;}
   #viewer3d{height:190px;}
 }
@@ -209,7 +211,8 @@
 
   </div>
 
-      <div class="preview-wrap reveal d2">
+      <div class="sticky-scope">
+  <div class="preview-wrap reveal d2">
       <p class="preview-label">Aperçu en temps réel</p>
       <div id="viewer3d"><div class="viewer-loading">Chargement de l'aperçu 3D…</div></div>
       <p class="viewer-hint">Glissez pour incliner · aperçu indicatif</p>
@@ -274,6 +277,7 @@
     <button class="btn-submit" id="submitBtn" onclick="addToCart()">
       🛒 Ajouter au panier — 25€
     </button>
+  </div>
   </div>
 
   <div class="info-row">

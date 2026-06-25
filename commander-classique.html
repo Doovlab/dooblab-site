@@ -150,8 +150,10 @@
 .preview-wrap{grid-area:preview;}
 .form-card{grid-area:form;}
 .info-row{grid-area:info;}
+.sticky-scope{display:contents;}
 @media (max-width:800px){
-  .page-wrap{grid-template-areas:"meta" "preview" "form" "info";}
+  .page-wrap{grid-template-areas:none;}
+  .sticky-scope{display:block;}
   .preview-wrap{position:sticky;top:var(--stick-top,120px);z-index:50;background:#FDF6EE;margin:0 0 10px;padding:6px 0 10px;box-shadow:0 10px 14px -10px rgba(20,12,6,.22);border-radius:0 0 14px 14px;transform:none;opacity:1;animation:none;}
   #viewer3d{height:190px;}
 }
@@ -186,7 +188,8 @@
     <ul class="features-list"><li>Sans gravure de prénom</li><li>Couleur au choix</li><li>Anneau de fixation inclus</li><li>PLA haute résistance</li></ul>
   </div>
 
-          <div class="preview-wrap reveal" style="margin:0 0 30px;">
+          <div class="sticky-scope">
+  <div class="preview-wrap reveal" style="margin:0 0 30px;">
       <p style="font-size:12px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);text-align:center;margin:0 0 10px;">Aperçu 3D en temps réel</p>
       <div id="viewer3d"><div class="viewer-loading">Chargement de l'aperçu 3D…</div></div>
       <p id="prev-caption" style="margin:10px 0 0;font-size:12px;color:var(--muted);text-align:center;">Glissez pour incliner · cliquez sur vos 2 couleurs</p>
@@ -256,6 +259,7 @@
       <h4>Commande reçue !</h4>
       <p>Merci ! Vous allez être redirigé vers le paiement...</p>
     </div>
+  </div>
   </div>
 
   <div class="info-row">
