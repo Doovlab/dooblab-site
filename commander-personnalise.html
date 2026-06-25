@@ -148,6 +148,7 @@
   nav.scrolled { box-shadow:0 6px 24px -10px rgba(60,30,10,0.20); }
   @media (prefers-reduced-motion: reduce){ html.js .reveal, html.js .reveal-left, html.js .reveal-right { opacity:1 !important; transform:none !important; } }
 
+.care-info{margin-top:22px;padding:15px 17px;background:#F0E6D6;border-radius:14px;}.care-info h3{font-family:'Playfair Display',serif;font-size:15px;margin-bottom:6px;color:var(--text);}.care-info p{font-size:12.5px;line-height:1.6;color:var(--muted);margin:0;}
 </style>
 <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -200,6 +201,10 @@
       <div class="shipping-row">🚚 Livraison 5 à 7 jours ouvrés</div>
       <div class="shipping-row">🇫🇷 Fabriqué en France</div>
       <div class="shipping-row">♻️ PLA écologique</div>
+    </div>
+    <div class="care-info reveal">
+      <h3>🌡️ Entretien &amp; conseils</h3>
+      <p>Fabriqué en PLA, un plastique d'origine végétale, résistant à l'usage quotidien, à l'eau et aux jeux. Comme tout objet, évitez de le laisser sous forte chaleur prolongée — par exemple dans une voiture fermée en plein soleil.</p>
     </div>
   </div>
 
@@ -288,18 +293,20 @@
 const COLORS = [
   { name:'Blanc Pur', hex:'#FFFFFF', border:'#ddd' },
   { name:'Noir', hex:'#1A1A1A' },
-  { name:'Vert Forêt', hex:'#2D6A4F' },
+  { name:'Vert Sapin', hex:'#1C4A35' },
   { name:'Bleu Ciel', hex:'#4A90D9' },
-  { name:'Rose Poudré', hex:'#F4A7B9' },
-  { name:'Rouge Brique', hex:'#C0392B' },
+  { name:'Rose Sakura', hex:'#F4A7B9' },
+  { name:'Rouge écarlate', hex:'#C0392B' },
   { name:'Jaune Soleil', hex:'#F1C40F' },
-  { name:'Violet', hex:'#9B59B6' },
+  { name:'Lavande', hex:'#9B59B6' },
   { name:'Kaki', hex:'#6B6B2A' },
-  { name:'Terracotta', hex:'#D4692A' },
+  { name:'Terre cuite', hex:'#D4692A' },
   { name:'Gris Ardoise', hex:'#5D6D7E' },
   { name:'Beige Sable', hex:'#C9A96E' },
-  { name:'Orange Vif', hex:'#E67E22' },
+  { name:'Mandarine', hex:'#E67E22' },
   { name:'Bleu Marine', hex:'#1B3A5C' },
+  { name:'Marron Latte', hex:'#B08968' },
+  { name:'Vert herbacé', hex:'#6E9F3A' },
 ];
 
 const FONT_MAP = {

@@ -141,6 +141,7 @@
   .viewer-loading { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:13px; }
   .preview-wrap { background:#fff; border:1px solid var(--beige-dark); border-radius:18px; padding:16px; box-shadow:0 10px 24px rgba(44,26,14,.07); }
   @media (max-width:900px){ .nav-links{ display:none; } }
+.care-info{margin-top:22px;padding:15px 17px;background:#F0E6D6;border-radius:14px;}.care-info h3{font-family:'Playfair Display',serif;font-size:15px;margin-bottom:6px;color:var(--text);}.care-info p{font-size:12.5px;line-height:1.6;color:var(--muted);margin:0;}
 </style>
 <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -180,6 +181,10 @@
       <span>🇫🇷 Fabriqué en France</span>
       <span>♻️ PLA écologique</span>
     </div>
+    <div class="care-info reveal">
+      <h3>🌡️ Entretien &amp; conseils</h3>
+      <p>Fabriqué en PLA, un plastique d'origine végétale, résistant à l'usage quotidien, à l'eau et aux jeux. Comme tout objet, évitez de le laisser sous forte chaleur prolongée — par exemple dans une voiture fermée en plein soleil.</p>
+    </div>
   </div>
 
   <!-- RIGHT -->
@@ -190,20 +195,22 @@
       <label>Couleur principale <span style="font-size:11px;font-weight:400">(contour)</span></label>
       
       <div class="color-picker" id="color-picker-1">
-  <div class="color-option" style="background:#F5F5F5" data-color="Blanc Pur" onclick="selectColor(this,1)" title="Blanc Pur"></div>
-  <div class="color-option" style="background:#1A1A1A" data-color="Noir Intense" onclick="selectColor(this,1)" title="Noir Intense"></div>
-  <div class="color-option" style="background:#2D5A27" data-color="Vert Sapin" onclick="selectColor(this,1)" title="Vert Sapin"></div>
+  <div class="color-option" style="background:#FFFFFF;border:3px solid #E4D6C3" data-color="Blanc Pur" onclick="selectColor(this,1)" title="Blanc Pur"></div>
+  <div class="color-option" style="background:#1A1A1A" data-color="Noir" onclick="selectColor(this,1)" title="Noir"></div>
+  <div class="color-option" style="background:#1C4A35" data-color="Vert Sapin" onclick="selectColor(this,1)" title="Vert Sapin"></div>
   <div class="color-option" style="background:#4A90D9" data-color="Bleu Ciel" onclick="selectColor(this,1)" title="Bleu Ciel"></div>
-  <div class="color-option" style="background:#F0A0B0" data-color="Rose Tendre" onclick="selectColor(this,1)" title="Rose Tendre"></div>
-  <div class="color-option" style="background:#C0392B" data-color="Rouge Vif" onclick="selectColor(this,1)" title="Rouge Vif"></div>
-  <div class="color-option" style="background:#E8C020" data-color="Jaune Soleil" onclick="selectColor(this,1)" title="Jaune Soleil"><span class="stock-badge">Stock limité</span></div>
-  <div class="color-option" style="background:#9B7FD4" data-color="Violet Lavande" onclick="selectColor(this,1)" title="Violet Lavande"></div>
-  <div class="color-option" style="background:#7A7A45" data-color="Kaki Naturel" onclick="selectColor(this,1)" title="Kaki Naturel"><span class="stock-badge">Stock limité</span></div>
-  <div class="color-option" style="background:#D4692A" data-color="Terracotta Chaud" onclick="selectColor(this,1)" title="Terracotta Chaud"></div>
-  <div class="color-option" style="background:#5A6472" data-color="Gris Ardoise" onclick="selectColor(this,1)" title="Gris Ardoise"></div>
-  <div class="color-option" style="background:#D4B896" data-color="Beige Sablé" onclick="selectColor(this,1)" title="Beige Sablé"><span class="stock-badge">Stock limité</span></div>
-  <div class="color-option" style="background:#E07830" data-color="Orange Brûlé" onclick="selectColor(this,1)" title="Orange Brûlé"></div>
-  <div class="color-option" style="background:#1A3A6A" data-color="Bleu Marine" onclick="selectColor(this,1)" title="Bleu Marine"></div>
+  <div class="color-option" style="background:#F4A7B9" data-color="Rose Sakura" onclick="selectColor(this,1)" title="Rose Sakura"></div>
+  <div class="color-option" style="background:#C0392B" data-color="Rouge écarlate" onclick="selectColor(this,1)" title="Rouge écarlate"></div>
+  <div class="color-option" style="background:#F1C40F" data-color="Jaune Soleil" onclick="selectColor(this,1)" title="Jaune Soleil"></div>
+  <div class="color-option" style="background:#9B59B6" data-color="Lavande" onclick="selectColor(this,1)" title="Lavande"></div>
+  <div class="color-option" style="background:#6B6B2A" data-color="Kaki" onclick="selectColor(this,1)" title="Kaki"></div>
+  <div class="color-option" style="background:#D4692A" data-color="Terre cuite" onclick="selectColor(this,1)" title="Terre cuite"></div>
+  <div class="color-option" style="background:#5D6D7E" data-color="Gris Ardoise" onclick="selectColor(this,1)" title="Gris Ardoise"></div>
+  <div class="color-option" style="background:#C9A96E" data-color="Beige Sable" onclick="selectColor(this,1)" title="Beige Sable"></div>
+  <div class="color-option" style="background:#E67E22" data-color="Mandarine" onclick="selectColor(this,1)" title="Mandarine"></div>
+  <div class="color-option" style="background:#1B3A5C" data-color="Bleu Marine" onclick="selectColor(this,1)" title="Bleu Marine"></div>
+  <div class="color-option" style="background:#B08968" data-color="Marron Latte" onclick="selectColor(this,1)" title="Marron Latte"></div>
+  <div class="color-option" style="background:#6E9F3A" data-color="Vert herbacé" onclick="selectColor(this,1)" title="Vert herbacé"></div>
 </div>
 <div class="color-label" id="color-label-1">Sélectionnez une couleur</div>
 
@@ -213,20 +220,22 @@
       <label>Deuxième couleur <span style="font-size:11px;font-weight:400">(coussinets)</span></label>
             <p class="color-note">Le fond de base est Blanc Pur par défaut.</p>
       <div class="color-picker" id="color-picker-2">
-  <div class="color-option" style="background:#F5F5F5" data-color="Blanc Pur" onclick="selectColor(this,2)" title="Blanc Pur"></div>
-  <div class="color-option" style="background:#1A1A1A" data-color="Noir Intense" onclick="selectColor(this,2)" title="Noir Intense"></div>
-  <div class="color-option" style="background:#2D5A27" data-color="Vert Sapin" onclick="selectColor(this,2)" title="Vert Sapin"></div>
+  <div class="color-option" style="background:#FFFFFF;border:3px solid #E4D6C3" data-color="Blanc Pur" onclick="selectColor(this,2)" title="Blanc Pur"></div>
+  <div class="color-option" style="background:#1A1A1A" data-color="Noir" onclick="selectColor(this,2)" title="Noir"></div>
+  <div class="color-option" style="background:#1C4A35" data-color="Vert Sapin" onclick="selectColor(this,2)" title="Vert Sapin"></div>
   <div class="color-option" style="background:#4A90D9" data-color="Bleu Ciel" onclick="selectColor(this,2)" title="Bleu Ciel"></div>
-  <div class="color-option" style="background:#F0A0B0" data-color="Rose Tendre" onclick="selectColor(this,2)" title="Rose Tendre"></div>
-  <div class="color-option" style="background:#C0392B" data-color="Rouge Vif" onclick="selectColor(this,2)" title="Rouge Vif"></div>
-  <div class="color-option" style="background:#E8C020" data-color="Jaune Soleil" onclick="selectColor(this,2)" title="Jaune Soleil"><span class="stock-badge">Stock limité</span></div>
-  <div class="color-option" style="background:#9B7FD4" data-color="Violet Lavande" onclick="selectColor(this,2)" title="Violet Lavande"></div>
-  <div class="color-option" style="background:#7A7A45" data-color="Kaki Naturel" onclick="selectColor(this,2)" title="Kaki Naturel"><span class="stock-badge">Stock limité</span></div>
-  <div class="color-option" style="background:#D4692A" data-color="Terracotta Chaud" onclick="selectColor(this,2)" title="Terracotta Chaud"></div>
-  <div class="color-option" style="background:#5A6472" data-color="Gris Ardoise" onclick="selectColor(this,2)" title="Gris Ardoise"></div>
-  <div class="color-option" style="background:#D4B896" data-color="Beige Sablé" onclick="selectColor(this,2)" title="Beige Sablé"><span class="stock-badge">Stock limité</span></div>
-  <div class="color-option" style="background:#E07830" data-color="Orange Brûlé" onclick="selectColor(this,2)" title="Orange Brûlé"></div>
-  <div class="color-option" style="background:#1A3A6A" data-color="Bleu Marine" onclick="selectColor(this,2)" title="Bleu Marine"></div>
+  <div class="color-option" style="background:#F4A7B9" data-color="Rose Sakura" onclick="selectColor(this,2)" title="Rose Sakura"></div>
+  <div class="color-option" style="background:#C0392B" data-color="Rouge écarlate" onclick="selectColor(this,2)" title="Rouge écarlate"></div>
+  <div class="color-option" style="background:#F1C40F" data-color="Jaune Soleil" onclick="selectColor(this,2)" title="Jaune Soleil"></div>
+  <div class="color-option" style="background:#9B59B6" data-color="Lavande" onclick="selectColor(this,2)" title="Lavande"></div>
+  <div class="color-option" style="background:#6B6B2A" data-color="Kaki" onclick="selectColor(this,2)" title="Kaki"></div>
+  <div class="color-option" style="background:#D4692A" data-color="Terre cuite" onclick="selectColor(this,2)" title="Terre cuite"></div>
+  <div class="color-option" style="background:#5D6D7E" data-color="Gris Ardoise" onclick="selectColor(this,2)" title="Gris Ardoise"></div>
+  <div class="color-option" style="background:#C9A96E" data-color="Beige Sable" onclick="selectColor(this,2)" title="Beige Sable"></div>
+  <div class="color-option" style="background:#E67E22" data-color="Mandarine" onclick="selectColor(this,2)" title="Mandarine"></div>
+  <div class="color-option" style="background:#1B3A5C" data-color="Bleu Marine" onclick="selectColor(this,2)" title="Bleu Marine"></div>
+  <div class="color-option" style="background:#B08968" data-color="Marron Latte" onclick="selectColor(this,2)" title="Marron Latte"></div>
+  <div class="color-option" style="background:#6E9F3A" data-color="Vert herbacé" onclick="selectColor(this,2)" title="Vert herbacé"></div>
 </div>
 <div class="color-label" id="color-label-2">Sélectionnez une couleur</div>
 
