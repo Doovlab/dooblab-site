@@ -209,14 +209,17 @@
 const SUPABASE_URL = 'https://ycsskzxbtaoekfpocgoz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ESbSaBIVfAA463W4GTDihg_77jF03Of';
 let currentToken = '';
+let currentCode = '';
 let currentPhotoUrl = '';
 
 async function loadProfile() {
   const params = new URLSearchParams(window.location.search);
   const token = params.get('t');
+  const code = params.get('e');
   currentToken = token;
+  currentCode = code;
 
-  if (!token) {
+  if (!token || !code) {
     document.getElementById('loading').innerHTML = '<div class="edit-page"><div style="text-align:center;padding:60px 24px"><div style="font-size:48px;margin-bottom:16px">🔒</div><h2 style="font-family:Playfair Display,serif">Accès non autorisé</h2><p style="color:#9A7A60;margin-top:8px">Lien invalide ou expiré.</p></div></div>';
     return;
   }
@@ -318,6 +321,7 @@ async function saveProfile() {
       },
       body: JSON.stringify({
         p_token: currentToken,
+        p_code: currentCode,
         p_dog_name: body.dog_name,
         p_owner_name: body.owner_name,
         p_phone: body.phone,
@@ -326,13 +330,14 @@ async function saveProfile() {
       })
     });
 
-    if (res.ok) {
+    const ok = await res.json().catch(() => false);
+    if (res.ok && ok === true) {
       const toast = document.getElementById('toast');
       toast.style.display = 'block';
       btn.textContent = '✓ Enregistré !';
       setTimeout(() => { toast.style.display = 'none'; btn.textContent = 'Enregistrer les modifications'; btn.disabled = false; }, 3000);
     } else {
-      btn.textContent = 'Erreur, réessayez';
+      btn.textContent = 'Lien d\'édition invalide';
       btn.disabled = false;
     }
   } catch(e) {
