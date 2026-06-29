@@ -222,8 +222,10 @@ async function loadProfile() {
   }
 
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/medaillons?token=eq.${token}&select=*`, {
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_medaillon`, {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_token: token })
     });
     const data = await res.json();
 
@@ -307,15 +309,21 @@ async function saveProfile() {
   };
 
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/medaillons?token=eq.${currentToken}`, {
-      method: 'PATCH',
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/save_medaillon`, {
+      method: 'POST',
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': 'Bearer ' + SUPABASE_KEY,
-        'Content-Type': 'application/json',
-        'Prefer': 'return=minimal'
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify({
+        p_token: currentToken,
+        p_dog_name: body.dog_name,
+        p_owner_name: body.owner_name,
+        p_phone: body.phone,
+        p_message: body.message,
+        p_photo_url: body.photo_url
+      })
     });
 
     if (res.ok) {
