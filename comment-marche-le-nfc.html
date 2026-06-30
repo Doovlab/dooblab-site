@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doovlab — Comment marche le médaillon NFC ?</title>
+<meta name="description" content="Le médaillon NFC Doovlab : un scan de téléphone et le passant accède au profil de votre chien et à vos coordonnées. Sans application, modifiable à vie. On vous explique tout.">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Doovlab">
+<meta property="og:title" content="Doovlab — Comment marche le médaillon NFC ?">
+<meta property="og:description" content="Un scan de téléphone et l'on accède au profil de votre chien. Sans application, modifiable à vie. On vous explique tout.">
+<meta property="og:image" content="https://doovlab.fr/og-image.jpg">
+<meta property="og:url" content="https://doovlab.fr/comment-marche-le-nfc.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Doovlab — Comment marche le médaillon NFC ?">
+<meta name="twitter:description" content="Un scan de téléphone et l'on accède au profil de votre chien. Sans application, modifiable à vie.">
+<meta name="twitter:image" content="https://doovlab.fr/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sunset: #D4692A;
+    --sunset-light: #F0923A;
+    --sunset-dark: #A84E1A;
+    --beige: #FDF6EE;
+    --beige-dark: #F0E6D6;
+    --text: #2C1A0E;
+    --muted: #9A7A60;
+    --white: #FFFFFF;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Nunito',sans-serif; background:var(--beige); color:var(--text); }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 48px; background:rgba(253,246,238,0.94);
+    backdrop-filter:blur(8px); border-bottom:1px solid rgba(212,105,42,0.12);
+    transition:box-shadow .3s ease;
+  }
+  nav.scrolled { box-shadow:0 6px 24px -10px rgba(60,30,10,0.20); }
+  .nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .nav-logo img { width:36px; height:36px; object-fit:contain; }
+  .nav-brand { font-family:'Playfair Display',serif; font-weight:700; font-size:20px; color:var(--text); letter-spacing:2px; }
+  .nav-links { display:flex; align-items:center; gap:32px; list-style:none; }
+  .nav-links a { text-decoration:none; font-size:14px; font-weight:600; color:var(--muted); letter-spacing:1px; text-transform:uppercase; transition:color .2s; }
+  .nav-links a:hover, .nav-links a.active { color:var(--sunset); }
+  .nav-cta { background:var(--sunset); color:var(--beige) !important; padding:10px 24px; border-radius:50px; transition:background .2s !important; }
+  .nav-cta:hover { background:var(--sunset-dark) !important; color:var(--beige) !important; }
+
+  .scroll-progress { position:fixed; top:0; left:0; height:3px; width:0; background:linear-gradient(90deg,var(--sunset-light),var(--sunset)); z-index:200; transition:width .12s linear; }
+
+  .hero { padding:130px 24px 30px; text-align:center; }
+  .hero .hero-label { font-size:12px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--sunset-dark); display:inline-block; background:var(--beige-dark); padding:6px 18px; border-radius:50px; margin-bottom:22px; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(34px,5vw,54px); font-weight:700; color:var(--text); line-height:1.15; }
+  .hero h1 em { font-style:italic; color:var(--sunset); }
+  .hero p { font-size:17px; color:var(--muted); max-width:620px; margin:18px auto 0; line-height:1.8; }
+
+  .wrap { max-width:1000px; margin:0 auto; padding:0 24px; }
+  .section { padding:56px 0; }
+  .section h2 { font-family:'Playfair Display',serif; font-size:clamp(26px,3.4vw,38px); color:var(--text); text-align:center; line-height:1.2; }
+  .section h2 em { font-style:italic; color:var(--sunset); }
+  .section .lead { text-align:center; color:var(--muted); max-width:600px; margin:14px auto 0; line-height:1.8; font-size:16px; }
+
+  /* Étapes */
+  .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:26px; margin-top:44px; }
+  .step { background:var(--white); border:1px solid var(--beige-dark); border-radius:18px; padding:28px 24px; text-align:center; }
+  .step-num { width:46px; height:46px; margin:0 auto 18px; background:var(--sunset); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; font-family:'Playfair Display',serif; }
+  .step h3 { font-size:17px; margin-bottom:8px; color:var(--text); }
+  .step p { font-size:14px; color:var(--muted); line-height:1.65; }
+
+  /* Démo */
+  .demo { background:var(--text); border-radius:26px; padding:48px; display:grid; grid-template-columns:1fr 320px; gap:48px; align-items:center; margin-top:44px; overflow:hidden; }
+  .demo-content h2 { text-align:left; color:var(--beige); }
+  .demo-content h2 em { color:var(--sunset-light); }
+  .demo-content p { color:rgba(253,246,238,0.7); line-height:1.8; margin:16px 0 28px; font-size:16px; }
+  .demo-btn { display:inline-flex; align-items:center; gap:10px; background:var(--sunset); color:#fff; padding:16px 30px; border-radius:50px; font-weight:700; font-size:15px; text-decoration:none; transition:all .2s; }
+  .demo-btn:hover { background:var(--sunset-light); transform:translateY(-2px); }
+  .phone { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:30px; padding:26px; }
+  .phone-screen { background:var(--beige); border-radius:18px; padding:24px 18px; text-align:center; color:var(--text); }
+  .phone-avatar { width:74px; height:74px; background:var(--sunset); border-radius:50%; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-size:34px; border:3px solid var(--text); }
+  .phone-name { font-family:'Playfair Display',serif; font-size:24px; font-weight:700; letter-spacing:1px; margin-bottom:14px; }
+  .phone-row { background:rgba(212,105,42,0.09); border-radius:10px; padding:9px 14px; margin-bottom:7px; font-size:12.5px; text-align:left; display:flex; gap:9px; align-items:center; }
+  .phone-call { background:var(--text); color:var(--beige); border:none; border-radius:50px; padding:11px 22px; font-size:12.5px; font-weight:700; letter-spacing:1px; width:100%; margin-top:12px; font-family:'Playfair Display',serif; }
+
+  /* Comparaison */
+  .compare { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:44px; }
+  .compare-card { background:var(--white); border:1px solid var(--beige-dark); border-radius:20px; padding:30px 28px; }
+  .compare-card.highlight { border:2px solid var(--sunset); box-shadow:0 14px 40px -22px rgba(212,105,42,0.55); }
+  .compare-card .tag { display:inline-block; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:5px 14px; border-radius:50px; margin-bottom:14px; }
+  .compare-card.base .tag { background:var(--beige-dark); color:var(--muted); }
+  .compare-card.highlight .tag { background:var(--sunset); color:#fff; }
+  .compare-card h3 { font-family:'Playfair Display',serif; font-size:21px; margin-bottom:6px; color:var(--text); }
+  .compare-card .sub { font-size:13px; color:var(--muted); margin-bottom:18px; }
+  .compare-card ul { list-style:none; display:flex; flex-direction:column; gap:11px; }
+  .compare-card li { font-size:14px; line-height:1.5; color:var(--text); display:flex; gap:10px; align-items:flex-start; }
+  .compare-card li .ic { flex-shrink:0; font-size:15px; line-height:1.4; }
+  .yes { color:#2E7D32; } .no { color:#B23B2E; }
+  .compare-note { text-align:center; color:var(--muted); font-size:14px; margin-top:22px; line-height:1.7; }
+
+  /* Cartes génériques (avantages / technique / cas d'usage) */
+  .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:44px; }
+  .card { background:var(--white); border:1px solid var(--beige-dark); border-radius:18px; padding:26px 24px; }
+  .card .ico { font-size:30px; margin-bottom:14px; }
+  .card h3 { font-size:16px; margin-bottom:8px; color:var(--text); }
+  .card p { font-size:14px; color:var(--muted); line-height:1.65; }
+
+  /* Bloc "jamais périmé" */
+  .highlight-band { background:var(--beige-dark); border-radius:22px; padding:42px; text-align:center; margin-top:44px; }
+  .highlight-band h2 { text-align:center; }
+  .highlight-band p { color:var(--text); max-width:640px; margin:16px auto 0; line-height:1.85; font-size:16px; }
+
+  /* CTA final */
+  .cta { text-align:center; padding:64px 24px 90px; }
+  .cta h2 { font-family:'Playfair Display',serif; font-size:30px; color:var(--text); margin-bottom:10px; }
+  .cta p { color:var(--muted); margin-bottom:26px; line-height:1.7; }
+  .btn-primary { display:inline-flex; align-items:center; gap:8px; background:var(--sunset); color:var(--beige); padding:17px 36px; border-radius:50px; font-size:16px; font-weight:700; text-decoration:none; transition:all .2s; }
+  .btn-primary:hover { background:var(--sunset-dark); transform:translateY(-2px); }
+  .cta .price-note { display:block; margin-top:14px; font-size:13px; color:var(--muted); }
+
+  footer { background: var(--text); color: rgba(253,246,238,0.6); padding: 48px; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .footer-brand { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--beige); letter-spacing: 2px; }
+  .footer-tagline { font-size: 13px; font-style: italic; color: var(--sunset-light); margin-top: 4px; }
+  footer p { font-size: 13px; }
+
+  html.js .reveal { opacity:0; transform:translateY(30px); transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+  html.js .reveal.in { opacity:1; transform:none; }
+  .reveal.d1{transition-delay:.08s;} .reveal.d2{transition-delay:.16s;}
+  @media (prefers-reduced-motion: reduce){ html.js .reveal { opacity:1 !important; transform:none !important; } }
+
+  @media (max-width: 900px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 20px 20px; }
+    .steps, .cards, .compare { grid-template-columns: 1fr; }
+    .demo { grid-template-columns: 1fr; padding: 32px 24px; gap: 32px; }
+    .demo-content h2 { text-align:center; }
+    .phone { max-width:320px; margin:0 auto; }
+    footer { padding: 28px 20px; flex-direction: column; text-align: center; }
+  }
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Doovlab">
+    <span class="nav-brand">DOOVLAB</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="boutique.html">Boutique</a></li>
+    <li><a href="a-propos.html">Notre histoire</a></li>
+    <li><a href="avis.html">Avis</a></li>
+    <li><a href="faq.html">FAQ</a></li>
+    <li><a href="panier.html" id="nav-cart">🛒 Panier</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <span class="hero-label reveal">Le médaillon connecté</span>
+  <h1 class="reveal d1">Comment marche le <em>NFC</em> ?</h1>
+  <p class="reveal d2">Une petite puce dans le médaillon, et n'importe qui peut accéder au profil de votre chien d'un simple geste avec son téléphone. Sans application, sans abonnement. On vous explique tout.</p>
+</section>
+
+<!-- ÉTAPES -->
+<div class="wrap">
+  <section class="section">
+    <h2 class="reveal">Concrètement, ça se passe <em>comment</em> ?</h2>
+    <p class="lead reveal d1">Trois étapes, et c'est à vie.</p>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <h3>Vous commandez</h3>
+        <p>Vous recevez un lien privé pour créer le profil de votre chien. Lui seul vous permet de modifier les informations.</p>
+      </div>
+      <div class="step reveal d1">
+        <div class="step-num">2</div>
+        <h3>Vous remplissez en 2 min</h3>
+        <p>Photo, prénom, votre numéro, un petit message. Vous choisissez ce qui s'affiche, et vous pouvez tout modifier quand vous voulez.</p>
+      </div>
+      <div class="step reveal d2">
+        <div class="step-num">3</div>
+        <h3>On scanne, on vous joint</h3>
+        <p>Quelqu'un approche son téléphone du médaillon (ou ouvre le lien), voit le profil et vous contacte aussitôt.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- DÉMO -->
+<div class="wrap">
+  <section class="demo reveal">
+    <div class="demo-content">
+      <h2>Voyez ce qu'un <em>passant</em> verrait</h2>
+      <p>Pas besoin de nous croire sur parole : ouvrez un vrai profil de démonstration, exactement comme si vous veniez de scanner un médaillon trouvé dans la rue.</p>
+      <!-- 👉 POUR CHANGER LA DÉMO : remplacez le token cf2b688108 ci-dessous par celui d'un profil de démo (ex. Penny ou Monir) -->
+      <a class="demo-btn" href="chien.html?t=cf2b688108" target="_blank" rel="noopener">🔎 Voir un exemple de profil</a>
+    </div>
+    <div class="phone">
+      <div class="phone-screen">
+        <div class="phone-avatar">🐶</div>
+        <div class="phone-name">PENNY</div>
+        <div class="phone-row">📞 06 XX XX XX XX</div>
+        <div class="phone-row">💬 « Je suis perdue, appelez vite ! »</div>
+        <div class="phone-row">📍 Gers (32)</div>
+        <button class="phone-call">APPELER LE MAÎTRE</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- COMPARAISON -->
+<div class="wrap">
+  <section class="section">
+    <h2 class="reveal">NFC ou puce vétérinaire ? <em>Les deux</em></h2>
+    <p class="lead reveal d1">« J'ai déjà fait pucer mon chien, à quoi sert le NFC ? » La puce de votre vétérinaire et le médaillon NFC ne font pas le même travail : ils se complètent.</p>
+    <div class="compare">
+      <div class="compare-card base reveal">
+        <span class="tag">Puce vétérinaire (ICAD)</span>
+        <h3>L'identification légale</h3>
+        <div class="sub">Obligatoire, sous la peau</div>
+        <ul>
+          <li><span class="ic yes">✓</span> Obligatoire et permanente</li>
+          <li><span class="ic yes">✓</span> Identification officielle de votre chien</li>
+          <li><span class="ic no">✕</span> Lisible seulement avec un lecteur spécial</li>
+          <li><span class="ic no">✕</span> Nécessite un vétérinaire ou un refuge</li>
+          <li><span class="ic no">✕</span> Un passant ne peut rien faire avec</li>
+        </ul>
+      </div>
+      <div class="compare-card highlight reveal d1">
+        <span class="tag">Médaillon NFC Doovlab</span>
+        <h3>Le réflexe du quotidien</h3>
+        <div class="sub">Visible, sur le collier</div>
+        <ul>
+          <li><span class="ic yes">✓</span> Lu par n'importe quel smartphone récent</li>
+          <li><span class="ic yes">✓</span> Affiche vos coordonnées et un message</li>
+          <li><span class="ic yes">✓</span> Contact immédiat, sans intermédiaire</li>
+          <li><span class="ic yes">✓</span> Modifiable par vous à tout moment</li>
+          <li><span class="ic yes">✓</span> Visible : rassure et dissuade</li>
+        </ul>
+      </div>
+    </div>
+    <p class="compare-note reveal">Le médaillon NFC ne remplace pas la puce d'identification légale : il la complète, en permettant à <strong>la première personne qui croise votre chien</strong> de vous joindre tout de suite, sans rien d'autre qu'un téléphone.</p>
+  </section>
+</div>
+
+<!-- JAMAIS PÉRIMÉ -->
+<div class="wrap">
+  <section class="section" style="padding-bottom:0;">
+    <div class="highlight-band reveal">
+      <h2>Jamais <em>périmé</em></h2>
+      <p>Un numéro gravé dans le métal, c'est figé : si vous changez de téléphone ou déménagez, il devient faux. Avec le profil NFC, vous mettez vos informations à jour en 30 secondes, autant de fois que vous voulez, grâce à votre lien privé. Le médaillon reste toujours d'actualité, à vie.</p>
+    </div>
+  </section>
+</div>
+
+<!-- SÉCURITÉ -->
+<div class="wrap">
+  <section class="section">
+    <h2 class="reveal">Et la <em>vie privée</em> ?</h2>
+    <p class="lead reveal d1">Vous gardez le contrôle, du début à la fin.</p>
+    <div class="cards">
+      <div class="card reveal"><div class="ico">👁️</div><h3>Vous choisissez tout</h3><p>Seules les informations que vous décidez d'afficher apparaissent. Ni plus, ni moins.</p></div>
+      <div class="card reveal d1"><div class="ico">🔒</div><h3>Vous seul pouvez modifier</h3><p>Personne ne peut changer le profil sans votre lien d'édition privé, connu de vous seul.</p></div>
+      <div class="card reveal d2"><div class="ico">🙅</div><h3>Aucun compte requis</h3><p>Pas d'application à installer, pas de compte à créer, pas d'abonnement. Jamais.</p></div>
+    </div>
+  </section>
+</div>
+
+<!-- TECHNIQUE -->
+<div class="wrap">
+  <section class="section">
+    <h2 class="reveal">Les bonnes questions <em>techniques</em></h2>
+    <div class="cards">
+      <div class="card reveal"><div class="ico">📱</div><h3>Compatible partout</h3><p>La grande majorité des smartphones récents, iPhone comme Android, lisent les puces NFC.</p></div>
+      <div class="card reveal d1"><div class="ico">🔋</div><h3>Sans batterie</h3><p>La puce est passive : elle ne s'use pas, ne se recharge pas. Increvable, à vie.</p></div>
+      <div class="card reveal d2"><div class="ico">💧</div><h3>Résistant</h3><p>Protégé par sa résine, le médaillon supporte l'eau, les jeux et le quotidien.</p></div>
+      <div class="card reveal"><div class="ico">🔗</div><h3>Marche même sans NFC</h3><p>Un simple lien web mène à la même page : le profil reste accessible depuis n'importe quel navigateur.</p></div>
+      <div class="card reveal d1"><div class="ico">⚡</div><h3>Instantané</h3><p>Pas d'attente, pas de chargement compliqué : le profil s'ouvre directement.</p></div>
+      <div class="card reveal d2"><div class="ico">🇫🇷</div><h3>Fait main en France</h3><p>Chaque médaillon est imprimé et préparé à la main, dans le Gers.</p></div>
+    </div>
+  </section>
+</div>
+
+<!-- CAS D'USAGE -->
+<div class="wrap">
+  <section class="section">
+    <h2 class="reveal">Pas seulement pour les <em>fugues</em></h2>
+    <div class="cards">
+      <div class="card reveal"><div class="ico">🐕</div><h3>Chien perdu</h3><p>La personne qui le trouve vous appelle directement, sans passer par un vétérinaire.</p></div>
+      <div class="card reveal d1"><div class="ico">🏥</div><h3>En cas d'accident</h3><p>Vos consignes et vos contacts sont visibles tout de suite par les secours ou un passant.</p></div>
+      <div class="card reveal d2"><div class="ico">🏡</div><h3>Gardiennage</h3><p>Pet-sitter, famille, vacances : toutes les infos utiles sont à portée de scan.</p></div>
+    </div>
+  </section>
+</div>
+
+<!-- CTA -->
+<section class="cta">
+  <h2 class="reveal">Prêt à connecter votre chien ?</h2>
+  <p class="reveal d1">Un médaillon unique, personnalisé… et qui ramène à la maison.</p>
+  <a href="commander-nfc.html" class="btn-primary reveal d2">🐾 Commander le médaillon NFC</a>
+  <span class="price-note reveal d2">25 € · personnalisable · fabriqué main en France</span>
+</section>
+
+<footer>
+  <div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <img src="logo.png" alt="Doovlab" style="width:36px;height:36px;object-fit:contain;filter:brightness(10);">
+      <div>
+        <div class="footer-brand">DOOVLAB</div>
+        <div class="footer-tagline">Unique comme votre chien</div>
+      </div>
+    </div>
+  </div>
+  <p>© 2026 Doovlab · Impression 3D artisanale · France</p>
+  <p>contact@doovlab.fr</p>
+  <div style="text-align:center;width:100%;margin-top:16px">
+    <p style="font-size:12px">
+      <a href="index.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Accueil</a>
+      <a href="boutique.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Boutique</a>
+      <a href="a-propos.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Notre histoire</a>
+      <a href="faq.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">FAQ</a>
+      <a href="contact.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Contact</a>
+      <a href="mentions-legales.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Mentions légales</a>
+      <a href="cgv.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">CGV</a>
+      <a href="confidentialite.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Confidentialité</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = document.querySelectorAll('.reveal');
+  if(reduce || !('IntersectionObserver' in window)){ els.forEach(function(e){e.classList.add('in');}); }
+  else {
+    var io = new IntersectionObserver(function(en){ en.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {threshold:0.12, rootMargin:'0px 0px -6% 0px'});
+    els.forEach(function(e){ io.observe(e); });
+  }
+  var bar=document.getElementById('scrollProgress'), nv=document.querySelector('nav');
+  function onScroll(){ var d=document.documentElement, st=d.scrollTop||document.body.scrollTop, sh=d.scrollHeight-d.clientHeight; if(bar) bar.style.width=(sh>0?st/sh*100:0)+'%'; if(nv) nv.classList.toggle('scrolled', st>10); }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+})();
+</script>
+<script>(function(){try{var c=JSON.parse(localStorage.getItem("doovlab_cart_v1"))||[];var e=document.getElementById("nav-cart");if(e)e.textContent="🛒 Panier"+(c.length?" ("+c.length+")":"");}catch(e){}})();</script>
+</body>
+</html>
