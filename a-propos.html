@@ -57,8 +57,8 @@
 
   /* STORY SECTION */
   .story-section { max-width: 780px; margin: 70px auto 80px; padding: 0 48px; display: flex; flex-direction: column; gap: 48px; }
-  .story-block { display: grid; grid-template-columns: 72px 1fr; gap: 28px; align-items: start; }
-  .story-icon { width: 72px; height: 72px; background: var(--beige-dark); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0; }
+  .story-block { display: grid; grid-template-columns: 5px 1fr; gap: 26px; align-items: stretch; }
+  .story-icon { width: 5px; min-height: 54px; background: var(--sunset); border-radius: 3px; }
   .story-content { }
   .story-content .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--sunset); margin-bottom: 6px; }
   .story-content h2 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--text); margin-bottom: 14px; line-height: 1.3; }
@@ -78,7 +78,7 @@
   /* VALUES */
   .values-section { max-width: 900px; margin: 0 auto 80px; padding: 0 48px; display: grid; grid-template-columns: repeat(3,1fr); gap: 28px; }
   .value-card { background: var(--white); border-radius: 20px; padding: 32px 24px; text-align: center; }
-  .value-icon { font-size: 36px; margin-bottom: 16px; }
+  .value-icon { width:30px; height:3px; background:var(--sunset); border-radius:2px; margin:0 auto 16px; }
   .value-card h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
   .value-card p { font-size: 14px; color: var(--muted); line-height: 1.7; }
 
@@ -120,8 +120,8 @@
   .value-card, .dog-card { transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s, background .35s; }
   .value-card:hover { transform:translateY(-8px); box-shadow:0 20px 42px -18px rgba(60,20,5,0.25); }
   .dog-card:hover { transform:translateY(-8px); background:rgba(253,246,238,0.10); }
-  .story-icon { transition:transform .4s cubic-bezier(.2,.7,.2,1); }
-  .story-block:hover .story-icon { transform:scale(1.08) rotate(-6deg); }
+  .story-icon { transition:opacity .3s ease; }
+  .story-block:hover .story-icon { opacity:0.8; }
   @media (prefers-reduced-motion: reduce){ html.js .reveal, html.js .reveal-left, html.js .reveal-right { opacity:1 !important; transform:none !important; } }
 </style>
 <script>document.documentElement.classList.add('js');</script>
@@ -155,7 +155,7 @@
 <!-- STORY SECTION -->
 <section class="story-section">
   <div class="story-block reveal-left">
-    <div class="story-icon">🖨️</div>
+    <div class="story-icon"></div>
     <div class="story-content">
       <div class="eyebrow">2021 — Les débuts</div>
       <h2>Une passion qui change tout</h2>
@@ -163,7 +163,7 @@
     </div>
   </div>
   <div class="story-block reveal-right">
-    <div class="story-icon">🐾</div>
+    <div class="story-icon"></div>
     <div class="story-content">
       <div class="eyebrow">L'idée fondatrice</div>
       <h2>Protéger ce qu'on aime</h2>
@@ -171,7 +171,7 @@
     </div>
   </div>
   <div class="story-block reveal-left">
-    <div class="story-icon">❤️</div>
+    <div class="story-icon"></div>
     <div class="story-content">
       <div class="eyebrow">La mission</div>
       <h2>Réunir les familles</h2>
@@ -201,17 +201,17 @@
 <!-- VALUES -->
 <section class="values-section">
   <div class="value-card reveal">
-    <div class="value-icon">🇫🇷</div>
+    <div class="value-icon"></div>
     <h3>Fabriqué en France</h3>
     <p>Chaque médaillon est imprimé à la main dans mon atelier, avec soin et précision.</p>
   </div>
   <div class="value-card reveal d1">
-    <div class="value-icon">♻️</div>
+    <div class="value-icon"></div>
     <h3>PLA écologique</h3>
     <p>Des matériaux durables et respectueux de l'environnement pour chaque création.</p>
   </div>
   <div class="value-card reveal d2">
-    <div class="value-icon">🎨</div>
+    <div class="value-icon"></div>
     <h3>100% personnalisé</h3>
     <p>Le prénom de votre chien, vos couleurs. Unique comme lui.</p>
   </div>
