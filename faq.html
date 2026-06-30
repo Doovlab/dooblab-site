@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doovlab — Questions fréquentes</title>
+<meta name="description" content="Toutes les réponses sur les médaillons Doovlab : matière, personnalisation, puce NFC, commande, livraison et entretien.">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Doovlab">
+<meta property="og:title" content="Doovlab — Questions fréquentes">
+<meta property="og:description" content="Matière, personnalisation, puce NFC, livraison, entretien : toutes les réponses sur les médaillons Doovlab.">
+<meta property="og:image" content="https://doovlab.fr/og-image.jpg">
+<meta property="og:url" content="https://doovlab.fr/faq.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Doovlab — Questions fréquentes">
+<meta name="twitter:description" content="Matière, personnalisation, puce NFC, livraison, entretien : toutes les réponses sur les médaillons Doovlab.">
+<meta name="twitter:image" content="https://doovlab.fr/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sunset: #D4692A;
+    --sunset-light: #F0923A;
+    --sunset-dark: #A84E1A;
+    --beige: #FDF6EE;
+    --beige-dark: #F0E6D6;
+    --text: #2C1A0E;
+    --muted: #9A7A60;
+    --white: #FFFFFF;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Nunito',sans-serif; background:var(--beige); color:var(--text); }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 48px; background:rgba(253,246,238,0.94);
+    backdrop-filter:blur(8px); border-bottom:1px solid rgba(212,105,42,0.12);
+    transition:box-shadow .3s ease;
+  }
+  nav.scrolled { box-shadow:0 6px 24px -10px rgba(60,30,10,0.20); }
+  .nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .nav-logo img { width:36px; height:36px; object-fit:contain; }
+  .nav-brand { font-family:'Playfair Display',serif; font-weight:700; font-size:20px; color:var(--text); letter-spacing:2px; }
+  .nav-links { display:flex; align-items:center; gap:32px; list-style:none; }
+  .nav-links a { text-decoration:none; font-size:14px; font-weight:600; color:var(--muted); letter-spacing:1px; text-transform:uppercase; transition:color .2s; }
+  .nav-links a:hover, .nav-links a.active { color:var(--sunset); }
+  .nav-cta { background:var(--sunset); color:var(--beige) !important; padding:10px 24px; border-radius:50px; transition:background .2s !important; }
+  .nav-cta:hover { background:var(--sunset-dark) !important; color:var(--beige) !important; }
+
+  .scroll-progress { position:fixed; top:0; left:0; height:3px; width:0; background:linear-gradient(90deg,var(--sunset-light),var(--sunset)); z-index:200; transition:width .12s linear; }
+
+  .faq-hero { padding:130px 24px 40px; text-align:center; }
+  .faq-hero .hero-label { font-size:12px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--sunset-dark); display:inline-block; background:var(--beige-dark); padding:6px 18px; border-radius:50px; margin-bottom:22px; }
+  .faq-hero h1 { font-family:'Playfair Display',serif; font-size:clamp(34px,5vw,52px); font-weight:700; color:var(--text); line-height:1.15; }
+  .faq-hero h1 em { font-style:italic; color:var(--sunset); }
+  .faq-hero p { font-size:17px; color:var(--muted); max-width:560px; margin:18px auto 0; line-height:1.8; }
+
+  .faq-section { max-width:760px; margin:0 auto; padding:20px 24px 0; }
+  .faq-cat { font-family:'Playfair Display',serif; font-size:24px; color:var(--sunset-dark); margin:46px 0 16px; }
+  .faq-cat:first-child { margin-top:20px; }
+  details.faq { background:var(--white); border:1px solid var(--beige-dark); border-radius:14px; margin-bottom:12px; overflow:hidden; }
+  details.faq summary { list-style:none; cursor:pointer; padding:18px 22px; font-weight:700; font-size:16px; color:var(--text); display:flex; justify-content:space-between; align-items:center; gap:16px; }
+  details.faq summary::-webkit-details-marker { display:none; }
+  details.faq summary::after { content:'+'; font-size:26px; color:var(--sunset); font-weight:400; line-height:1; flex-shrink:0; }
+  details.faq[open] summary::after { content:'\2212'; }
+  details.faq summary:hover { color:var(--sunset); }
+  details.faq .a { padding:0 22px 20px; color:var(--muted); font-size:15px; line-height:1.75; }
+  details.faq .a a { color:var(--sunset-dark); }
+
+  .faq-cta { text-align:center; padding:64px 24px 90px; }
+  .faq-cta h2 { font-family:'Playfair Display',serif; font-size:28px; color:var(--text); margin-bottom:10px; }
+  .faq-cta p { color:var(--muted); margin-bottom:26px; line-height:1.7; }
+  .btn-primary { display:inline-flex; align-items:center; gap:8px; background:var(--sunset); color:var(--beige); padding:16px 32px; border-radius:50px; font-size:15px; font-weight:700; text-decoration:none; transition:all .2s; }
+  .btn-primary:hover { background:var(--sunset-dark); transform:translateY(-2px); }
+
+  footer { background: var(--text); color: rgba(253,246,238,0.6); padding: 48px; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .footer-brand { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--beige); letter-spacing: 2px; }
+  .footer-tagline { font-size: 13px; font-style: italic; color: var(--sunset-light); margin-top: 4px; }
+  footer p { font-size: 13px; }
+
+  html.js .reveal { opacity:0; transform:translateY(30px); transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+  html.js .reveal.in { opacity:1; transform:none; }
+  .reveal.d1{transition-delay:.08s;} .reveal.d2{transition-delay:.16s;}
+  @media (prefers-reduced-motion: reduce){ html.js .reveal { opacity:1 !important; transform:none !important; } }
+
+  @media (max-width: 900px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .faq-hero { padding: 100px 20px 30px; }
+    footer { padding: 28px 20px; flex-direction: column; text-align: center; }
+  }
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="Doovlab">
+    <span class="nav-brand">DOOVLAB</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Accueil</a></li>
+    <li><a href="boutique.html">Boutique</a></li>
+    <li><a href="a-propos.html">Notre histoire</a></li>
+    <li><a href="avis.html">Avis</a></li>
+    <li><a href="panier.html" id="nav-cart">🛒 Panier</a></li>
+    <li><a href="contact.html" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="faq-hero">
+  <span class="hero-label reveal">Questions fréquentes</span>
+  <h1 class="reveal d1">On répond à <em>tout</em></h1>
+  <p class="reveal d2">Matière, personnalisation, puce connectée, livraison, entretien… Tout ce que vous voulez savoir avant de commander.</p>
+</section>
+
+<div class="faq-section">
+
+  <h2 class="faq-cat reveal">Le produit</h2>
+
+  <details class="faq reveal">
+    <summary>C'est quoi un médaillon Doovlab ?</summary>
+    <div class="a">Un médaillon en forme de patte, imprimé en 3D et fabriqué main en France, pensé pour le collier de votre chien. Il existe en trois versions : Classique, Personnalisé (avec le prénom gravé) et NFC connecté (avec une puce qui mène à la page de votre chien).</div>
+  </details>
+
+  <details class="faq reveal">
+    <summary>En quelle matière sont-ils faits ?</summary>
+    <div class="a">En PLA, un plastique d'origine végétale, recouvert d'une fine résine qui lui donne sa brillance et le protège dans le temps.</div>
+  </details>
+
+  <details class="faq reveal">
+    <summary>Est-ce solide ? Résiste-t-il à l'eau ?</summary>
+    <div class="a">Oui, il supporte sans problème l'eau, les jeux et la vie de tous les jours. Seule précaution, comme pour beaucoup d'objets : évitez de le laisser sous forte chaleur prolongée (par exemple dans une voiture fermée en plein soleil).</div>
+  </details>
+
+  <details class="faq reveal">
+    <summary>Quelle taille fait le médaillon ?</summary>
+    <div class="a">Il mesure 5 × 5 cm : léger et compact, il s'accroche facilement au collier sans gêner votre chien.</div>
+  </details>
+
+  <h2 class="faq-cat reveal">La personnalisation</h2>
+
+  <details class="faq reveal">
+    <summary>Qu'est-ce que je peux personnaliser ?</summary>
+    <div class="a">La ou les couleurs du médaillon, le prénom de votre chien (gravé en relief, selon la version) et la police d'écriture. Vous composez tout directement sur la page de commande, avec un aperçu en temps réel.</div>
+  </details>
+
+  <details class="faq reveal">
+    <summary>Combien de couleurs sont disponibles ?</summary>
+    <div class="a">Une palette de 16 couleurs, et la possibilité de combiner deux teintes pour un rendu bicolore. De quoi créer un médaillon vraiment unique.</div>
+  </details>
+
+  <details class="faq reveal">
+    <summary>Le prénom est-il gravé ou simplement imprimé ?</summary>
+    <div class="a">Il est intégré en relief dès la fabrication (versions Personnalisé et NFC), pas collé ni peint en surface : il ne s'efface pas avec le temps.</div>
+  </details>
+
+  <h2 class="faq-cat reveal">La puce NFC</h2>
+
+  <details class="faq reveal">
+    <summary>C'est quoi le médaillon NFC connecté ?</summary>
+    <div class="a">Une puce sans contact est intégrée au médaillon. En l'approchant d'un smartphone (ou en ouvrant le lien), on accède à une page web qui affiche les informations de votre chien et vos coordonnées, pour vous contacter en cas de perte.</div>
+  </details>
+
+  <details class="faq reveal">
+    <summary>Faut-il une application ou un abonnement ?</summary>
+    <div class="a">Non. Aucune application à installer, aucun abonnement à payer. La page s'ouvre directement dans le navigateur du téléphone. C'est à vie.</div>
+  </details>
+
+  <details class="faq reveal">
+    <summary>Puis-je modifier les informations plus tard ?</summary>
+    <div class="a">Oui, autant de fois que vous le souhaitez (nouveau numéro, nouvelle adresse…), grâce à votre lien d'édition privé que nous vous transmettons avec le médaillon.</div>
+  </details>
+
+  <details class="faq reveal">
+    <summary>Mes informations sont-elles en sécurité ?</summary>
+    <div class="a">Oui. Toute personne qui scanne peut seulement voir les informations que vous avez choisi d'afficher. Personne ne peut les modifier sans votre lien d'édition privé, connu de vous seul.</div>
+  </details>
+
+  <details class="faq reveal">
+    <summary>Le NFC fonctionne-t-il sur tous les téléphones ?</summary>
+    <div class="a">La grande majorité des smartphones récents (Android comme iPhone) lisent les puces NFC. Et même sans NFC, la page de votre chien reste accessible par son lien web.</div>
+  </details>
+
+  <h2 class="faq-cat reveal">Commande & livraison</h2>
+
+  <details class="faq reveal">
+    <summary>Comment se passe une commande ?</summary>
+    <div class="a">Vous choisissez votre version et votre personnalisation, vous réglez en ligne de façon sécurisée, puis votre médaillon est fabriqué spécialement pour vous avant d'être expédié.</div>
+  </details>
+
+  <details class="faq reveal">
+    <summary>Quels sont les délais ?</summary>
+    <div class="a">Chaque médaillon est fabriqué à la commande, de façon artisanale. L'expédition se fait généralement sous 5 à 7 jours ouvrés.</div>
+  </details>
+
+  <details class="faq reveal">
+    <summary>Combien coûte la livraison ?</summary>
+    <div class="a">La livraison est à 4,90 €, et elle est offerte dès 50 € d'achat.</div>
+  </details>
+
+  <details class="faq reveal">
+    <summary>« Série limitée », ça veut dire quoi ?</summary>
+    <div class="a">Le lancement se fait en série numérotée, limitée à 100 exemplaires. Chaque médaillon de cette série porte son propre numéro : un objet vraiment unique, et parmi les tout premiers Doovlab.</div>
+  </details>
+
+  <details class="faq reveal">
+    <summary>Le paiement est-il sécurisé ?</summary>
+    <div class="a">Oui, le paiement est traité par Stripe, un service de paiement reconnu. Vos informations bancaires ne sont jamais visibles par Doovlab.</div>
+  </details>
+
+  <h2 class="faq-cat reveal">Entretien</h2>
+
+  <details class="faq reveal">
+    <summary>Comment entretenir mon médaillon ?</summary>
+    <div class="a">Rien de compliqué : il résiste à l'eau et aux jeux, un simple passage sous l'eau suffit à le nettoyer. Évitez seulement de l'exposer à une forte chaleur prolongée.</div>
+  </details>
+
+</div>
+
+<section class="faq-cta">
+  <h2 class="reveal">Une autre question ?</h2>
+  <p class="reveal d1">Écrivez-nous, on répond avec plaisir.<br>Ou découvrez directement les médaillons.</p>
+  <a href="boutique.html" class="btn-primary reveal d2">🐾 Découvrir les médaillons</a>
+</section>
+
+<footer>
+  <div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <img src="logo.png" alt="Doovlab" style="width:36px;height:36px;object-fit:contain;filter:brightness(10);">
+      <div>
+        <div class="footer-brand">DOOVLAB</div>
+        <div class="footer-tagline">Unique comme votre chien</div>
+      </div>
+    </div>
+  </div>
+  <p>© 2026 Doovlab · Impression 3D artisanale · France</p>
+  <p>contact@doovlab.fr</p>
+  <div style="text-align:center;width:100%;margin-top:16px">
+    <p style="font-size:12px">
+      <a href="index.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Accueil</a>
+      <a href="boutique.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Boutique</a>
+      <a href="a-propos.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Notre histoire</a>
+      <a href="faq.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">FAQ</a>
+      <a href="contact.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Contact</a>
+      <a href="mentions-legales.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Mentions légales</a>
+      <a href="cgv.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">CGV</a>
+      <a href="confidentialite.html" style="color:rgba(253,246,238,0.5);text-decoration:none;margin:0 12px">Confidentialité</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = document.querySelectorAll('.reveal');
+  if(reduce || !('IntersectionObserver' in window)){ els.forEach(function(e){e.classList.add('in');}); }
+  else {
+    var io = new IntersectionObserver(function(en){ en.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {threshold:0.12, rootMargin:'0px 0px -6% 0px'});
+    els.forEach(function(e){ io.observe(e); });
+  }
+  var bar=document.getElementById('scrollProgress'), nv=document.querySelector('nav');
+  function onScroll(){ var d=document.documentElement, st=d.scrollTop||document.body.scrollTop, sh=d.scrollHeight-d.clientHeight; if(bar) bar.style.width=(sh>0?st/sh*100:0)+'%'; if(nv) nv.classList.toggle('scrolled', st>10); }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+})();
+</script>
+<script>(function(){try{var c=JSON.parse(localStorage.getItem("doovlab_cart_v1"))||[];var e=document.getElementById("nav-cart");if(e)e.textContent="🛒 Panier"+(c.length?" ("+c.length+")":"");}catch(e){}})();</script>
+</body>
+</html>
