@@ -44,6 +44,7 @@
   .card .msg { font-size:14.5px; line-height:1.55; flex:1; }
   .card .who { margin-top:12px; font-size:13px; color:var(--muted); }
   .card .who b { color:var(--text); }
+  .tester-tag { display:inline-block; align-self:flex-start; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--sunset-dark); background:var(--beige-d); padding:3px 9px; border-radius:50px; margin-bottom:10px; }
   .empty { text-align:center; color:var(--muted); padding:30px; grid-column:1/-1; font-size:16px; }
 
   /* Formulaire */
@@ -88,8 +89,8 @@
 
 <div class="wrap">
   <div class="head">
-    <h1>Ils ont adopté Doovlab</h1>
-    <p>Les avis de nos clients et les photos de leurs compagnons. 🐾</p>
+    <h1>Ils ont testé Doovlab</h1>
+    <p>Avant l'ouverture, nous avons confié des médaillons à quelques testeurs pour éprouver le produit en conditions réelles. Voici leurs retours — les avis de nos clients viendront bientôt les rejoindre. 🐾</p>
   </div>
 
   <div class="grid" id="grid">
@@ -155,8 +156,9 @@ async function loadAvis(){
     grid.innerHTML = data.map(a => {
       const photo = a.photo_url ? `<img src="${esc(a.photo_url)}" alt="Chien d'un client Doovlab" loading="lazy">` : '';
       const who = a.chien ? `<b>${esc(a.auteur)}</b> & ${esc(a.chien)}` : `<b>${esc(a.auteur)}</b>`;
+      const tag = a.testeur ? '<span class="tester-tag">Testeur</span>' : '';
       return `<div class="card">${photo}<div class="body">
-        <div class="stars">${starline(a.note)}</div>
+        ${tag}<div class="stars">${starline(a.note)}</div>
         <div class="msg">${esc(a.message)}</div>
         <div class="who">${who}</div>
       </div></div>`;
