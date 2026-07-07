@@ -142,6 +142,15 @@
   }
 </style>
 <script>document.documentElement.classList.add('js');</script>
+<style id="burger-css">
+.nav-toggle{display:none;background:none;border:0;cursor:pointer;padding:6px;flex-direction:column;gap:5px;z-index:101;}
+.nav-toggle span{display:block;width:25px;height:2px;background:var(--text,#2C1A0E);border-radius:2px;transition:.25s;}
+@media (max-width:900px){
+ .nav-toggle{display:flex;}
+ nav .nav-links.open{display:flex !important;flex-direction:column;align-items:flex-start;position:absolute;top:100%;left:0;right:0;margin:0;padding:18px 24px;gap:18px;background:var(--beige,#FDF6EE);box-shadow:0 14px 34px -16px rgba(60,30,10,.32);border-bottom:1px solid rgba(212,105,42,.14);}
+ nav .nav-links.open li{width:100%;}
+}
+</style>
 </head>
 <body>
 <div class="scroll-progress" id="scrollProgress"></div>
@@ -160,6 +169,7 @@
     <li><a href="panier.html" id="nav-cart">🛒 Panier</a></li>
     <li><a href="contact.html" class="nav-cta">Contact</a></li>
   </ul>
+  <button class="nav-toggle" aria-label="Ouvrir le menu" onclick="var n=document.querySelector('.nav-links');n.classList.toggle('open');this.setAttribute('aria-expanded',n.classList.contains('open'));"><span></span><span></span><span></span></button>
 </nav>
 
 <section class="hero">
