@@ -82,6 +82,10 @@
 }
 </style>
 <style>#preview:not([src]){display:none;}</style>
+<style id="navhide-css">
+nav{transition:transform .35s ease, box-shadow .3s ease;}
+nav.nav-hidden{transform:translateY(-100%);}
+</style>
 </head>
 <body>
 <nav>
@@ -262,6 +266,19 @@ document.getElementById('submit').addEventListener('click', async () => {
 });
 
 loadAvis();
+</script>
+<script>
+(function(){var nv=document.querySelector('nav');if(!nv)return;var ln=window.scrollY||0;
+window.addEventListener('scroll',function(){
+ var y=window.scrollY||document.documentElement.scrollTop||0;
+ if(window.innerWidth<=900){
+  var open=document.querySelector('.nav-links.open');
+  if(y>ln+4 && y>100 && !open){nv.classList.add('nav-hidden');}
+  else if(y<ln-4 || y<=100){nv.classList.remove('nav-hidden');}
+ } else {nv.classList.remove('nav-hidden');}
+ ln=y;
+},{passive:true});
+})();
 </script>
 </body>
 </html>
