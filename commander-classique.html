@@ -140,7 +140,17 @@
 
   #viewer3d { width:100%; height:340px; position:relative; }
   #viewer3d canvas { display:block; }
-  .viewer-loading { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:13px; }
+  .viewer-loading { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; color:var(--muted); font-size:13px; text-align:center; z-index:2; }
+  .viewer-loading.is-done { opacity:0; transition:opacity .4s ease; pointer-events:none; }
+  .vl-badge { position:relative; width:76px; height:76px; display:flex; align-items:center; justify-content:center; }
+  .vl-badge::before { content:""; position:absolute; inset:0; border-radius:50%; border:2px solid rgba(212,105,42,.16); }
+  .vl-badge::after { content:""; position:absolute; inset:0; border-radius:50%; border:2px solid transparent; border-top-color:#D4692A; border-right-color:#F0923A; animation:vl-spin 1.1s linear infinite; }
+  .vl-badge img { width:44px; height:44px; object-fit:contain; animation:vl-pulse 1.6s ease-in-out infinite; }
+  .vl-txt { font-size:12px; letter-spacing:.04em; animation:vl-fade 1.6s ease-in-out infinite; }
+  @keyframes vl-spin { to { transform:rotate(360deg); } }
+  @keyframes vl-pulse { 0%,100% { transform:scale(1); opacity:.85; } 50% { transform:scale(1.09); opacity:1; } }
+  @keyframes vl-fade { 0%,100% { opacity:.5; } 50% { opacity:1; } }
+  @media (prefers-reduced-motion:reduce) { .vl-badge::after, .vl-badge img, .vl-txt { animation:none; } }
   .preview-wrap { margin-bottom:32px; }
   @media (max-width:900px){ .nav-links{ display:none; } }
 .care-info{margin-top:22px;padding:15px 17px;background:#F0E6D6;border-radius:14px;}.care-info h3{font-family:'Playfair Display',serif;font-size:15px;margin-bottom:6px;color:var(--text);}.care-info p{font-size:12.5px;line-height:1.6;color:var(--muted);margin:0;}
@@ -193,7 +203,7 @@ nav.nav-hidden{transform:translateY(-100%);}
   
               <div class="preview-wrap reveal" style="margin:0 0 30px;">
       <p style="font-size:12px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);text-align:center;margin:0 0 10px;">Aperçu 3D en temps réel</p>
-      <div id="viewer3d"><div class="viewer-loading">Chargement de l'aperçu 3D…</div></div>
+      <div id="viewer3d"><div class="viewer-loading"><span class="vl-badge"><img src="logo.png" alt="" aria-hidden="true"></span><span class="vl-txt">Chargement de l'aperçu 3D…</span></div></div>
       <p id="prev-caption" style="margin:10px 0 0;font-size:12px;color:var(--muted);text-align:center;">Glissez pour incliner · cliquez sur vos 2 couleurs</p>
     </div>
   </div>
@@ -426,7 +436,7 @@ if (container) {
     if(bodyMat) bodyMat.color.set(bodyHex);
     if(padMat) padMat.color.set(padHex);
     scene.add(gltf.scene);
-    const l = container.querySelector('.viewer-loading'); if(l) l.remove();
+    const l = container.querySelector('.viewer-loading'); if(l){ l.classList.add('is-done'); setTimeout(()=>{ if(l.parentNode) l.remove(); }, 420); }
   }, undefined, (err)=>{
     console.error(err);
     const l = container.querySelector('.viewer-loading'); if(l) l.textContent = 'Aperçu 3D indisponible';
