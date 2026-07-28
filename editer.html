@@ -134,6 +134,54 @@
   .form-group:nth-of-type(3){animation-delay:.18s;}
   .save-btn,.preview-btn{animation:dvUp .55s .12s both;}
   @media (prefers-reduced-motion: reduce){ .section-title,.form-group,.save-btn,.preview-btn{animation:none!important;} }
+
+  /* ===== Recadrage photo (zoom + deplacer) ===== */
+  .cropper-overlay {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    background: rgba(44,26,14,0.78); backdrop-filter: blur(3px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .cropper-overlay.open { display: flex; }
+  .cropper-card {
+    background: #fff; border-radius: 22px; padding: 24px 22px 20px;
+    width: 100%; max-width: 340px; text-align: center;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.3);
+  }
+  .cropper-card h3 {
+    font-family: 'Playfair Display', serif; font-size: 20px; color: var(--text);
+    margin-bottom: 4px;
+  }
+  .cropper-card .hint { font-size: 12.5px; color: var(--muted); margin-bottom: 16px; }
+  .crop-stage {
+    width: 240px; height: 240px; margin: 0 auto 16px;
+    border-radius: 50%; overflow: hidden; position: relative;
+    background: var(--beige-dark); border: 3px solid var(--text);
+    touch-action: none; cursor: grab;
+  }
+  .crop-stage.dragging { cursor: grabbing; }
+  .crop-stage img {
+    position: absolute; left: 0; top: 0; transform-origin: 0 0;
+    user-select: none; -webkit-user-drag: none; pointer-events: none;
+    max-width: none;
+  }
+  .crop-ring {
+    position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+    box-shadow: 0 0 0 2000px rgba(255,255,255,0); 
+  }
+  .zoom-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .zoom-row span { font-size: 18px; }
+  .zoom-row input[type=range] {
+    flex: 1; accent-color: var(--sunset); height: 4px;
+  }
+  .crop-actions { display: flex; gap: 10px; }
+  .crop-actions button {
+    flex: 1; border-radius: 50px; padding: 13px; font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 700; cursor: pointer; border: none; transition: all .2s;
+  }
+  .crop-cancel { background: transparent; color: var(--muted); border: 1.5px solid var(--beige-dark) !important; }
+  .crop-cancel:hover { border-color: var(--muted) !important; color: var(--text); }
+  .crop-ok { background: var(--sunset); color: #fff; }
+  .crop-ok:hover { background: var(--sunset-dark); }
 </style>
 </head>
 <body>
@@ -205,6 +253,27 @@
   </div>
 </div>
 
+<!-- Modale de recadrage photo -->
+<div class="cropper-overlay" id="cropper-overlay">
+  <div class="cropper-card">
+    <h3>Cadrez la photo 🐾</h3>
+    <p class="hint">Glissez pour déplacer, réglez le zoom ci-dessous.</p>
+    <div class="crop-stage" id="crop-stage">
+      <img id="crop-img" src="" alt="">
+      <div class="crop-ring"></div>
+    </div>
+    <div class="zoom-row">
+      <span>🐕</span>
+      <input type="range" id="zoom-range" min="1" max="3" step="0.01" value="1">
+      <span style="font-size:24px">🐕</span>
+    </div>
+    <div class="crop-actions">
+      <button class="crop-cancel" onclick="cancelCrop()">Annuler</button>
+      <button class="crop-ok" onclick="applyCrop()">Valider</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const SUPABASE_URL = 'https://ycsskzxbtaoekfpocgoz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_ESbSaBIVfAA463W4GTDihg_77jF03Of';
@@ -255,47 +324,154 @@ async function loadProfile() {
   }
 }
 
-async function handlePhotoUpload(input) {
+// ===== Recadrage : etat =====
+const CROP_OUT = 512;            // taille finale (px) de la photo carree envoyee
+let cropState = { img:null, scale:1, minScale:1, x:0, y:0, natW:0, natH:0, dragging:false, lastX:0, lastY:0 };
+
+function handlePhotoUpload(input) {
   if (!input.files || !input.files[0]) return;
   const file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = e => openCropper(e.target.result);
+  reader.readAsDataURL(file);
+  input.value = '';   // permet de re-choisir le meme fichier
+}
+
+const STAGE = 240;   // diametre du cercle de recadrage a l'ecran
+
+function openCropper(dataUrl) {
+  const img = document.getElementById('crop-img');
+  const stage = document.getElementById('crop-stage');
+  const range = document.getElementById('zoom-range');
+  const tmp = new Image();
+  tmp.onload = () => {
+    cropState.natW = tmp.naturalWidth;
+    cropState.natH = tmp.naturalHeight;
+    // echelle mini = l'image couvre tout le cercle (cote le plus petit)
+    cropState.minScale = STAGE / Math.min(tmp.naturalWidth, tmp.naturalHeight);
+    cropState.scale = cropState.minScale;
+    range.min = cropState.minScale;
+    range.max = cropState.minScale * 3;
+    range.step = cropState.minScale / 100;
+    range.value = cropState.minScale;
+    img.src = dataUrl;
+    // centrer
+    cropState.x = (STAGE - cropState.natW * cropState.scale) / 2;
+    cropState.y = (STAGE - cropState.natH * cropState.scale) / 2;
+    renderCrop();
+    document.getElementById('cropper-overlay').classList.add('open');
+  };
+  tmp.src = dataUrl;
+  cropState.img = tmp;
+}
+
+function clampCrop() {
+  const w = cropState.natW * cropState.scale;
+  const h = cropState.natH * cropState.scale;
+  // empeche les bords blancs : l'image doit toujours couvrir le cercle
+  if (cropState.x > 0) cropState.x = 0;
+  if (cropState.y > 0) cropState.y = 0;
+  if (cropState.x < STAGE - w) cropState.x = STAGE - w;
+  if (cropState.y < STAGE - h) cropState.y = STAGE - h;
+}
+
+function renderCrop() {
+  const img = document.getElementById('crop-img');
+  clampCrop();
+  img.style.width = (cropState.natW * cropState.scale) + 'px';
+  img.style.height = (cropState.natH * cropState.scale) + 'px';
+  img.style.transform = 'translate(' + cropState.x + 'px,' + cropState.y + 'px)';
+}
+
+// zoom (garde le centre du cercle fixe)
+document.getElementById('zoom-range').addEventListener('input', function() {
+  const newScale = parseFloat(this.value);
+  const cx = STAGE/2, cy = STAGE/2;
+  const ratio = newScale / cropState.scale;
+  cropState.x = cx - (cx - cropState.x) * ratio;
+  cropState.y = cy - (cy - cropState.y) * ratio;
+  cropState.scale = newScale;
+  renderCrop();
+});
+
+// glisser : souris
+const stageEl = document.getElementById('crop-stage');
+stageEl.addEventListener('mousedown', e => { cropState.dragging=true; cropState.lastX=e.clientX; cropState.lastY=e.clientY; stageEl.classList.add('dragging'); });
+window.addEventListener('mousemove', e => {
+  if(!cropState.dragging) return;
+  cropState.x += e.clientX - cropState.lastX;
+  cropState.y += e.clientY - cropState.lastY;
+  cropState.lastX = e.clientX; cropState.lastY = e.clientY;
+  renderCrop();
+});
+window.addEventListener('mouseup', () => { cropState.dragging=false; stageEl.classList.remove('dragging'); });
+// glisser : tactile
+stageEl.addEventListener('touchstart', e => { const t=e.touches[0]; cropState.dragging=true; cropState.lastX=t.clientX; cropState.lastY=t.clientY; }, {passive:true});
+stageEl.addEventListener('touchmove', e => {
+  if(!cropState.dragging) return;
+  const t=e.touches[0];
+  cropState.x += t.clientX - cropState.lastX;
+  cropState.y += t.clientY - cropState.lastY;
+  cropState.lastX=t.clientX; cropState.lastY=t.clientY;
+  renderCrop();
+  e.preventDefault();
+}, {passive:false});
+stageEl.addEventListener('touchend', () => { cropState.dragging=false; });
+
+function cancelCrop() {
+  document.getElementById('cropper-overlay').classList.remove('open');
+}
+
+async function applyCrop() {
+  // rendu du cercle visible dans un canvas carre CROP_OUT
+  const canvas = document.createElement('canvas');
+  canvas.width = CROP_OUT; canvas.height = CROP_OUT;
+  const ctx = canvas.getContext('2d');
+  const k = CROP_OUT / STAGE;          // passage ecran -> sortie
+  ctx.drawImage(
+    cropState.img,
+    cropState.x * k, cropState.y * k,
+    cropState.natW * cropState.scale * k,
+    cropState.natH * cropState.scale * k
+  );
+  document.getElementById('cropper-overlay').classList.remove('open');
+
+  // apercu immediat dans la bulle
+  const previewData = canvas.toDataURL('image/jpeg', 0.9);
+  const pv = document.getElementById('preview-img');
+  pv.src = previewData;
+  pv.style.display = 'block';
+  document.getElementById('placeholder-emoji').style.display = 'none';
+
+  // upload du blob recadre vers Supabase
   const progress = document.getElementById('upload-progress');
   progress.style.display = 'block';
-
-  // Preview local
-  const reader = new FileReader();
-  reader.onload = e => {
-    const img = document.getElementById('preview-img');
-    img.src = e.target.result;
-    img.style.display = 'block';
-    document.getElementById('placeholder-emoji').style.display = 'none';
-  };
-  reader.readAsDataURL(file);
-
-  // Upload to Supabase Storage
-  try {
-    const fileName = `${currentToken}_${Date.now()}.${file.name.split('.').pop()}`;
-    const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/photos/${fileName}`, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_KEY,
-        'Content-Type': file.type,
-        'x-upsert': 'true'
-      },
-      body: file
-    });
-
-    if (uploadRes.ok) {
-      currentPhotoUrl = `${SUPABASE_URL}/storage/v1/object/public/photos/${fileName}`;
-      progress.textContent = '✓ Photo uploadée !';
-      setTimeout(() => { progress.style.display = 'none'; }, 2000);
-    } else {
-      progress.textContent = 'Erreur upload, la photo sera sauvegardée localement';
-      setTimeout(() => { progress.style.display = 'none'; }, 3000);
+  progress.textContent = '⏳ Upload en cours...';
+  canvas.toBlob(async (blob) => {
+    try {
+      const fileName = `${currentToken}_${Date.now()}.jpg`;
+      const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/photos/${fileName}`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': 'image/jpeg',
+          'x-upsert': 'true'
+        },
+        body: blob
+      });
+      if (uploadRes.ok) {
+        currentPhotoUrl = `${SUPABASE_URL}/storage/v1/object/public/photos/${fileName}`;
+        progress.textContent = '✓ Photo uploadée !';
+        setTimeout(() => { progress.style.display = 'none'; }, 2000);
+      } else {
+        progress.textContent = 'Erreur upload, réessayez';
+        setTimeout(() => { progress.style.display = 'none'; }, 3000);
+      }
+    } catch(e) {
+      progress.style.display = 'none';
     }
-  } catch(e) {
-    progress.style.display = 'none';
-  }
+  }, 'image/jpeg', 0.9);
 }
 
 async function saveProfile() {
@@ -348,5 +524,6 @@ async function saveProfile() {
 
 loadProfile();
 </script>
+
 </body>
 </html>
