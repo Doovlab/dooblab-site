@@ -23,7 +23,7 @@ const FREE_SHIPPING_THRESHOLD = 5000;  // 50,00 € : port offert au-dessus (ne 
 
 // --- Série de lancement limitée -------------------------------
 const LAUNCH_LIMIT = 100;   // nombre total de médaillons de la série de lancement
-const LAUNCH_START = Math.floor(Date.parse('2026-09-01T00:00:00Z') / 1000); // ⇦ METS ICI ta date/heure d'ouverture réelle. Toute commande AVANT (tes tests) n'est PAS comptée dans le X/100.
+const LAUNCH_START = Math.floor(Date.parse('2026-08-08T00:00:00Z') / 1000); // ⇦ METS ICI ta date/heure d'ouverture réelle. Toute commande AVANT (tes tests) n'est PAS comptée dans le X/100.
 
 // --- Ton domaine (sert aux pages de retour) -------------------
 const SITE = 'https://doovlab.fr';
