@@ -23,6 +23,7 @@ const FREE_SHIPPING_THRESHOLD = 5000;  // 50,00 € : port offert au-dessus (ne 
 
 // --- Série de lancement limitée -------------------------------
 const LAUNCH_LIMIT = 100;   // nombre total de médaillons de la série de lancement
+const LAUNCH_START = Math.floor(Date.parse('2026-09-01T00:00:00Z') / 1000); // ⇦ METS ICI ta date/heure d'ouverture réelle. Toute commande AVANT (tes tests) n'est PAS comptée dans le X/100.
 
 // --- Ton domaine (sert aux pages de retour) -------------------
 const SITE = 'https://doovlab.fr';
@@ -39,7 +40,7 @@ async function countLaunchSold(key) {
     if (!r.ok) throw new Error('Stripe list error');
     const arr = d.data || [];
     for (const s of arr) {
-      if (s.metadata && s.metadata.series === 'launch') {
+      if (s.created >= LAUNCH_START && s.metadata && s.metadata.series === 'launch') {
         sold += parseInt(s.metadata.units, 10) || 0;
       }
     }
@@ -135,7 +136,6 @@ module.exports = async function handler(req, res) {
     // On marque cette commande comme faisant partie de la série + les numéros à graver
     params.append('metadata[series]', 'launch');
     params.append('metadata[units]', String(totalUnits));
-    params.append('metadata[numeros]', (sold + 1) + (totalUnits > 1 ? ('-' + (sold + totalUnits)) : '') + '/' + LAUNCH_LIMIT);
 
     // Frais de port : offerts si le seuil est atteint, sinon forfait
     const fee = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE_CENTS;
