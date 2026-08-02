@@ -54,7 +54,7 @@
     }
 
     buildBanner();
-    banner.innerHTML = '\u{1F525} Série de lancement \u00b7 plus que <b id="series-banner-n">' + remaining + '</b>/' + LIMIT + ' exemplaires numérotés';
+    banner.innerHTML = '\u{1F525} Série de lancement \u00b7 plus que <b id="series-banner-n">' + remaining + '</b>/' + LIMIT + ' avant fermeture temporaire de la boutique';
 
     var block = document.getElementById('series-block');
     if (block) {
