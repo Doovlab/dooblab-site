@@ -123,14 +123,17 @@ nav.nav-hidden{transform:translateY(-100%);}
 
 <div class="wrap">
   <h1>Votre panier</h1>
-  <p class="sub">Livraison offerte dès 50€ d'achat.</p>
+  <p class="sub">Livraison offerte dès 50€ en France · Union européenne 14,99€.</p>
   <div id="cart-content"></div>
 </div>
 
 <script>
 const KEY = 'doovlab_cart_v1';
 const SHIPPING_FEE = 4.90;   // ⚠️ doit correspondre à SHIPPING_FEE_CENTS dans api/checkout.js (490 = 4,90 €)
-const FREE_THRESHOLD = 50;
+const EU_SHIPPING = 14.99;   // ⚠️ doit correspondre à EU_SHIPPING_CENTS dans api/checkout.js (1499 = 14,99 €)
+const FREE_THRESHOLD = 50;   // port offert FRANCE uniquement
+function getZone(){ try { return localStorage.getItem('doovlab_zone') === 'UE' ? 'UE' : 'FR'; } catch(e){ return 'FR'; } }
+function setZone(z){ try { localStorage.setItem('doovlab_zone', z); } catch(e){} render(); }
 
 function getCart(){ try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch(e){ return []; } }
 function saveCart(c){ localStorage.setItem(KEY, JSON.stringify(c)); }
@@ -162,27 +165,41 @@ function render(){
     + '</div>';
   });
 
+  const zone = getZone();
   const remaining = Math.max(0, FREE_THRESHOLD - subtotal);
   const pct = Math.min(100, (subtotal / FREE_THRESHOLD) * 100);
   const freeReached = subtotal >= FREE_THRESHOLD;
 
-  const shipMsg = freeReached
-    ? '🎉 Bravo, la livraison est offerte ! <span style="color:#2D7a3a">Tu économises ' + eur(SHIPPING_FEE) + '</span>'
-    : 'Plus que <strong>' + eur(remaining) + '</strong> pour la livraison offerte 🎁';
-  html += '<div class="ship-bar-wrap"><div class="ship-msg">' + shipMsg + '</div>'
-        + '<div class="ship-track"><div class="ship-fill" style="width:' + pct + '%"></div></div></div>';
+  // Sélecteur de zone de livraison (France / UE)
+  var zbase = 'padding:8px 14px;border-radius:50px;border:1.5px solid #D4692A;background:#fff;color:#D4692A;font-weight:700;font-size:14px;cursor:pointer;';
+  var zon   = 'background:#D4692A;color:#fff;';
+  html += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 16px;">'
+        + '<span style="font-weight:700;font-size:14px;">Livraison :</span>'
+        + '<button type="button" onclick="setZone(\'FR\')" style="' + zbase + (zone==='FR'?zon:'') + '">🇫🇷 France</button>'
+        + '<button type="button" onclick="setZone(\'UE\')" style="' + zbase + (zone==='UE'?zon:'') + '">🇪🇺 Union européenne</button>'
+        + '</div>';
 
-  if (!freeReached){
-    if (remaining <= 14){
-      html += '<div class="nudge">Un <strong>médaillon Classique à 14€</strong> et la livraison passe offerte 😉 '
-            + '<a href="commander-classique.html">Ajouter un Classique →</a></div>';
-    } else {
-      html += '<div class="nudge">Il te manque <strong>' + eur(remaining) + '</strong> pour la livraison offerte. '
-            + '<a href="boutique.html">Compléter ma commande →</a></div>';
+  var shipping;
+  if (zone === 'UE'){
+    shipping = EU_SHIPPING;
+    html += '<div class="ship-bar-wrap"><div class="ship-msg">📦 Livraison Union européenne : <strong>' + eur(EU_SHIPPING) + '</strong> · Colissimo suivi (2 à 5 jours), sans douane</div></div>';
+  } else {
+    shipping = freeReached ? 0 : SHIPPING_FEE;
+    const shipMsg = freeReached
+      ? '🎉 Bravo, la livraison est offerte ! <span style="color:#2D7a3a">Tu économises ' + eur(SHIPPING_FEE) + '</span>'
+      : 'Plus que <strong>' + eur(remaining) + '</strong> pour la livraison offerte 🎁';
+    html += '<div class="ship-bar-wrap"><div class="ship-msg">' + shipMsg + '</div>'
+          + '<div class="ship-track"><div class="ship-fill" style="width:' + pct + '%"></div></div></div>';
+    if (!freeReached){
+      if (remaining <= 14){
+        html += '<div class="nudge">Un <strong>médaillon Classique à 14€</strong> et la livraison passe offerte 😉 '
+              + '<a href="commander-classique.html">Ajouter un Classique →</a></div>';
+      } else {
+        html += '<div class="nudge">Il te manque <strong>' + eur(remaining) + '</strong> pour la livraison offerte. '
+              + '<a href="boutique.html">Compléter ma commande →</a></div>';
+      }
     }
   }
-
-  const shipping = freeReached ? 0 : SHIPPING_FEE;
   const total = subtotal + shipping;
   html += '<div class="summary">'
     + '<div class="row"><span>Sous-total</span><span>' + eur(subtotal) + '</span></div>'
@@ -247,7 +264,7 @@ async function checkout(){
     const res = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: cart.map(it => ({ id: it.id, qty: it.qty, options: it.options })) })
+      body: JSON.stringify({ zone: getZone(), items: cart.map(it => ({ id: it.id, qty: it.qty, options: it.options })) })
     });
     const data = await res.json();
     if (res.ok && data.url) { window.location.href = data.url; return; }
