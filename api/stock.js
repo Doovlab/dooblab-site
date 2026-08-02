@@ -6,6 +6,7 @@
 // =============================================================
 
 const LAUNCH_LIMIT = 100;
+const LAUNCH_START = Math.floor(Date.parse('2026-09-01T00:00:00Z') / 1000); // ⇦ MÊME date que dans api/checkout.js. Les commandes AVANT (tes tests) ne sont pas comptées.
 
 async function countLaunchSold(key) {
   let sold = 0, startingAfter = null, pages = 0;
@@ -17,7 +18,7 @@ async function countLaunchSold(key) {
     if (!r.ok) throw new Error('Stripe list error');
     const arr = d.data || [];
     for (const s of arr) {
-      if (s.metadata && s.metadata.series === 'launch') {
+      if (s.created >= LAUNCH_START && s.metadata && s.metadata.series === 'launch') {
         sold += parseInt(s.metadata.units, 10) || 0;
       }
     }
