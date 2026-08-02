@@ -18,8 +18,11 @@ const CATALOG = {
 };
 
 // --- Réglages livraison ---------------------------------------
-const SHIPPING_FEE_CENTS      = 490;   // 4,90 € sous le seuil  ← AJUSTE ce montant après avoir pesé un colis
-const FREE_SHIPPING_THRESHOLD = 5000;  // 50,00 € : port offert au-dessus (ne pas changer, c'est ton offre)
+const SHIPPING_FEE_CENTS      = 490;   // 4,90 € France sous le seuil  ← AJUSTE après avoir pesé un colis
+const FREE_SHIPPING_THRESHOLD = 5000;  // 50,00 € : port offert au-dessus, FRANCE UNIQUEMENT
+const EU_SHIPPING_CENTS       = 1499;  // 14,99 € vers l'UE (Colissimo zone A ≤ 500 g) — jamais offert
+// Pays de l'Union européenne (hors France) livrés en zone UE
+const EU_COUNTRIES = ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE'];
 
 // --- Série de lancement limitée -------------------------------
 const LAUNCH_LIMIT = 100;   // nombre total de médaillons de la série de lancement
@@ -66,6 +69,7 @@ module.exports = async function handler(req, res) {
   try {
     // Récupère le panier envoyé par le site
     const body  = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+    const zone  = (body.zone === 'UE') ? 'UE' : 'FR';   // zone de livraison choisie sur le panier
     const items = Array.isArray(body.items) ? body.items : [];
     if (!items.length) {
       res.status(400).json({ error: 'Panier vide' });
@@ -78,8 +82,12 @@ module.exports = async function handler(req, res) {
     params.append('locale', 'fr');
     params.append('success_url', SITE + '/merci.html?session_id={CHECKOUT_SESSION_ID}');
     params.append('cancel_url',  SITE + '/panier.html');
-    // On collecte l'adresse de livraison (France) et le téléphone
-    params.append('shipping_address_collection[allowed_countries][0]', 'FR');
+    // On collecte l'adresse de livraison (pays selon la zone choisie) et le téléphone
+    if (zone === 'UE') {
+      EU_COUNTRIES.forEach((c, i) => params.append('shipping_address_collection[allowed_countries][' + i + ']', c));
+    } else {
+      params.append('shipping_address_collection[allowed_countries][0]', 'FR');
+    }
     params.append('phone_number_collection[enabled]', 'true');
 
     // Lignes du panier (prix recalculés côté serveur)
@@ -137,12 +145,15 @@ module.exports = async function handler(req, res) {
     params.append('metadata[series]', 'launch');
     params.append('metadata[units]', String(totalUnits));
 
-    // Frais de port : offerts si le seuil est atteint, sinon forfait
-    const fee = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE_CENTS;
+    // Frais de port : UE = forfait 14,99 € (jamais offert) ; France = offert au seuil, sinon forfait
+    const fee = (zone === 'UE')
+      ? EU_SHIPPING_CENTS
+      : (subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE_CENTS);
+    params.append('metadata[zone]', zone);
     params.append('shipping_options[0][shipping_rate_data][type]', 'fixed_amount');
     params.append('shipping_options[0][shipping_rate_data][fixed_amount][amount]', String(fee));
     params.append('shipping_options[0][shipping_rate_data][fixed_amount][currency]', 'eur');
-    params.append('shipping_options[0][shipping_rate_data][display_name]', fee === 0 ? 'Livraison offerte' : 'Livraison');
+    params.append('shipping_options[0][shipping_rate_data][display_name]', fee === 0 ? 'Livraison offerte' : (zone === 'UE' ? 'Livraison Union européenne' : 'Livraison'));
 
     // Appel à l'API Stripe
     const r = await fetch('https://api.stripe.com/v1/checkout/sessions', {
