@@ -101,7 +101,7 @@
     <div class="step"><div class="n">3</div><div class="t"><strong>Expédition & suivi</strong><span>Dès l'envoi, tu reçois un email avec le suivi de ton colis.</span></div></div>
   </div>
 
-  <div class="nfc-note">
+  <div class="nfc-note" id="nfc-note" style="display:none">
     📡 <strong>Tu as commandé un médaillon NFC ?</strong> Dans ton colis, tu trouveras un QR code à scanner pour créer la page de profil de ton chien (photo, infos, contact) — celle qui s'affiche quand on scanne le médaillon.
   </div>
 
@@ -114,7 +114,15 @@
 </div>
 
 <script>
-  // Paiement validé : on vide le panier
+  // Paiement validé : on lit le panier pour savoir s'il contenait un NFC, PUIS on le vide
+  try {
+    const cart = JSON.parse(localStorage.getItem('doovlab_cart_v1') || '[]');
+    const hasNFC = Array.isArray(cart) && cart.some(it => it && it.id === 'nfc');
+    if (hasNFC) {
+      const note = document.getElementById('nfc-note');
+      if (note) note.style.display = '';
+    }
+  } catch(e){}
   try { localStorage.removeItem('doovlab_cart_v1'); } catch(e){}
 
   function fireConfetti(){
