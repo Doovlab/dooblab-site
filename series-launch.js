@@ -51,7 +51,12 @@
     window.__freeShipRemaining = (fs && typeof fs.remaining === 'number') ? fs.remaining : null;
     window.__freeShipLimit     = (fs && fs.limit) || 50;
 
-    var price = document.querySelector('.product-price');
+    // Uniquement sur les 3 pages produit (commander-*.html) :
+    // sur la boutique et l'accueil, la classe .product-price existe aussi
+    // dans les cartes, et la ligne casserait la mise en page.
+    var price = (location.pathname.indexOf('commander-') !== -1)
+      ? document.querySelector('.product-price')
+      : null;
     if (price) {
       var line = document.getElementById('freeship-line');
       if (window.__freeShipActive) {
