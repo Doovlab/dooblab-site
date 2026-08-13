@@ -184,13 +184,20 @@ function render(){
     shipping = EU_SHIPPING;
     html += '<div class="ship-bar-wrap"><div class="ship-msg">📦 Livraison Union européenne : <strong>' + eur(EU_SHIPPING) + '</strong> · Colissimo suivi (2 à 5 jours), sans douane</div></div>';
   } else {
-    shipping = freeReached ? 0 : SHIPPING_FEE;
-    const shipMsg = freeReached
+    const launchFree = (window.__freeShipActive === true);
+    shipping = (launchFree || freeReached) ? 0 : SHIPPING_FEE;
+    const shipMsg = launchFree
+      ? '\u{1F381} <strong>Offre de lancement</strong> : frais de port offerts en France'
+        + (typeof window.__freeShipRemaining === 'number'
+            ? ' \u2014 plus que <strong>' + window.__freeShipRemaining + '</strong> sur ' + (window.__freeShipLimit || 50) + ' commandes'
+            : '')
+      : freeReached
       ? '🎉 Bravo, la livraison est offerte ! <span style="color:#2D7a3a">Tu économises ' + eur(SHIPPING_FEE) + '</span>'
       : 'Plus que <strong>' + eur(remaining) + '</strong> pour la livraison offerte 🎁';
     html += '<div class="ship-bar-wrap"><div class="ship-msg">' + shipMsg + '</div>'
-          + '<div class="ship-track"><div class="ship-fill" style="width:' + pct + '%"></div></div></div>';
-    if (!freeReached){
+          + (launchFree ? '' : '<div class="ship-track"><div class="ship-fill" style="width:' + pct + '%"></div></div>')
+          + '</div>';
+    if (!launchFree && !freeReached){
       if (remaining <= 14){
         html += '<div class="nudge">Un <strong>médaillon Classique à 14€</strong> et la livraison passe offerte 😉 '
               + '<a href="commander-classique.html">Ajouter un Classique →</a></div>';
