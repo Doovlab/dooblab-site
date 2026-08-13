@@ -79,6 +79,26 @@
     }
   }
 
+  /* Texte du bandeau : l'urgence monte avec les ventes, au lieu d'annoncer
+     « plus que 100/100 » dès la première seconde.
+       - aucune vente        → annonce simple
+       - de 1 vente à URGENT → compteur d'adoptions
+       - sous le seuil       → rareté assumée */
+  var URGENT = 30;
+
+  function bannerText(sold, remaining) {
+    if (!sold) {
+      return '\u{1F43E} S\u00e9rie de lancement \u00b7 <b id="series-banner-n">' + LIMIT +
+             '</b> exemplaires, puis fermeture temporaire de la boutique';
+    }
+    if (remaining > URGENT) {
+      return '\u{1F43E} S\u00e9rie de lancement \u00b7 <b id="series-banner-n">' + sold + '</b>/' + LIMIT +
+             ' d\u00e9j\u00e0 adopt\u00e9s';
+    }
+    return '\u{1F525} Plus que <b id="series-banner-n">' + remaining + '</b> sur ' + LIMIT +
+           ' avant fermeture temporaire de la boutique';
+  }
+
   function render(sold, remaining) {
     var soldOut = remaining <= 0;
     window.__seriesRemaining = remaining;
@@ -90,7 +110,7 @@
     }
 
     buildBanner();
-    banner.innerHTML = '\u{1F525} Série de lancement \u00b7 plus que <b id="series-banner-n">' + remaining + '</b>/' + LIMIT + ' avant fermeture temporaire de la boutique';
+    banner.innerHTML = bannerText(sold, remaining);
 
     var block = document.getElementById('series-block');
     if (block) {
