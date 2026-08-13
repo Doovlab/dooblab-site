@@ -167,6 +167,11 @@
 .care-info{margin-top:22px;padding:15px 17px;background:#F0E6D6;border-radius:14px;}.care-info h3{font-family:'Playfair Display',serif;font-size:15px;margin-bottom:6px;color:var(--text);}.care-info p{font-size:12.5px;line-height:1.6;color:var(--muted);margin:0;}
 .info-row{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:20px;margin-top:28px;align-items:flex-start;}.info-row>*{flex:1 1 240px;margin:0;}
 
+
+  .launch-ship { display:none; margin:6px 0 4px; font-family:'Nunito',sans-serif; font-size:15px;
+                 color:var(--terracotta,#D4692A); font-weight:600; }
+  .launch-ship .dot { display:inline-block; width:7px; height:7px; border-radius:50%;
+                      background:var(--terracotta,#D4692A); margin-right:6px; vertical-align:middle; }
 </style>
 <script>document.documentElement.classList.add('js');</script>
 <style id="burger-css">
@@ -211,6 +216,7 @@ nav.nav-hidden{transform:translateY(-100%);}
     <h1 class="product-title reveal">Médaillon Patte —<br>NFC Connecté</h1>
 
     <div class="product-price reveal d1">25€ <span>/ pièce</span></div>
+    <div class="launch-ship" id="launch-ship"><span class="dot"></span><span id="launch-ship-txt"></span></div>
 
     <ul class="product-perks">
       <li>Puce NFC NTAG213 intégrée</li>
@@ -603,6 +609,25 @@ window.addEventListener('scroll',function(){
  } else {nv.classList.remove('nav-hidden');}
  ln=y;
 },{passive:true});
+})();
+</script>
+
+<script>
+// Compteur port offert de lancement : interroge l'API et affiche "plus que X sur 50"
+(function(){
+  fetch('/api/checkout', { method:'GET' })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if (d && d.freeShipActive && d.freeShipRemaining > 0) {
+        var el = document.getElementById('launch-ship');
+        var tx = document.getElementById('launch-ship-txt');
+        if (el && tx) {
+          tx.textContent = 'Frais de port offerts en France — plus que ' + d.freeShipRemaining + ' sur ' + (d.freeShipLimit || 50);
+          el.style.display = 'block';
+        }
+      }
+    })
+    .catch(function(){ /* silencieux : si l'API ne repond pas, on n'affiche rien */ });
 })();
 </script>
 </body>
