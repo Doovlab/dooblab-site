@@ -43,6 +43,37 @@
     }, 60);
   }
 
+  /* --- Offre de lancement : port offert pour les 50 premières commandes ---
+     Une seule ligne discrète, juste sous le prix des pages produit.
+     Sur le panier, on relance simplement le rendu : c'est lui qui recalcule. */
+  function renderFreeShip(fs) {
+    window.__freeShipActive    = !!(fs && fs.active);
+    window.__freeShipRemaining = (fs && typeof fs.remaining === 'number') ? fs.remaining : null;
+    window.__freeShipLimit     = (fs && fs.limit) || 50;
+
+    var price = document.querySelector('.product-price');
+    if (price) {
+      var line = document.getElementById('freeship-line');
+      if (window.__freeShipActive) {
+        if (!line) {
+          line = document.createElement('div');
+          line.id = 'freeship-line';
+          line.style.cssText = "margin:6px 0 2px;color:#A84E1A;font-weight:700;font-size:14px;";
+          price.parentNode.insertBefore(line, price.nextSibling);
+        }
+        line.innerHTML = '\u{1F381} Frais de port offerts en France \u2014 plus que <b>' +
+                         window.__freeShipRemaining + '</b> sur ' + window.__freeShipLimit + ' commandes';
+      } else if (line) {
+        line.parentNode.removeChild(line);
+      }
+    }
+
+    // Page panier : on redemande un rendu pour que le total tienne compte de l'offre
+    if (location.pathname.indexOf('panier') !== -1 && typeof window.render === 'function') {
+      window.render();
+    }
+  }
+
   function render(sold, remaining) {
     var soldOut = remaining <= 0;
     window.__seriesRemaining = remaining;
@@ -77,6 +108,7 @@
       .then(function (r) { return r.json(); })
       .then(function (d) {
         if (d && typeof d.remaining === 'number') render(d.sold, d.remaining);
+        if (d) renderFreeShip(d.freeShip);
       })
       .catch(function () {});
   }
