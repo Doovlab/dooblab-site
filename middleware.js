@@ -1,46 +1,49 @@
-import { next } from '@vercel/edge';
+import { next, rewrite } from '@vercel/edge';
 
-// Protège tout le site tant que la variable SITE_PASSWORD est définie sur Vercel.
-// Pour OUVRIR le site le jour du lancement : il suffit de supprimer la variable
-// SITE_PASSWORD dans Vercel (ou de supprimer ce fichier). Aucun autre changement.
+// ─────────────────────────────────────────────────────────────
+//  OUVERTURE AUTOMATIQUE DU SITE — Doovlab
+//  Avant l'heure d'ouverture : toute page affiche le compte à rebours.
+//  À l'heure dite : le site s'ouvre tout seul, sans aucune intervention.
+//
+//  Pour changer l'heure d'ouverture : modifie OPEN_TIME ci-dessous.
+//  Pour forcer l'ouverture immédiate (au cas où) : mets OPEN_TIME dans le passé,
+//  ou supprime ce fichier.
+// ─────────────────────────────────────────────────────────────
+
+// 15 août 2026 à 00h00, heure de Paris (= 14 août 22h00 UTC, car Paris = UTC+2 en été)
+const OPEN_TIME = new Date('2026-08-14T22:00:00Z').getTime();
 
 export const config = {
-  // S'applique à toutes les pages
   matcher: '/:path*',
 };
 
 export default function middleware(request) {
-  const PASSWORD = process.env.SITE_PASSWORD;
+  const now = Date.now();
 
-  // Pas de mot de passe défini => site ouvert (aucun blocage)
-  if (!PASSWORD) {
+  // Le site est ouvert : on laisse tout passer normalement.
+  if (now >= OPEN_TIME) {
     return next();
   }
 
-  const auth = request.headers.get('authorization');
+  const url = new URL(request.url);
+  const path = url.pathname;
 
-  if (auth) {
-    // En-tête attendu : "Basic base64(identifiant:motdepasse)"
-    const encoded = auth.split(' ')[1] || '';
-    let decoded = '';
-    try {
-      decoded = atob(encoded);
-    } catch (e) {
-      decoded = '';
-    }
-    // On ne vérifie que le mot de passe (l'identifiant peut être n'importe quoi)
-    const password = decoded.slice(decoded.indexOf(':') + 1);
-    if (password === PASSWORD) {
-      return next();
-    }
+  // Avant l'ouverture, on laisse passer UNIQUEMENT :
+  //  - la page compte à rebours elle-même
+  //  - le logo qu'elle affiche
+  //  - les fichiers techniques (favicon, robots)
+  // Tout le reste est réécrit vers le compte à rebours.
+  const allowed =
+    path === '/countdown.html' ||
+    path === '/countdown-logo.png' ||
+    path === '/favicon.ico' ||
+    path === '/robots.txt';
+
+  if (allowed) {
+    return next();
   }
 
-  // Sinon : demande d'authentification (fenêtre de connexion du navigateur)
-  return new Response('Accès restreint — Doovlab arrive bientôt.', {
-    status: 401,
-    headers: {
-      'WWW-Authenticate': 'Basic realm="Doovlab", charset="UTF-8"',
-      'Content-Type': 'text/plain; charset=utf-8',
-    },
-  });
+  // Toute autre URL (accueil, boutique, QR code, lien Insta…) affiche le compte
+  // à rebours SANS changer l'adresse dans la barre du navigateur (rewrite, pas redirect).
+  return rewrite(new URL('/countdown.html', request.url));
 }
