@@ -11,11 +11,13 @@
     --terracotta:#D4692A; --terra-dark:#A84E1A; --beige:#FDF6EE; --beige2:#FBEEE2;
     --text:#2C1A0E; --muted:#9A7A60; }
   * { box-sizing:border-box; margin:0; padding:0; }
-  html,body { height:100%; }
+  html,body { min-height:100%; }
   body { background:var(--beige); color:var(--text); font-family:'Nunito',sans-serif;
     min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center; padding:24px; overflow-x:hidden; }
-  .logo { width:150px; height:150px; margin-bottom:22px; animation:float 4s ease-in-out infinite; }
+    text-align:center; padding:40px 24px; overflow-x:hidden; }
+  /* sur ecrans peu hauts (mobiles), on aligne en haut pour que le logo ne soit jamais coupe */
+  @media (max-height:820px) { body { justify-content:flex-start; } }
+  .logo { width:130px; height:130px; margin-bottom:20px; margin-top:6px; animation:float 4s ease-in-out infinite; }
   @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
   h1 { font-family:'Playfair Display',serif; font-size:clamp(30px,7vw,52px); font-weight:700;
     color:var(--terracotta); line-height:1.1; margin-bottom:10px; }
@@ -115,9 +117,13 @@
           'Content-Type':'application/json', 'Prefer':'return=minimal' },
         body: JSON.stringify({ email: email, prenom: null, chien: null })
       });
-      if(!res.ok) throw new Error('insert');
-      document.getElementById('form-card').style.display='none';
-      document.getElementById('done-card').style.display='block';
+      // 409 = email déjà présent (contrainte unique) : on considère que c'est bon
+      if(res.ok || res.status === 409){
+        document.getElementById('form-card').style.display='none';
+        document.getElementById('done-card').style.display='block';
+        return;
+      }
+      throw new Error('insert '+res.status);
     } catch(err) {
       msg.textContent = "Oups, réessayez ou écrivez à contact@doovlab.fr.";
       msg.classList.add('err');
