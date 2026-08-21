@@ -57,6 +57,7 @@
     letter-spacing: 2px;
     animation: pulse 2s ease-in-out infinite;
   }
+  .lost-banner.is-hidden { display: none; }
   @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.85; } }
 
   .profile-page { max-width: 480px; margin: 0 auto; padding: 40px 24px 60px; }
@@ -176,7 +177,7 @@
   <span class="top-bar-tagline">Unique comme votre chien</span>
 </div>
 
-<div class="lost-banner" id="lost-banner">
+<div class="lost-banner is-hidden" id="lost-banner">
   ⚠ CE CHIEN EST PEUT-ÊTRE PERDU — MERCI DE CONTACTER SON PROPRIÉTAIRE
 </div>
 
@@ -220,6 +221,13 @@ async function loadProfile() {
     }
 
     const dog = data[0];
+
+    // L'alerte « chien perdu » n'a de sens que si le visiteur peut joindre
+    // quelqu'un. Sur un profil pas encore rempli, elle reste masquee.
+    if (dog.phone || dog.owner_name) {
+      document.getElementById('lost-banner').classList.remove('is-hidden');
+    }
+
     const phone = dog.phone || '';
     const cleanPhone = phone.replace(/\s/g, '');
 
@@ -267,6 +275,19 @@ async function loadProfile() {
         <p>Médaillon NFC fabriqué par <a href="index.html">Doovlab</a><br>Impression 3D artisanale · France</p>
       </div>
     `;
+
+    // Profil sans aucune coordonnee : on l'annonce clairement plutot que de
+    // laisser croire a une fiche incomplete.
+    if (!dog.phone && !dog.owner_name) {
+      page.insertAdjacentHTML('afterbegin',
+        '<div class="error-card" style="margin-bottom:22px">' +
+        '<div class="icon">\uD83D\uDCDD</div>' +
+        '<h2>Profil pas encore compl&eacute;t&eacute;</h2>' +
+        '<p>Le propri&eacute;taire de ce m&eacute;daillon n\'a pas encore renseign&eacute; ' +
+        'ses coordonn&eacute;es.<br>Si ce m&eacute;daillon est le v&ocirc;tre, utilisez le QR&nbsp;code ' +
+        'fourni dans votre colis pour compl&eacute;ter le profil.</p></div>');
+    }
+
   } catch(e) {
     page.innerHTML = `<div class="error-card"><div class="icon">⚠️</div><h2>Erreur de connexion</h2><p>Impossible de charger le profil. Réessayez dans quelques instants.</p></div>`;
   }
