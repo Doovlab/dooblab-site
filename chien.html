@@ -193,7 +193,8 @@ const SUPABASE_KEY = 'sb_publishable_ESbSaBIVfAA463W4GTDihg_77jF03Of';
 
 async function loadProfile() {
   const params = new URLSearchParams(window.location.search);
-  const token = params.get('t');
+  // .trim() : neutralise un espace parasite colle au token lors de l'encodage NFC (%20)
+  const token = (params.get('t') || '').trim();
   const page = document.getElementById('profile-page');
 
   if (!token) {

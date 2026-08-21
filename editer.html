@@ -283,8 +283,9 @@ let currentPhotoUrl = '';
 
 async function loadProfile() {
   const params = new URLSearchParams(window.location.search);
-  const token = params.get('t');
-  const code = params.get('e');
+  // .trim() : neutralise un espace parasite colle au token ou au code (%20)
+  const token = (params.get('t') || '').trim();
+  const code = (params.get('e') || '').trim();
   currentToken = token;
   currentCode = code;
 
