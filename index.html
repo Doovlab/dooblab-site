@@ -236,6 +236,7 @@ nav.nav-hidden{transform:translateY(-100%);}
   .photo-badge  { top:auto; bottom:-10px; right:50%;
                   transform:translateX(50%) scale(.86); padding:8px 14px; }
 }
+.hero [class*="reveal"] { transform:none !important; opacity:1 !important; }
 </style></head>
 <body>
 <div class="scroll-progress" id="scrollProgress"></div>
@@ -615,10 +616,17 @@ if (el && MEDAILLONS.length) {
     plane.renderOrder = 3;
     scene.add(model);
 
-    const first = () => drawName(MEDAILLONS[0]);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(first);
-    else first();
-  });
+        const first = () => drawName(MEDAILLONS[idx]);
+    if (document.fonts && document.fonts.load) {
+      Promise.all([
+        document.fonts.load("700 240px 'Playfair Display'", 'Abc'),
+        document.fonts.load("400 240px 'Pacifico'", 'Abc'),
+        document.fonts.load("700 240px 'Comfortaa'", 'Abc')
+      ]).then(first, first);
+      document.fonts.ready.then(first);
+    } else {
+      first();
+    }
 
   const clock = new THREE.Clock();
 
