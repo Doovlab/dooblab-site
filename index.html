@@ -625,7 +625,29 @@ if (el && MEDAILLONS.length) {
             tgtPad.set(med.pad);
             drawName(med);
             phase = 'fadein'; phaseStart = t;
-          }
+          }        }
+        else if (phase === 'fadein') {
+          const p = Math.min(1, (t - phaseStart) / (FADE/2));
+          plane.material.opacity = p;
+          if (p >= 1) { phase = 'idle'; lastSwitch = t; }
+        }
+
+        curBody.lerp(tgtBody, 0.07); bodyMat.color.copy(curBody);
+        curPad.lerp(tgtPad, 0.07);   padMats.forEach(m => m.color.copy(curPad));
+      }
+    }
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    W = el.clientWidth || 380; H = el.clientHeight || 470;
+    camera.aspect = W/H;
+    camera.updateProjectionMatrix();
+    renderer.setSize(W, H);
+  });
+}
 
 /* ===== Médaillons 3D des cartes produit ===== */
 const _PAD={cx:0,cy:-12.9,topZ:3.0,planeW:27,planeH:14};
