@@ -123,6 +123,27 @@
       const note = document.getElementById('nfc-note');
       if (note) note.style.display = '';
     }
+    /* --- Pixel Meta : événement d'achat --- */
+if (Array.isArray(cart) && cart.length && window.doovlabTrackPurchase) {
+  let total = 0, items = 0;
+  const ids = [];
+  cart.forEach(it => {
+    if (!it) return;
+    const p = Number(it.price) || 0;
+    const q = Number(it.qty) || 1;
+    total += p * q;
+    items += q;
+    if (it.id) ids.push(it.id);
+  });
+  const sid = new URLSearchParams(location.search).get('session_id') || '';
+  window.doovlabTrackPurchase({
+    value: total,
+    orderId: sid,
+    contentIds: ids,
+    numItems: items
+  });
+}
+/* --- fin pixel --- */
   } catch(e){}
   try { localStorage.removeItem('doovlab_cart_v1'); } catch(e){}
 
