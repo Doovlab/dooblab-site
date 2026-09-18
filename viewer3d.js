@@ -104,4 +104,5 @@ if (container) {
     setPadColor:(hex)=>{ padHex=hex; if(padMat) padMat.color.set(hex); },
     setName:(t)=>{ currentName=t; drawText(); },
     setFont:(key)=>{ curFont = FONT_CSS[key] || FONT_CSS.playfair; drawText(); }
-  };
+    };
+}
