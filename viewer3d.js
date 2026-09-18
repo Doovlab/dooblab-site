@@ -1,4 +1,3 @@
-<script type="module">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -105,6 +104,5 @@ if (container) {
     setPadColor:(hex)=>{ padHex=hex; if(padMat) padMat.color.set(hex); },
     setName:(t)=>{ currentName=t; drawText(); },
     setFont:(key)=>{ curFont = FONT_CSS[key] || FONT_CSS.playfair; drawText(); }
-  };
+    };
 }
-</script>
