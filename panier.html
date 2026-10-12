@@ -185,20 +185,14 @@ function render(){
     shipping = EU_SHIPPING;
     html += '<div class="ship-bar-wrap"><div class="ship-msg">📦 Livraison Union européenne : <strong>' + eur(EU_SHIPPING) + '</strong> · Colissimo suivi (2 à 5 jours), sans douane</div></div>';
   } else {
-    const launchFree = (window.__freeShipActive === true);
-    shipping = (launchFree || freeReached) ? 0 : SHIPPING_FEE;
-    const shipMsg = launchFree
-      ? '\u{1F381} <strong>Offre de lancement</strong> : frais de port offerts en France'
-        + (typeof window.__freeShipRemaining === 'number'
-            ? ' \u2014 plus que <strong>' + window.__freeShipRemaining + '</strong> sur ' + (window.__freeShipLimit || 50) + ' commandes'
-            : '')
-      : freeReached
+    shipping = freeReached ? 0 : SHIPPING_FEE;
+    const shipMsg = freeReached
       ? '🎉 Bravo, la livraison est offerte ! <span style="color:#2D7a3a">Tu économises ' + eur(SHIPPING_FEE) + '</span>'
       : 'Plus que <strong>' + eur(remaining) + '</strong> pour la livraison offerte 🎁';
     html += '<div class="ship-bar-wrap"><div class="ship-msg">' + shipMsg + '</div>'
-          + (launchFree ? '' : '<div class="ship-track"><div class="ship-fill" style="width:' + pct + '%"></div></div>')
+          + '<div class="ship-track"><div class="ship-fill" style="width:' + pct + '%"></div></div>'
           + '</div>';
-    if (!launchFree && !freeReached){
+    if (!freeReached){
       if (remaining <= 14){
         html += '<div class="nudge">Un <strong>médaillon Classique à 14€</strong> et la livraison passe offerte 😉 '
               + '<a href="commander-classique.html">Ajouter un Classique →</a></div>';
@@ -276,14 +270,6 @@ async function checkout(){
     });
     const data = await res.json();
     if (res.ok && data.url) { window.location.href = data.url; return; }
-    // Série de lancement épuisée ou quantité supérieure au restant
-    if (res.status === 409) {
-      err.textContent = data.message || 'La série de lancement est épuisée.';
-      err.style.display = 'block';
-      btn.disabled = false;
-      btn.textContent = 'Commander et payer';
-      return;
-    }
     throw new Error(data.message || data.error || 'Erreur inconnue');
   } catch(e) {
     err.textContent = 'Impossible de lancer le paiement : ' + e.message;
@@ -335,7 +321,6 @@ window.addEventListener('scroll', function(){
 
 render();
 </script>
-<script defer src="/series-launch.js"></script>
 <script>
 (function(){var nv=document.querySelector('nav');if(!nv)return;var ln=window.scrollY||0;
 window.addEventListener('scroll',function(){

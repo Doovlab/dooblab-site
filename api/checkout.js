@@ -20,40 +20,12 @@ const CATALOG = {
 // --- Réglages livraison ---------------------------------------
 const SHIPPING_FEE_CENTS      = 490;   // 4,90 € France sous le seuil  ← AJUSTE après avoir pesé un colis
 const FREE_SHIPPING_THRESHOLD = 5000;  // 50,00 € : port offert au-dessus, FRANCE UNIQUEMENT
-const FREE_SHIPPING_LAUNCH    = 50;    // offre de lancement : port offert pour les 50 PREMIÈRES COMMANDES, FRANCE UNIQUEMENT
 const EU_SHIPPING_CENTS       = 1499;  // 14,99 € vers l'UE (Colissimo zone A ≤ 500 g) — jamais offert
 // Pays de l'Union européenne (hors France) livrés en zone UE
 const EU_COUNTRIES = ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE'];
 
-// --- Série de lancement limitée -------------------------------
-const LAUNCH_LIMIT = 100;   // nombre total de médaillons de la série de lancement
-const LAUNCH_START = Math.floor(Date.parse('2026-08-14T22:00:00Z') / 1000); // Ouverture : 15/08/2026 00h00 heure de Paris (UTC+2). Les commandes AVANT (tes tests) ne sont pas comptées.
-
 // --- Ton domaine (sert aux pages de retour) -------------------
 const SITE = 'https://doovlab.fr';
-
-// Compte combien de médaillons de la "série de lancement" ont déjà été PAYÉS.
-// Source de vérité = Stripe (on additionne metadata.units des sessions terminées).
-async function countLaunch(key) {
-  let sold = 0, orders = 0, startingAfter = null, pages = 0;
-  do {
-    let url = 'https://api.stripe.com/v1/checkout/sessions?status=complete&limit=100';
-    if (startingAfter) url += '&starting_after=' + startingAfter;
-    const r = await fetch(url, { headers: { 'Authorization': 'Bearer ' + key } });
-    const d = await r.json();
-    if (!r.ok) throw new Error('Stripe list error');
-    const arr = d.data || [];
-    for (const s of arr) {
-      if (s.created >= LAUNCH_START && s.metadata && s.metadata.series === 'launch') {
-        sold += parseInt(s.metadata.units, 10) || 0;
-        orders++;
-      }
-    }
-    startingAfter = (d.has_more && arr.length) ? arr[arr.length - 1].id : null;
-    pages++;
-  } while (startingAfter && pages < 10);
-  return { units: sold, orders: orders };
-}
 
 module.exports = async function handler(req, res) {
   // On n'accepte que les requêtes POST
@@ -119,48 +91,18 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    // ===== VERROU SÉRIE DE LANCEMENT (100 exemplaires) ==========
-    // On compte ce qui est déjà vendu AVANT de créer la page de paiement.
-    // Si la série est épuisée (ou si la commande dépasse le restant),
-    // on bloque ICI : le client ne voit jamais la page de paiement,
-    // donc aucun risque de paiement à rembourser.
-    const launch = await countLaunch(key);
-    const sold = launch.units;
-    const remaining = LAUNCH_LIMIT - sold;
-    if (remaining <= 0) {
-      res.status(409).json({
-        error: 'SERIES_SOLD_OUT',
-        message: 'La série de lancement (100 exemplaires) est épuisée. Merci pour votre engouement \u{1F43E}',
-        remaining: 0,
-      });
-      return;
-    }
-    if (totalUnits > remaining) {
-      res.status(409).json({
-        error: 'NOT_ENOUGH_LEFT',
-        message: 'Il ne reste que ' + remaining + ' exemplaire(s) de la série de lancement. Réduisez la quantité pour finaliser.',
-        remaining: remaining,
-      });
-      return;
-    }
-
-    // On marque cette commande comme faisant partie de la série + les numéros à graver
-    params.append('metadata[series]', 'launch');
+    // Nombre de médaillons de la commande (pratique pour la préparation)
     params.append('metadata[units]', String(totalUnits));
 
-    // Frais de port : UE = forfait 14,99 € (jamais offert) ; France = offert au seuil, sinon forfait
-    // Offre de lancement : port offert en France pour les 50 premières commandes,
-    // indépendamment du montant. Au-delà, on retombe sur le seuil habituel de 50 €.
-    const launchFreeShip = (zone !== 'UE') && (launch.orders < FREE_SHIPPING_LAUNCH);
+    // Frais de port : UE = forfait 14,99 € (jamais offert) ; France = offert dès 50 €, sinon forfait 4,90 €
     const fee = (zone === 'UE')
       ? EU_SHIPPING_CENTS
-      : ((launchFreeShip || subtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : SHIPPING_FEE_CENTS);
+      : (subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE_CENTS);
     params.append('metadata[zone]', zone);
-    if (launchFreeShip) params.append('metadata[free_ship]', 'launch');
     params.append('shipping_options[0][shipping_rate_data][type]', 'fixed_amount');
     params.append('shipping_options[0][shipping_rate_data][fixed_amount][amount]', String(fee));
     params.append('shipping_options[0][shipping_rate_data][fixed_amount][currency]', 'eur');
-    params.append('shipping_options[0][shipping_rate_data][display_name]', fee === 0 ? (launchFreeShip ? 'Livraison offerte — offre de lancement' : 'Livraison offerte') : (zone === 'UE' ? 'Livraison Union européenne' : 'Livraison'));
+    params.append('shipping_options[0][shipping_rate_data][display_name]', fee === 0 ? 'Livraison offerte' : (zone === 'UE' ? 'Livraison Union européenne' : 'Livraison'));
 
     // Appel à l'API Stripe
     const r = await fetch('https://api.stripe.com/v1/checkout/sessions', {

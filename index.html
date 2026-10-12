@@ -290,30 +290,6 @@ nav.nav-hidden{transform:translateY(-100%);}
   </div>
 </section>
 
-<!-- ===== SÉRIE DE LANCEMENT ===== -->
-<section id="series-block" class="series-block" style="display:none">
-  <div class="series-inner">
-    <span class="series-badge">✦ Édition de lancement</span>
-    <h2 id="series-title">Les 100 médaillons du lancement</h2>
-    <p id="series-sub" class="series-sub">Pour son lancement, Doovlab ne fabrique que 100 médaillons. Une fois les 100 partis, la boutique ferme temporairement — le temps de préparer la suite. Les premiers seront les seuls, pour un moment.</p>
-    <div class="series-track"><div class="series-fill" id="series-bar"></div></div>
-    <div class="series-count" id="series-count">— / 100</div>
-    <a class="series-cta" href="boutique.html">Adopter le mien 🐾</a>
-  </div>
-</section>
-<style>
-  .series-block { background: linear-gradient(135deg,#A84E1A,#D4692A); color:#FDF6EE; padding:54px 24px; text-align:center; }
-  .series-inner { max-width:620px; margin:0 auto; }
-  .series-badge { display:inline-block; background:rgba(253,246,238,0.16); padding:6px 16px; border-radius:50px; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
-  .series-block h2 { font-family:'Playfair Display',serif; font-size:clamp(24px,3.5vw,34px); margin-bottom:12px; line-height:1.2; }
-  .series-sub { font-size:15px; line-height:1.6; opacity:.92; margin-bottom:26px; }
-  .series-track { height:14px; background:rgba(253,246,238,0.22); border-radius:50px; overflow:hidden; max-width:440px; margin:0 auto; }
-  .series-fill { height:100%; width:0; background:#FDF6EE; border-radius:50px; transition:width .8s cubic-bezier(.2,.7,.2,1); }
-  .series-count { margin-top:12px; font-weight:700; font-size:15px; letter-spacing:.5px; }
-  .series-cta { display:inline-block; margin-top:24px; background:#FDF6EE; color:#A84E1A; text-decoration:none; font-weight:800; padding:13px 30px; border-radius:50px; transition:transform .2s; }
-  .series-cta:hover { transform:translateY(-2px); }
-</style>
-
 <!-- ===== BANDEAU ENGAGEMENTS (marron) ===== -->
 <section class="stats-band">
   <div class="stats-inner">
@@ -752,7 +728,6 @@ if(document.readyState!=='loading')dvInitMedaillons();else document.addEventList
 })();
 </script>
 <script>(function(){try{var c=JSON.parse(localStorage.getItem("doovlab_cart_v1"))||[];var e=document.getElementById("nav-cart");if(e)e.textContent="🛒 Panier"+(c.length?" ("+c.length+")":"");}catch(e){}})();</script>
-<script defer src="/series-launch.js"></script>
 <script>
 (function(){var nv=document.querySelector('nav');if(!nv)return;var ln=window.scrollY||0;
 window.addEventListener('scroll',function(){
