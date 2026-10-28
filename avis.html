@@ -44,6 +44,8 @@
   .card .msg { font-size:14.5px; line-height:1.55; flex:1; }
   .card .who { margin-top:12px; font-size:13px; color:var(--muted); }
   .card .who b { color:var(--text); }
+  .card .msg { white-space:pre-line; }
+  a.tester-tag { text-decoration:none; }
   .tester-tag { display:inline-block; align-self:flex-start; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--sunset-dark); background:var(--beige-d); padding:3px 9px; border-radius:50px; margin-bottom:10px; }
   .empty { text-align:center; color:var(--muted); padding:30px; grid-column:1/-1; font-size:16px; }
 
@@ -157,7 +159,7 @@ const H = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
 try { var c=JSON.parse(localStorage.getItem('doovlab_cart_v1'))||[]; var el=document.getElementById('nav-cart'); if(el) el.textContent='🛒 Panier'+(c.length?' ('+c.length+')':''); } catch(e){}
 
 function esc(s){ return (s||'').replace(/[&<>"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
-function starline(n){ n=Math.max(1,Math.min(5,n||5)); return '★★★★★'.slice(0,n)+'<span style="color:#E6DCCB">'+'★★★★★'.slice(0,5-n)+'</span>'; }
+function starline(n){ if(!n) return ''; n=Math.max(1,Math.min(5,n)); return '★★★★★'.slice(0,n)+'<span style="color:#E6DCCB">'+'★★★★★'.slice(0,5-n)+'</span>'; }
 
 async function loadAvis(){
   const grid = document.getElementById('grid');
@@ -171,9 +173,11 @@ async function loadAvis(){
     grid.innerHTML = data.map(a => {
       const photo = a.photo_url ? `<img src="${esc(a.photo_url)}" alt="Chien d'un client Doovlab" loading="lazy" onerror="this.style.display='none'">` : '';
       const who = a.chien ? `<b>${esc(a.auteur)}</b> & ${esc(a.chien)}` : `<b>${esc(a.auteur)}</b>`;
-      const tag = a.testeur ? '<span class="tester-tag">Testeur</span>' : '';
+      const tag = a.testeur ? '<span class="tester-tag">Testeur</span>'
+        : (a.source_url ? `<a class="tester-tag" href="${esc(a.source_url)}" target="_blank" rel="noopener">Publié sur Facebook ↗</a>` : '');
+      const st = a.note ? `<div class="stars">${starline(a.note)}</div>` : '';
       return `<div class="card">${photo}<div class="body">
-        ${tag}<div class="stars">${starline(a.note)}</div>
+        ${tag}${st}
         <div class="msg">${esc(a.message)}</div>
         <div class="who">${who}</div>
       </div></div>`;
