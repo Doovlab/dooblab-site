@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doovlab — Régler la fiche repas</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sunset: #D4692A; --sunset-light: #F0923A; --sunset-dark: #A84E1A;
+    --beige: #FDF6EE; --beige-dark: #F0E6D6; --text: #2C1A0E; --muted: #9A7A60; --white: #FFFFFF;
+    --green: #2D7A4F; --green-light: #E8F5EE;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Nunito', sans-serif; background: var(--beige); color: var(--text); min-height: 100vh; }
+  .top-bar { background: var(--text); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .top-bar-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .top-bar-logo img { width: 30px; height: 30px; object-fit: contain; filter: brightness(10); }
+  .top-bar-brand { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 16px; color: var(--beige); letter-spacing: 2px; }
+  .edit-page { max-width: 520px; margin: 0 auto; padding: 36px 20px 60px; }
+  .edit-header { margin-bottom: 26px; }
+  .edit-header h1 { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 700; margin-bottom: 8px; }
+  .edit-header p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  .photo-section { text-align: center; margin-bottom: 26px; }
+  .photo-bubble { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--text); overflow: hidden; background: var(--beige-dark);
+    display: flex; align-items: center; justify-content: center; font-size: 48px; margin: 0 auto 12px; cursor: pointer; position: relative; transition: transform .2s; }
+  .photo-bubble:hover { transform: scale(1.05); }
+  .photo-bubble img { width: 100%; height: 100%; object-fit: cover; display: none; }
+  .photo-bubble .overlay { position: absolute; inset: 0; background: rgba(15,13,11,.5); display: flex; flex-direction: column; align-items: center; justify-content: center;
+    color: white; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; gap: 6px; opacity: 0; transition: opacity .2s; }
+  .photo-bubble:hover .overlay { opacity: 1; }
+  .photo-bubble input[type="file"] { display: none; }
+  .photo-hint { font-size: 12px; color: var(--muted); font-style: italic; }
+  .upload-progress { display: none; font-size: 13px; color: var(--muted); text-align: center; margin-top: 8px; font-style: italic; }
+
+  .form-card { background: white; border-radius: 20px; padding: 24px 22px; box-shadow: 0 2px 20px rgba(60,20,5,.06); margin-bottom: 18px; }
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--sunset); margin: 6px 0 14px; }
+  .section-title:not(:first-child) { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--beige-dark); }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 6px; }
+  .form-group input, .form-group textarea { width: 100%; background: var(--beige); border: 1.5px solid var(--beige-dark); border-radius: 12px; padding: 13px 16px;
+    font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--text); outline: none; transition: border-color .2s; }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--sunset); }
+  .form-group textarea { resize: vertical; min-height: 84px; line-height: 1.5; }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+  .unit { position: relative; }
+  .unit input { padding-right: 44px; }
+  .unit span { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); font-weight: 700; }
+
+  .times { display: flex; flex-direction: column; gap: 8px; }
+  .time-row { display: flex; gap: 8px; align-items: center; }
+  .time-row input { flex: 1; }
+  .time-row button { width: 46px; height: 46px; border-radius: 12px; border: 1.5px solid var(--beige-dark); background: #fff; color: var(--muted); font-size: 18px; cursor: pointer; flex: none; }
+  .add-btn { margin-top: 8px; background: none; border: 1.5px dashed var(--beige-dark); border-radius: 12px; padding: 11px; width: 100%; color: var(--sunset); font: 700 14px 'Nunito', sans-serif; cursor: pointer; }
+
+  .save-btn { width: 100%; background: var(--sunset); color: white; border: none; border-radius: 50px; padding: 16px; font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700; cursor: pointer; transition: all .2s; letter-spacing: 1px; margin-top: 8px; }
+  .save-btn:hover { background: var(--sunset-dark); }
+  .save-btn:disabled { background: var(--muted); cursor: not-allowed; }
+  .preview-btn { display: block; width: 100%; background: transparent; color: var(--text); border: 1.5px solid var(--beige-dark); border-radius: 50px; padding: 14px;
+    font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 600; text-align: center; text-decoration: none; }
+  .preview-btn:hover { border-color: var(--sunset); color: var(--sunset); }
+  .toast { display: none; background: var(--green-light); color: var(--green); border-radius: 12px; padding: 14px 18px; font-size: 14px; font-weight: 600; text-align: center; margin-top: 14px; }
+  .privacy { font-size: 12px; color: var(--muted); text-align: center; margin-top: 12px; line-height: 1.5; }
+  .loading { text-align: center; padding: 60px 24px; }
+  .loading-spinner { width: 48px; height: 48px; border: 4px solid var(--beige-dark); border-top-color: var(--sunset); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 20px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== Recadrage photo (zoom + deplacer) ===== */
+  .cropper-overlay {
+    display: none; position: fixed; inset: 0; z-index: 1000;
+    background: rgba(44,26,14,0.78); backdrop-filter: blur(3px);
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .cropper-overlay.open { display: flex; }
+  .cropper-card {
+    background: #fff; border-radius: 22px; padding: 24px 22px 20px;
+    width: 100%; max-width: 340px; text-align: center;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.3);
+  }
+  .cropper-card h3 {
+    font-family: 'Playfair Display', serif; font-size: 20px; color: var(--text);
+    margin-bottom: 4px;
+  }
+  .cropper-card .hint { font-size: 12.5px; color: var(--muted); margin-bottom: 16px; }
+  .crop-stage {
+    width: 240px; height: 240px; margin: 0 auto 16px;
+    border-radius: 50%; overflow: hidden; position: relative;
+    background: var(--beige-dark); border: 3px solid var(--text);
+    touch-action: none; cursor: grab;
+  }
+  .crop-stage.dragging { cursor: grabbing; }
+  .crop-stage img {
+    position: absolute; left: 0; top: 0; transform-origin: 0 0;
+    user-select: none; -webkit-user-drag: none; pointer-events: none;
+    max-width: none;
+  }
+  .crop-ring {
+    position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+    box-shadow: 0 0 0 2000px rgba(255,255,255,0); 
+  }
+  .zoom-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .zoom-row span { font-size: 18px; }
+  .zoom-row input[type=range] {
+    flex: 1; accent-color: var(--sunset); height: 4px;
+  }
+  .crop-actions { display: flex; gap: 10px; }
+  .crop-actions button {
+    flex: 1; border-radius: 50px; padding: 13px; font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 700; cursor: pointer; border: none; transition: all .2s;
+  }
+  .crop-cancel { background: transparent; color: var(--muted); border: 1.5px solid var(--beige-dark) !important; }
+  .crop-cancel:hover { border-color: var(--muted) !important; color: var(--text); }
+  .crop-ok { background: var(--sunset); color: #fff; }
+  .crop-ok:hover { background: var(--sunset-dark); }
+
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="index.html" class="top-bar-logo"><img src="/logo.png" alt="Doovlab"><span class="top-bar-brand">DOOVLAB</span></a>
+</div>
+
+<div id="loading" class="edit-page">
+  <div class="loading"><div class="loading-spinner"></div><p style="color:var(--muted);font-size:15px;">Chargement...</p></div>
+</div>
+
+<div id="edit-content" style="display:none">
+  <div class="edit-page">
+    <div class="edit-header">
+      <h1>Régler la fiche repas</h1>
+      <p>Ces informations s'affichent quand on approche un téléphone du rehausseur de votre chien. Idéal pour la famille ou la personne qui le garde.</p>
+    </div>
+
+    <div class="photo-section">
+      <div class="photo-bubble" id="photo-bubble" onclick="document.getElementById('photo-input').click()">
+        <span id="placeholder-emoji">🐕</span>
+        <img id="preview-img" src="" alt="Photo">
+        <div class="overlay"><span style="font-size:22px">📷</span><span>Modifier</span></div>
+        <input type="file" id="photo-input" accept="image/*" onchange="handlePhotoUpload(this)">
+      </div>
+      <p class="photo-hint">Touchez pour ajouter ou changer la photo</p>
+      <p class="upload-progress" id="upload-progress">⏳ Upload en cours...</p>
+    </div>
+
+    <div class="form-card">
+      <div class="section-title">Votre chien</div>
+      <div class="form-group"><label for="dog_name">Prénom du chien</label><input type="text" id="dog_name" maxlength="40" placeholder="Ex : Penny"></div>
+
+      <div class="section-title">Ration</div>
+      <div class="form-group"><label for="grams">Quantité par repas</label>
+        <div class="unit"><input type="number" id="grams" min="0" max="9999" inputmode="numeric" placeholder="Ex : 180"><span>g</span></div></div>
+      <div class="form-group"><label>Horaires des repas</label>
+        <div class="times" id="times"></div>
+        <button type="button" class="add-btn" id="add-time">+ Ajouter un repas</button>
+        <p class="hint">Jusqu'à 4 repas par jour. La fiche indique ainsi si le repas en cours a déjà été donné.</p></div>
+      <div class="form-group"><label for="food">Aliment</label><input type="text" id="food" maxlength="120" placeholder="Ex : Croquettes Royal Canin Maxi Adult"></div>
+      <div class="form-group"><label for="dose_hint">Repère sans balance</label><input type="text" id="dose_hint" maxlength="120" placeholder="Ex : 2 verres doseurs bien remplis">
+        <p class="hint">Pour que n'importe qui serve la bonne quantité.</p></div>
+
+      <div class="section-title">À savoir</div>
+      <div class="form-group"><label for="medication">Médicament ou complément dans le repas</label><input type="text" id="medication" maxlength="200" placeholder="Ex : 1 comprimé le soir, caché dans la gamelle"></div>
+      <div class="form-group"><label for="treats">Friandises</label><input type="text" id="treats" maxlength="120" placeholder="Ex : 3 maximum par jour"></div>
+      <div class="form-group"><label for="forbidden">Aliments interdits / allergies</label><input type="text" id="forbidden" maxlength="200" placeholder="Ex : Poulet (allergie), Chocolat, Raisin">
+        <p class="hint">Séparez par des virgules.</p></div>
+      <div class="form-group"><label for="water">Eau</label><input type="text" id="water" maxlength="120" placeholder="Ex : Changer l'eau matin et soir"></div>
+      <div class="form-group"><label for="note">Note pour la personne qui garde</label><textarea id="note" maxlength="400" placeholder="Ex : Penny mange vite, attendre 30 min avant la promenade."></textarea></div>
+
+      <div class="section-title">Qui nourrit votre chien ?</div>
+      <div class="form-group"><label for="feeders">Prénoms</label><input type="text" id="feeders" placeholder="Ex : Julie, Marc, Mamie, Dog-sitter">
+        <p class="hint">Séparez par des virgules (6 maximum). Ils apparaissent en boutons sur la fiche, pour savoir qui a donné le dernier repas.</p></div>
+
+      <button class="save-btn" id="save-btn">Enregistrer la fiche</button>
+      <div class="toast" id="toast">✓ Fiche repas enregistrée !</div>
+      <p class="privacy">Aucune coordonnée personnelle n'est affichée sur la fiche repas.</p>
+    </div>
+
+    <a id="preview-link" href="#" class="preview-btn">👁 Voir la fiche repas</a>
+  </div>
+</div>
+
+<!-- Modale de recadrage photo -->
+<div class="cropper-overlay" id="cropper-overlay">
+  <div class="cropper-card">
+    <h3>Cadrez la photo 🐾</h3>
+    <p class="hint">Glissez pour déplacer, réglez le zoom ci-dessous.</p>
+    <div class="crop-stage" id="crop-stage">
+      <img id="crop-img" src="" alt="">
+      <div class="crop-ring"></div>
+    </div>
+    <div class="zoom-row">
+      <span>🐕</span>
+      <input type="range" id="zoom-range" min="1" max="3" step="0.01" value="1">
+      <span style="font-size:24px">🐕</span>
+    </div>
+    <div class="crop-actions">
+      <button class="crop-cancel" onclick="cancelCrop()">Annuler</button>
+      <button class="crop-ok" onclick="applyCrop()">Valider</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+const SUPABASE_URL = 'https://ycsskzxbtaoekfpocgoz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ESbSaBIVfAA463W4GTDihg_77jF03Of';
+const params = new URLSearchParams(window.location.search);
+// .trim() : neutralise un espace parasite colle au token ou au code (%20)
+let currentToken = (params.get('t') || '').trim();
+let currentCode = (params.get('e') || '').trim();
+let currentPhotoUrl = '';
+const FIELDS = ['dog_name', 'grams', 'food', 'dose_hint', 'medication', 'treats', 'forbidden', 'water', 'note'];
+const $ = id => document.getElementById(id);
+
+async function rpc(name, args) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify(args)
+  });
+  return { ok: res.ok, data: await res.json().catch(() => null) };
+}
+
+// ----- horaires -----
+function addTime(v) {
+  const box = $('times');
+  if (box.children.length >= 4) return;
+  const row = document.createElement('div');
+  row.className = 'time-row form-group';
+  row.style.marginBottom = '0';
+  row.innerHTML = '<input type="time" value="' + (v || '') + '"><button type="button" aria-label="Retirer ce repas">✕</button>';
+  row.querySelector('button').onclick = () => { row.remove(); refreshAdd(); };
+  box.appendChild(row);
+  refreshAdd();
+}
+function refreshAdd() { $('add-time').style.display = $('times').children.length >= 4 ? 'none' : 'block'; }
+$('add-time').onclick = () => addTime('');
+
+// ----- chargement -----
+async function loadFiche() {
+  if (!currentToken || !currentCode) {
+    $('loading').innerHTML = '<div class="edit-page"><div style="text-align:center;padding:60px 24px"><div style="font-size:48px;margin-bottom:16px">🔒</div><h2 style="font-family:Playfair Display,serif;margin-bottom:8px">Lien incomplet</h2><p style="color:#9A7A60">Utilisez le QR code fourni dans le colis de votre rehausseur.</p></div></div>';
+    return;
+  }
+  try {
+    const { data } = await rpc('get_gamelle', { p_token: currentToken });
+    if (!data) {
+      $('loading').innerHTML = '<div class="edit-page"><div style="text-align:center;padding:60px 24px"><div style="font-size:48px;margin-bottom:16px">🐾</div><h2 style="font-family:Playfair Display,serif;margin-bottom:8px">Rehausseur introuvable</h2><p style="color:#9A7A60">Contactez <a style="color:#D4692A" href="mailto:contact@doovlab.fr">contact@doovlab.fr</a>.</p></div></div>';
+      return;
+    }
+    FIELDS.forEach(k => { $(k).value = data[k] == null ? '' : data[k]; });
+    $('feeders').value = (data.feeders || []).join(', ');
+    const times = data.times && data.times.length ? data.times : ['07:30', '18:00'];   // proposition par défaut
+    times.forEach(addTime);
+    if (data.photo_url) {
+      currentPhotoUrl = data.photo_url;
+      $('preview-img').src = data.photo_url;
+      $('preview-img').style.display = 'block';
+      $('placeholder-emoji').style.display = 'none';
+    }
+    $('preview-link').href = 'gamelle.html?t=' + encodeURIComponent(currentToken);
+    $('loading').style.display = 'none';
+    $('edit-content').style.display = 'block';
+  } catch (e) {
+    $('loading').innerHTML = '<div class="edit-page"><p style="text-align:center;color:#9A7A60;padding:60px">Erreur de connexion. Réessayez.</p></div>';
+  }
+}
+
+// ----- enregistrement -----
+$('save-btn').onclick = async () => {
+  const btn = $('save-btn');
+  btn.textContent = 'Enregistrement...';
+  btn.disabled = true;
+  const body = {};
+  FIELDS.forEach(k => { body[k] = $(k).value.trim(); });
+  body.grams = body.grams.replace(/\D/g, '');
+  body.times = [...$('times').querySelectorAll('input')].map(i => i.value).filter(Boolean);
+  body.feeders = $('feeders').value.split(/[,;\n]/).map(s => s.trim()).filter(Boolean).slice(0, 6);
+  body.photo_url = currentPhotoUrl || null;
+  try {
+    const { ok, data } = await rpc('save_gamelle', { p_token: currentToken, p_code: currentCode, p_data: body });
+    if (ok && data === true) {
+      $('toast').style.display = 'block';
+      btn.textContent = '✓ Enregistré !';
+      setTimeout(() => { $('toast').style.display = 'none'; btn.textContent = 'Enregistrer la fiche'; btn.disabled = false; }, 3000);
+    } else {
+      btn.textContent = 'Lien de réglage invalide';
+      btn.disabled = false;
+    }
+  } catch (e) {
+    btn.textContent = 'Erreur, réessayez';
+    btn.disabled = false;
+  }
+};
+
+// ===== Recadrage : etat =====
+const CROP_OUT = 512;            // taille finale (px) de la photo carree envoyee
+let cropState = { img:null, scale:1, minScale:1, x:0, y:0, natW:0, natH:0, dragging:false, lastX:0, lastY:0 };
+
+function handlePhotoUpload(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  // objectURL au lieu de base64 : bien plus leger en memoire sur telephone
+  openCropper(URL.createObjectURL(file));
+  input.value = '';   // permet de re-choisir le meme fichier
+}
+
+const STAGE = 240;   // diametre du cercle de recadrage a l'ecran
+
+function openCropper(dataUrl) {
+  const img = document.getElementById('crop-img');
+  const stage = document.getElementById('crop-stage');
+  const range = document.getElementById('zoom-range');
+  const tmp = new Image();
+  tmp.onload = () => {
+    cropState.natW = tmp.naturalWidth;
+    cropState.natH = tmp.naturalHeight;
+    // echelle mini = l'image couvre tout le cercle (cote le plus petit)
+    cropState.minScale = STAGE / Math.min(tmp.naturalWidth, tmp.naturalHeight);
+    cropState.scale = cropState.minScale;
+    range.min = cropState.minScale;
+    range.max = cropState.minScale * 3;
+    range.step = cropState.minScale / 100;
+    range.value = cropState.minScale;
+    img.src = dataUrl;
+    // centrer
+    cropState.x = (STAGE - cropState.natW * cropState.scale) / 2;
+    cropState.y = (STAGE - cropState.natH * cropState.scale) / 2;
+    renderCrop();
+    document.getElementById('cropper-overlay').classList.add('open');
+  };
+  tmp.onerror = () => {
+    const p = document.getElementById('upload-progress');
+    p.style.display = 'block';
+    p.style.whiteSpace = 'normal';
+    p.textContent = "Impossible de lire cette image. Essayez une autre photo, ou faites-en une capture d'ecran avant de la renvoyer.";
+    console.error('[photo] image illisible');
+    setTimeout(() => { p.style.display = 'none'; }, 15000);
+  };
+  tmp.src = dataUrl;
+  cropState.img = tmp;
+}
+
+function clampCrop() {
+  const w = cropState.natW * cropState.scale;
+  const h = cropState.natH * cropState.scale;
+  // empeche les bords blancs : l'image doit toujours couvrir le cercle
+  if (cropState.x > 0) cropState.x = 0;
+  if (cropState.y > 0) cropState.y = 0;
+  if (cropState.x < STAGE - w) cropState.x = STAGE - w;
+  if (cropState.y < STAGE - h) cropState.y = STAGE - h;
+}
+
+function renderCrop() {
+  const img = document.getElementById('crop-img');
+  clampCrop();
+  img.style.width = (cropState.natW * cropState.scale) + 'px';
+  img.style.height = (cropState.natH * cropState.scale) + 'px';
+  img.style.transform = 'translate(' + cropState.x + 'px,' + cropState.y + 'px)';
+}
+
+// zoom (garde le centre du cercle fixe)
+document.getElementById('zoom-range').addEventListener('input', function() {
+  const newScale = parseFloat(this.value);
+  const cx = STAGE/2, cy = STAGE/2;
+  const ratio = newScale / cropState.scale;
+  cropState.x = cx - (cx - cropState.x) * ratio;
+  cropState.y = cy - (cy - cropState.y) * ratio;
+  cropState.scale = newScale;
+  renderCrop();
+});
+
+// glisser : souris
+const stageEl = document.getElementById('crop-stage');
+stageEl.addEventListener('mousedown', e => { cropState.dragging=true; cropState.lastX=e.clientX; cropState.lastY=e.clientY; stageEl.classList.add('dragging'); });
+window.addEventListener('mousemove', e => {
+  if(!cropState.dragging) return;
+  cropState.x += e.clientX - cropState.lastX;
+  cropState.y += e.clientY - cropState.lastY;
+  cropState.lastX = e.clientX; cropState.lastY = e.clientY;
+  renderCrop();
+});
+window.addEventListener('mouseup', () => { cropState.dragging=false; stageEl.classList.remove('dragging'); });
+// glisser : tactile
+stageEl.addEventListener('touchstart', e => { const t=e.touches[0]; cropState.dragging=true; cropState.lastX=t.clientX; cropState.lastY=t.clientY; }, {passive:true});
+stageEl.addEventListener('touchmove', e => {
+  if(!cropState.dragging) return;
+  const t=e.touches[0];
+  cropState.x += t.clientX - cropState.lastX;
+  cropState.y += t.clientY - cropState.lastY;
+  cropState.lastX=t.clientX; cropState.lastY=t.clientY;
+  renderCrop();
+  e.preventDefault();
+}, {passive:false});
+stageEl.addEventListener('touchend', () => { cropState.dragging=false; });
+
+function cancelCrop() {
+  document.getElementById('cropper-overlay').classList.remove('open');
+}
+
+async function applyCrop() {
+  // rendu du cercle visible dans un canvas carre CROP_OUT
+  const canvas = document.createElement('canvas');
+  canvas.width = CROP_OUT; canvas.height = CROP_OUT;
+  const ctx = canvas.getContext('2d');
+  const k = CROP_OUT / STAGE;          // passage ecran -> sortie
+  ctx.drawImage(
+    cropState.img,
+    cropState.x * k, cropState.y * k,
+    cropState.natW * cropState.scale * k,
+    cropState.natH * cropState.scale * k
+  );
+  document.getElementById('cropper-overlay').classList.remove('open');
+
+  // apercu immediat dans la bulle
+  const previewData = canvas.toDataURL('image/jpeg', 0.9);
+  const pv = document.getElementById('preview-img');
+  pv.src = previewData;
+  pv.style.display = 'block';
+  document.getElementById('placeholder-emoji').style.display = 'none';
+
+  // upload du blob recadre vers Supabase
+  const progress = document.getElementById('upload-progress');
+  progress.style.display = 'block';
+  progress.textContent = '⏳ Upload en cours...';
+  const envoyer = async (blob) => {
+    try {
+      if (!blob) {
+        progress.style.whiteSpace = 'normal';
+        progress.textContent = "Erreur : impossible de convertir l'image sur cet appareil";
+        console.error('[upload] blob null');
+        setTimeout(() => { progress.style.display = 'none'; }, 15000);
+        return;
+      }
+      console.log('[upload] blob', Math.round(blob.size / 1024), 'Ko');
+      const fileName = `g_${currentToken}_${Date.now()}.jpg`;
+      const uploadRes = await fetch(`${SUPABASE_URL}/storage/v1/object/photos/${fileName}`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type': 'image/jpeg'
+        },
+        body: blob
+      });
+      if (uploadRes.ok) {
+        currentPhotoUrl = `${SUPABASE_URL}/storage/v1/object/public/photos/${fileName}`;
+        progress.textContent = '\u2713 Photo uploadee !';
+        setTimeout(() => { progress.style.display = 'none'; }, 2000);
+      } else {
+        const detail = await uploadRes.text().catch(() => '');
+        console.error('[upload] HTTP', uploadRes.status, detail);
+        progress.style.whiteSpace = 'normal';
+        progress.textContent = 'Erreur upload (' + uploadRes.status + ') ' + detail.slice(0, 120);
+        setTimeout(() => { progress.style.display = 'none'; }, 15000);
+      }
+    } catch (err) {
+      console.error('[upload] exception', err);
+      progress.style.whiteSpace = 'normal';
+      progress.textContent = 'Erreur reseau : ' + (err && err.message ? err.message : err);
+      setTimeout(() => { progress.style.display = 'none'; }, 15000);
+    }
+  };
+
+  if (canvas.toBlob) {
+    canvas.toBlob(envoyer, 'image/jpeg', 0.9);
+  } else {
+    // repli pour les navigateurs sans toBlob (anciens iOS)
+    const bin = atob(previewData.split(',')[1]);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    envoyer(new Blob([arr], { type: 'image/jpeg' }));
+  }
+}
+
+
+loadFiche();
+</script>
+</body>
+</html>
