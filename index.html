@@ -313,6 +313,33 @@ nav.nav-hidden{transform:translateY(-100%);}
 </section>
 
 <!-- ===== PRODUCTS ===== -->
+<!-- ===== TEMPORAIRE NOËL : ÉTOILE SOUVENIR (à retirer en janvier) ===== -->
+<style>
+  .etoile-promo { padding:70px 24px; background:#F6EEE4; }
+  .etoile-promo-inner { max-width:1040px; margin:0 auto; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:48px; align-items:center; }
+  .etoile-promo-img { border-radius:24px; overflow:hidden; aspect-ratio:4/5; max-width:420px; width:100%; justify-self:center; background:#E8DCCB; }
+  .etoile-promo-img img { width:100%; height:100%; object-fit:cover; display:block; }
+  .etoile-promo-label { display:inline-block; background:#9E2A22; color:#FDF6EE; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:6px 14px; border-radius:50px; margin-bottom:16px; }
+  .etoile-promo h2 { font-family:'Playfair Display',serif; font-size:clamp(32px,4.5vw,46px); line-height:1.1; color:#2C1A0E; margin-bottom:14px; }
+  .etoile-promo p { font-size:16.5px; line-height:1.7; color:#6B4B33; margin-bottom:22px; max-width:460px; }
+  .etoile-promo-cta { display:inline-flex; align-items:center; gap:10px; background:#D4692A; color:#fff; text-decoration:none; font-family:'Playfair Display',serif; font-weight:700; font-size:17px; padding:15px 30px; border-radius:50px; }
+  .etoile-promo-cta:hover { background:#A84E1A; }
+  .etoile-promo-note { display:block; margin-top:12px; font-size:13px; color:#8A6A52; }
+  @media (max-width:860px){ .etoile-promo-inner{ grid-template-columns:1fr; gap:28px; text-align:center; } .etoile-promo p{ margin-left:auto; margin-right:auto; } .etoile-promo-img{ max-width:300px; } }
+</style>
+<section class="etoile-promo" id="etoile-souvenir">
+  <div class="etoile-promo-inner">
+    <div class="etoile-promo-img reveal"><img src="etoile/etoile-bleu-marine-os.jpg" alt="Étoile Souvenir Doovlab bleu marine et or, suspendue à un fil rouge" loading="lazy" width="640" height="800"></div>
+    <div class="reveal">
+      <span class="etoile-promo-label">Nouveau · Collection Noël</span>
+      <h2>L'Étoile Souvenir</h2>
+      <p>Une décoration de sapin pour garder près de vous un compagnon parti. Son prénom et ses années en or, et au simple contact d'un téléphone, ses plus belles photos s'affichent.</p>
+      <a class="etoile-promo-cta" href="commander-etoile.html">Découvrir l'étoile →</a>
+      <span class="etoile-promo-note">29 € · Fil rouge fourni · Sans application ni abonnement</span>
+    </div>
+  </div>
+</section>
+
 <section class="products" id="produits">
   <div class="section-header reveal">
     <span class="section-label">Notre boutique</span>

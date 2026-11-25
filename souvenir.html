@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Doovlab — Étoile Souvenir</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night:#16263D; --night-2:#1E3350; --gold:#E2B04A; --gold-soft:#F3D58E;
+    --beige:#FDF6EE; --text:#2C1A0E; --muted:#9A7A60; --red:#B3121C;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Nunito',sans-serif; background:var(--beige); color:var(--text); min-height:100vh; }
+  .top-bar { background:var(--text); padding:14px 24px; display:flex; align-items:center; }
+  .top-bar a { display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .top-bar img { width:28px; height:28px; object-fit:contain; filter:brightness(10); }
+  .top-bar span { font-family:'Playfair Display',serif; font-weight:700; font-size:15px; color:var(--beige); letter-spacing:2px; }
+
+  .hero { background:radial-gradient(120% 90% at 50% 0%, var(--night-2), var(--night)); color:#F7EEDC; text-align:center; padding:44px 24px 54px; position:relative; overflow:hidden; }
+  .hero::before { content:""; position:absolute; inset:0; background-image:radial-gradient(1.5px 1.5px at 12% 22%,rgba(255,255,255,.7),transparent),radial-gradient(1px 1px at 78% 18%,rgba(255,255,255,.6),transparent),radial-gradient(1.5px 1.5px at 64% 62%,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 28% 72%,rgba(255,255,255,.5),transparent),radial-gradient(1px 1px at 90% 80%,rgba(255,255,255,.5),transparent); pointer-events:none; }
+  .hero-star { width:56px; height:56px; margin:0 auto 14px; display:block; position:relative; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:44px; line-height:1.1; color:var(--gold-soft); position:relative; overflow-wrap:anywhere; }
+  .hero .years { margin-top:8px; font-size:15px; letter-spacing:.18em; font-weight:700; color:var(--gold); position:relative; }
+  .hero .message { max-width:460px; margin:20px auto 0; font-family:'Playfair Display',serif; font-style:italic; font-size:18px; line-height:1.55; color:#EADFC9; position:relative; white-space:pre-line; }
+  .thread { width:2px; height:34px; background:var(--red); margin:0 auto; }
+
+  .gallery-wrap { max-width:720px; margin:0 auto; padding:26px 16px 40px; }
+  .gallery { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+  .gallery button { border:0; padding:0; background:#EADFCF; border-radius:16px; overflow:hidden; cursor:zoom-in; aspect-ratio:1; display:block; width:100%; }
+  .gallery button:first-child { grid-column:1 / -1; aspect-ratio:4/3; }
+  .gallery img { width:100%; height:100%; object-fit:cover; display:block; }
+
+  .empty, .state { max-width:460px; margin:0 auto; text-align:center; padding:40px 24px 60px; }
+  .empty h2, .state h2 { font-family:'Playfair Display',serif; font-size:22px; margin-bottom:8px; }
+  .empty p, .state p { color:var(--muted); line-height:1.6; font-size:15px; }
+  .spinner { width:44px; height:44px; border:4px solid #F0E6D6; border-top-color:#D4692A; border-radius:50%; animation:spin .8s linear infinite; margin:60px auto 16px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  footer { text-align:center; padding:10px 20px 40px; font-size:13px; color:var(--muted); }
+  footer a { color:#D4692A; font-weight:700; text-decoration:none; }
+
+  /* Visionneuse plein écran */
+  .viewer { display:none; position:fixed; inset:0; z-index:1000; background:rgba(12,10,8,.94); align-items:center; justify-content:center; }
+  .viewer.open { display:flex; }
+  .viewer img { max-width:100vw; max-height:100vh; object-fit:contain; user-select:none; }
+  .viewer button { position:absolute; background:rgba(255,255,255,.12); color:#fff; border:0; width:48px; height:48px; border-radius:50%; font-size:22px; cursor:pointer; }
+  .viewer .v-close { top:max(16px, env(safe-area-inset-top)); right:16px; }
+  .viewer .v-prev { left:12px; top:50%; transform:translateY(-50%); }
+  .viewer .v-next { right:12px; top:50%; transform:translateY(-50%); }
+  .viewer .v-count { position:absolute; bottom:max(18px, env(safe-area-inset-bottom)); left:0; right:0; text-align:center; color:rgba(255,255,255,.7); font-size:13px; }
+</style>
+</head>
+<body>
+
+<div class="top-bar"><a href="index.html"><img src="/logo.png" alt=""><span>DOOVLAB</span></a></div>
+
+<main id="app">
+  <div class="spinner" aria-hidden="true"></div>
+  <p style="text-align:center;color:var(--muted)">Chargement…</p>
+</main>
+
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-label="Photo en grand">
+  <img id="viewer-img" src="" alt="">
+  <button class="v-close" type="button" aria-label="Fermer" onclick="closeViewer()">✕</button>
+  <button class="v-prev" type="button" aria-label="Photo précédente" onclick="step(-1)">‹</button>
+  <button class="v-next" type="button" aria-label="Photo suivante" onclick="step(1)">›</button>
+  <div class="v-count" id="viewer-count"></div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://ycsskzxbtaoekfpocgoz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ESbSaBIVfAA463W4GTDihg_77jF03Of';
+// .trim() : neutralise un espace parasite colle au token (%20)
+const token = (new URLSearchParams(location.search).get('t') || '').trim();
+const app = document.getElementById('app');
+let photos = [];
+let current = 0;
+
+const STAR = '<svg class="hero-star" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 6l12.9 27.6 30.2 3.6-22.3 20.7 5.9 29.9L50 72.9 23.3 87.8l5.9-29.9L6.9 37.2l30.2-3.6z" fill="#E2B04A" stroke="#E2B04A" stroke-width="6" stroke-linejoin="round"/></svg>';
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+function isPhotoUrl(u) {
+  return typeof u === 'string' && u.indexOf(SUPABASE_URL + '/storage/v1/object/public/photos/') === 0;
+}
+
+function showState(icon, title, text) {
+  app.innerHTML = '<div class="state"><div style="font-size:46px;margin-bottom:14px">' + icon + '</div><h2>' + esc(title) + '</h2><p>' + text + '</p></div>';
+}
+
+async function load() {
+  if (!token) { showState('⭐', 'Étoile introuvable', 'Ce lien est incomplet. Approchez de nouveau votre téléphone de l\'étoile.'); return; }
+  try {
+    const res = await fetch(SUPABASE_URL + '/rest/v1/rpc/get_souvenir', {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_token: token })
+    });
+    const d = res.ok ? await res.json().catch(() => null) : null;
+    if (!d) { showState('⭐', 'Étoile introuvable', 'Nous ne retrouvons pas cette étoile. Écrivez-nous à <a style="color:#D4692A" href="mailto:contact@doovlab.fr">contact@doovlab.fr</a>.'); return; }
+    render(d);
+  } catch (e) {
+    showState('📡', 'Connexion impossible', 'Vérifiez votre connexion internet, puis approchez de nouveau votre téléphone de l\'étoile.');
+  }
+}
+
+function render(d) {
+  photos = (Array.isArray(d.photos) ? d.photos : []).filter(isPhotoUrl);
+  const name = (d.dog_name || '').trim();
+  if (name) document.title = name + ' — Étoile Souvenir Doovlab';
+  let html = '<section class="hero">' + STAR
+    + '<h1>' + (name ? esc(name) : 'Étoile Souvenir') + '</h1>'
+    + (d.years ? '<p class="years">' + esc(d.years) + '</p>' : '')
+    + (d.message ? '<p class="message">' + esc(d.message) + '</p>' : '')
+    + '</section><div class="thread" aria-hidden="true"></div>';
+  if (photos.length) {
+    html += '<div class="gallery-wrap"><div class="gallery">'
+      + photos.map((u, i) => '<button type="button" onclick="openViewer(' + i + ')" aria-label="Voir la photo ' + (i + 1) + ' en grand"><img src="' + esc(u) + '" alt="' + (name ? 'Photo de ' + esc(name) : 'Photo') + '" loading="' + (i < 3 ? 'eager' : 'lazy') + '"></button>').join('')
+      + '</div></div>';
+  } else {
+    html += '<div class="empty"><h2>L\'album n\'est pas encore rempli</h2><p>Pour ajouter les photos, scannez le QR code fourni dans le colis de l\'étoile.</p></div>';
+  }
+  html += '<footer>Une étoile fabriquée avec soin par <a href="index.html">Doovlab</a></footer>';
+  app.innerHTML = html;
+}
+
+function openViewer(i) { current = i; showPhoto(); document.getElementById('viewer').classList.add('open'); }
+function closeViewer() { document.getElementById('viewer').classList.remove('open'); }
+function step(n) { if (!photos.length) return; current = (current + n + photos.length) % photos.length; showPhoto(); }
+function showPhoto() {
+  document.getElementById('viewer-img').src = photos[current];
+  document.getElementById('viewer-count').textContent = (current + 1) + ' / ' + photos.length;
+  const multi = photos.length > 1;
+  document.querySelector('.v-prev').style.display = multi ? '' : 'none';
+  document.querySelector('.v-next').style.display = multi ? '' : 'none';
+}
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('viewer').classList.contains('open')) return;
+  if (e.key === 'Escape') closeViewer();
+  if (e.key === 'ArrowLeft') step(-1);
+  if (e.key === 'ArrowRight') step(1);
+});
+(function swipe() {
+  const v = document.getElementById('viewer'); let x0 = null;
+  v.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  v.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
+  });
+  v.addEventListener('click', e => { if (e.target === v) closeViewer(); });
+})();
+
+load();
+</script>
+</body>
+</html>

@@ -176,6 +176,9 @@
     padding: 0 48px 80px;
   }
 
+  .shop-cat { margin-bottom:56px; }
+  .cat-title { font-family:'Playfair Display',serif; font-size:30px; color:var(--text, #2C1A0E); margin:0 0 4px; }
+  .cat-sub { color:#8A6A52; font-size:15px; margin:0 0 22px; }
   .products-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -588,8 +591,8 @@ nav.nav-hidden{transform:translateY(-100%);}
 <!-- PAGE HEADER -->
 <div class="page-header reveal">
   <div class="breadcrumb"><a href="index.html">Accueil</a> → Boutique</div>
-  <h1>Nos médaillons</h1>
-  <p>Chaque médaillon est imprimé en 3D et personnalisé avec le prénom de votre chien. Fabriqué en France.</p>
+  <h1>Notre boutique</h1>
+  <p>Chaque création est imprimée en 3D et personnalisée avec le prénom de votre chien. Fabriqué en France.</p>
 </div>
 
 <!-- INFO STRIP -->
@@ -602,14 +605,16 @@ nav.nav-hidden{transform:translateY(-100%);}
 
 <!-- FILTERS -->
 <div class="filters">
-  <button class="filter-btn active" onclick="filterProducts('all', this)">Tous les médaillons</button>
-  <button class="filter-btn" onclick="filterProducts('classique', this)">Classique</button>
-  <button class="filter-btn" onclick="filterProducts('bicolore', this)">Personnalisé</button>
-  <button class="filter-btn" onclick="filterProducts('nfc', this)">NFC connecté</button>
+  <button class="filter-btn active" onclick="filterProducts('all', this)">Tout voir</button>
+  <button class="filter-btn" onclick="filterProducts('medaillons', this)">Médaillons</button>
+  <button class="filter-btn" onclick="filterProducts('souvenirs', this)">Souvenirs</button>
 </div>
 
 <!-- PRODUCTS -->
 <div class="products-section">
+  <div class="shop-cat" data-cat="medaillons">
+  <h2 class="cat-title">Médaillons</h2>
+  <p class="cat-sub">À accrocher au collier, avec ou sans puce NFC.</p>
   <div class="products-grid">
 
     <!-- CLASSIQUE -->
@@ -672,6 +677,37 @@ nav.nav-hidden{transform:translateY(-100%);}
       </div>
     </div>
 
+
+  </div>
+  </div>
+
+  <div class="shop-cat" data-cat="souvenirs">
+  <h2 class="cat-title">Souvenirs</h2>
+  <p class="cat-sub">Pour garder près de vous un compagnon parti.</p>
+  <div class="products-grid">
+    <!-- ÉTOILE SOUVENIR (collection Noël) -->
+    <div class="product-card reveal" data-category="souvenirs">
+      <div class="product-img" style="background:linear-gradient(180deg,#EFE4D6,#E2D3C1);">
+        <img src="etoile/etoile-bleu-marine-os.jpg" alt="Étoile Souvenir Doovlab, fond bleu marine, relief or, suspendue à un fil rouge" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center 40%;">
+        <span class="product-badge" style="background:#9E2A22;color:#FDF6EE;">Noël</span>
+      </div>
+      <div class="product-info">
+        <div class="product-tag">Collection Noël · Hommage</div>
+        <h2>Étoile Souvenir</h2>
+        <p>Une décoration de sapin pour garder près de vous un compagnon parti. Approchez un téléphone : ses plus belles photos s'affichent.</p>
+        <ul class="features-list">
+          <li>Prénom, années et motif en or</li>
+          <li>Album photos modifiable</li>
+          <li>Sans application ni abonnement</li>
+          <li>Fil rouge fourni</li>
+        </ul>
+        <div class="product-footer">
+          <div class="product-price">29€ <span class="cents">/ pièce</span></div>
+          <a href="commander-etoile.html" class="btn-order">Commander</a>
+        </div>
+      </div>
+    </div>
+  </div>
   </div>
 </div>
 
@@ -744,12 +780,8 @@ nav.nav-hidden{transform:translateY(-100%);}
 function filterProducts(category, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.querySelectorAll('.product-card').forEach(card => {
-    if (category === 'all' || card.dataset.category === category) {
-      card.style.display = '';
-    } else {
-      card.style.display = 'none';
-    }
+  document.querySelectorAll('.shop-cat').forEach(sec => {
+    sec.style.display = (category === 'all' || sec.dataset.cat === category) ? '' : 'none';
   });
 }
 </script>

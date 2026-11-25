@@ -106,6 +106,10 @@
     📡 <strong>Tu as commandé un médaillon NFC ?</strong> Dans ton colis, tu trouveras un QR code à scanner pour créer la page de profil de ton chien (photo, infos, contact) — celle qui s'affiche quand on scanne le médaillon.
   </div>
 
+  <div class="nfc-note" id="etoile-note" style="display:none">
+    ⭐ <strong>Tu as commandé une Étoile Souvenir ?</strong> Dans ton colis, tu trouveras un QR code à scanner pour ajouter les photos de ton compagnon et un petit mot. Ensuite, il suffira d'approcher un téléphone de l'étoile pour les voir s'afficher.
+  </div>
+
   <div class="insta">
     <p>Suis l'aventure Doovlab et partage la photo de ton chien avec son médaillon :</p>
     <a href="https://www.instagram.com/doovlab" target="_blank" rel="noopener">📸 Nous suivre sur Instagram</a>
@@ -122,6 +126,14 @@
     if (hasNFC) {
       const note = document.getElementById('nfc-note');
       if (note) note.style.display = '';
+    }
+    const hasEtoile = Array.isArray(cart) && cart.some(it => it && it.id === 'etoile');
+    if (hasEtoile) {
+      const noteE = document.getElementById('etoile-note');
+      if (noteE) noteE.style.display = '';
+      const onlyEtoile = cart.every(it => it && it.id === 'etoile');
+      const lead = document.querySelector('.lead');
+      if (onlyEtoile && lead) lead.textContent = "Ton paiement a bien été reçu. Nous allons fabriquer avec soin l'étoile de ton compagnon. ⭐";
     }
     /* --- Pixel Meta : événement d'achat --- */
 if (Array.isArray(cart) && cart.length && window.doovlabTrackPurchase) {

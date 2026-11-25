@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doovlab — Remplir l'Étoile Souvenir</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sunset:#D4692A; --sunset-dark:#A84E1A; --beige:#FDF6EE; --beige-dark:#F0E6D6;
+    --text:#2C1A0E; --muted:#8A6A52; --green:#2D7A4F; --green-light:#E8F5EE; --red:#B23434;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Nunito',sans-serif; background:var(--beige); color:var(--text); min-height:100vh; }
+  .top-bar { background:var(--text); padding:14px 24px; }
+  .top-bar a { display:flex; align-items:center; gap:10px; text-decoration:none; }
+  .top-bar img { width:28px; height:28px; object-fit:contain; filter:brightness(10); }
+  .top-bar span { font-family:'Playfair Display',serif; font-weight:700; font-size:15px; color:var(--beige); letter-spacing:2px; }
+  .page { max-width:540px; margin:0 auto; padding:32px 18px 60px; }
+  h1 { font-family:'Playfair Display',serif; font-size:28px; margin-bottom:8px; }
+  .intro { font-size:14.5px; color:var(--muted); line-height:1.6; margin-bottom:22px; }
+  .card { background:#fff; border-radius:20px; padding:22px 20px; box-shadow:0 2px 20px rgba(60,20,5,.06); margin-bottom:18px; }
+  .section-title { font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--sunset); margin-bottom:14px; }
+  .form-group { margin-bottom:16px; }
+  .form-group label { display:block; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:6px; }
+  .form-group input, .form-group textarea { width:100%; background:var(--beige); border:1.5px solid var(--beige-dark); border-radius:12px; padding:13px 15px; font-family:'Nunito',sans-serif; font-size:16px; color:var(--text); outline:none; }
+  .form-group input:focus, .form-group textarea:focus { border-color:var(--sunset); background:#fff; }
+  .form-group textarea { resize:vertical; min-height:96px; line-height:1.5; }
+  .hint { font-size:12.5px; color:var(--muted); margin-top:6px; line-height:1.5; }
+
+  .photos { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+  .ph { position:relative; aspect-ratio:1; border-radius:12px; overflow:hidden; background:var(--beige-dark); }
+  .ph img { width:100%; height:100%; object-fit:cover; display:block; }
+  .ph .cover { position:absolute; left:6px; top:6px; background:rgba(44,26,14,.78); color:#fff; font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:50px; }
+  .ph .actions { position:absolute; right:5px; top:5px; display:flex; flex-direction:column; gap:5px; }
+  .ph .actions button { width:32px; height:32px; border-radius:50%; border:0; background:rgba(255,255,255,.92); color:var(--text); font-size:15px; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.2); }
+  .ph.uploading::after { content:"⏳"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:26px; background:rgba(253,246,238,.7); }
+  .add-tile { aspect-ratio:1; border-radius:12px; border:2px dashed #E2CFB6; background:var(--beige); color:var(--sunset); font:700 13px 'Nunito',sans-serif; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; }
+  .add-tile span { font-size:26px; line-height:1; }
+  .status { font-size:13px; color:var(--muted); margin-top:10px; min-height:18px; }
+  .status.err { color:var(--red); }
+
+  .save-btn { width:100%; background:var(--sunset); color:#fff; border:0; border-radius:50px; padding:16px; font-family:'Playfair Display',serif; font-size:18px; font-weight:700; cursor:pointer; letter-spacing:1px; }
+  .save-btn:hover { background:var(--sunset-dark); }
+  .save-btn:disabled { background:#C9B8A6; cursor:not-allowed; }
+  .toast { display:none; background:var(--green-light); color:var(--green); border-radius:12px; padding:13px 16px; font-size:14px; font-weight:700; text-align:center; margin-top:12px; }
+  .preview-btn { display:block; text-align:center; margin-top:14px; border:1.5px solid var(--beige-dark); border-radius:50px; padding:13px; color:var(--text); text-decoration:none; font-weight:700; }
+  .preview-btn:hover { border-color:var(--sunset); color:var(--sunset); }
+  .privacy { font-size:12px; color:var(--muted); text-align:center; margin-top:12px; line-height:1.5; }
+  .state { text-align:center; padding:60px 20px; }
+  .state h2 { font-family:'Playfair Display',serif; margin-bottom:8px; }
+  .state p { color:var(--muted); }
+  .spinner { width:44px; height:44px; border:4px solid var(--beige-dark); border-top-color:var(--sunset); border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 16px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="top-bar"><a href="index.html"><img src="/logo.png" alt=""><span>DOOVLAB</span></a></div>
+
+<div class="page" id="loading"><div class="state"><div class="spinner"></div><p>Chargement…</p></div></div>
+
+<div class="page" id="editor" style="display:none">
+  <h1>Votre Étoile Souvenir</h1>
+  <p class="intro">Ajoutez ses plus belles photos et un petit mot. Ils s'afficheront quand on approchera un téléphone de l'étoile. Vous pourrez revenir les modifier à tout moment avec le QR code du colis.</p>
+
+  <div class="card">
+    <div class="section-title">Votre compagnon</div>
+    <div class="form-group"><label for="dog_name">Prénom</label><input type="text" id="dog_name" maxlength="40" placeholder="Ex : Haka"></div>
+    <div class="form-group"><label for="years">Années</label><input type="text" id="years" maxlength="30" placeholder="Ex : 2012 – 2026"></div>
+    <div class="form-group"><label for="message">Un petit mot</label><textarea id="message" maxlength="400" placeholder="Ex : Merci pour toutes ces années de bonheur. Tu resteras toujours avec nous."></textarea>
+      <p class="hint">400 caractères maximum. Il s'affiche sous son prénom.</p></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Photos (<span id="count">0</span> / 6)</div>
+    <div class="photos" id="photos"></div>
+    <input type="file" id="file-input" accept="image/*" multiple hidden>
+    <p class="hint">La première photo s'affiche en grand. Touchez ★ pour mettre une photo en premier.</p>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+  </div>
+
+  <button class="save-btn" id="save-btn" type="button">Enregistrer l'étoile</button>
+  <div class="toast" id="toast">✓ Votre étoile est enregistrée</div>
+  <a class="preview-btn" id="preview-link" href="#">👁 Voir ce qui s'affiche au scan</a>
+  <p class="privacy">Seuls le prénom, les années, le petit mot et les photos sont visibles. Aucune coordonnée n'est affichée.</p>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://ycsskzxbtaoekfpocgoz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ESbSaBIVfAA463W4GTDihg_77jF03Of';
+const MAX_PHOTOS = 6;
+const MAX_SIDE = 1600;          // plus grand cote de la photo envoyee (px)
+const params = new URLSearchParams(location.search);
+// .trim() : neutralise un espace parasite colle au token ou au code (%20)
+const token = (params.get('t') || '').trim();
+const code = (params.get('e') || '').trim();
+const $ = id => document.getElementById(id);
+let photos = [];                // URLs publiques, dans l'ordre d'affichage
+let pending = 0;                // envois en cours
+
+async function rpc(name, args) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${name}`, {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify(args)
+  });
+  return { ok: res.ok, data: await res.json().catch(() => null) };
+}
+function stateMsg(icon, title, html) {
+  $('loading').innerHTML = '<div class="state"><div style="font-size:46px;margin-bottom:14px">' + icon + '</div><h2>' + title + '</h2><p>' + html + '</p></div>';
+}
+function setStatus(txt, err) { const s = $('status'); s.textContent = txt || ''; s.classList.toggle('err', !!err); }
+
+async function load() {
+  if (!token || !code) { stateMsg('🔒', 'Lien incomplet', 'Utilisez le QR code fourni dans le colis de votre étoile.'); return; }
+  try {
+    const { data } = await rpc('get_souvenir', { p_token: token });
+    if (!data) { stateMsg('⭐', 'Étoile introuvable', 'Écrivez-nous à <a style="color:#D4692A" href="mailto:contact@doovlab.fr">contact@doovlab.fr</a>.'); return; }
+    $('dog_name').value = data.dog_name || '';
+    $('years').value = data.years || '';
+    $('message').value = data.message || '';
+    photos = Array.isArray(data.photos) ? data.photos.slice(0, MAX_PHOTOS) : [];
+    $('preview-link').href = 'souvenir.html?t=' + encodeURIComponent(token);
+    renderPhotos();
+    $('loading').style.display = 'none';
+    $('editor').style.display = 'block';
+  } catch (e) {
+    stateMsg('📡', 'Connexion impossible', 'Vérifiez votre connexion, puis réessayez.');
+  }
+}
+
+function renderPhotos(uploadingCount) {
+  const box = $('photos');
+  box.innerHTML = '';
+  photos.forEach((u, i) => {
+    const d = document.createElement('div');
+    d.className = 'ph';
+    d.innerHTML = '<img alt="Photo ' + (i + 1) + '">' + (i === 0 ? '<span class="cover">En grand</span>' : '')
+      + '<div class="actions">'
+      + '<button type="button" aria-label="Retirer cette photo" data-del="' + i + '">✕</button>'
+      + (i > 0 ? '<button type="button" aria-label="Mettre cette photo en premier" data-first="' + i + '">★</button>' : '')
+      + '</div>';
+    d.querySelector('img').src = u;
+    box.appendChild(d);
+  });
+  for (let k = 0; k < (uploadingCount || 0); k++) {
+    const d = document.createElement('div'); d.className = 'ph uploading'; box.appendChild(d);
+  }
+  if (photos.length + (uploadingCount || 0) < MAX_PHOTOS) {
+    const add = document.createElement('button');
+    add.type = 'button'; add.className = 'add-tile';
+    add.innerHTML = '<span>+</span>Ajouter';
+    add.onclick = () => $('file-input').click();
+    box.appendChild(add);
+  }
+  box.querySelectorAll('[data-del]').forEach(b => b.onclick = () => { photos.splice(+b.dataset.del, 1); renderPhotos(pending); });
+  box.querySelectorAll('[data-first]').forEach(b => b.onclick = () => { const [p] = photos.splice(+b.dataset.first, 1); photos.unshift(p); renderPhotos(pending); });
+  $('count').textContent = photos.length;
+}
+
+// Redimensionne la photo (cote max MAX_SIDE) et renvoie un JPEG
+function shrink(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, MAX_SIDE / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      if (c.toBlob) c.toBlob(b => b ? resolve(b) : reject(new Error('conversion')), 'image/jpeg', 0.85);
+      else {
+        const bin = atob(c.toDataURL('image/jpeg', 0.85).split(',')[1]);
+        const arr = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+        resolve(new Blob([arr], { type: 'image/jpeg' }));
+      }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('illisible')); };
+    img.src = url;
+  });
+}
+
+// Envoi vers le stockage Supabase (sans x-upsert : la lecture du bucket est fermee)
+async function upload(blob) {
+  const name = `s_${token}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}.jpg`;
+  const r = await fetch(`${SUPABASE_URL}/storage/v1/object/photos/${name}`, {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'image/jpeg' },
+    body: blob
+  });
+  if (!r.ok) {
+    const detail = await r.text().catch(() => '');
+    throw new Error('envoi ' + r.status + ' ' + detail.slice(0, 100));
+  }
+  return `${SUPABASE_URL}/storage/v1/object/public/photos/${name}`;
+}
+
+$('file-input').addEventListener('change', async function () {
+  const files = Array.from(this.files || []).slice(0, MAX_PHOTOS - photos.length - pending);
+  this.value = '';
+  if (!files.length) return;
+  pending += files.length;
+  renderPhotos(pending);
+  $('save-btn').disabled = true;
+  setStatus('Envoi de ' + files.length + ' photo' + (files.length > 1 ? 's' : '') + '…');
+  let errors = 0;
+  for (const f of files) {
+    try {
+      const url = await upload(await shrink(f));
+      photos.push(url);
+    } catch (e) {
+      errors++;
+      console.error('[photo]', e);
+    }
+    pending--;
+    renderPhotos(pending);
+  }
+  $('save-btn').disabled = false;
+  if (errors) setStatus(errors + ' photo' + (errors > 1 ? 's n\'ont' : ' n\'a') + ' pas pu être envoyée' + (errors > 1 ? 's' : '') + '. Essayez une autre photo ou une capture d\'écran.', true);
+  else setStatus('Photos ajoutées. Pensez à enregistrer.');
+});
+
+$('save-btn').onclick = async () => {
+  const btn = $('save-btn');
+  btn.disabled = true; btn.textContent = 'Enregistrement…';
+  const body = {
+    dog_name: $('dog_name').value.trim(),
+    years: $('years').value.trim(),
+    message: $('message').value.trim(),
+    photos: photos
+  };
+  try {
+    const { ok, data } = await rpc('save_souvenir', { p_token: token, p_code: code, p_data: body });
+    if (ok && data === true) {
+      $('toast').style.display = 'block';
+      btn.textContent = '✓ Enregistré';
+      setStatus('');
+      setTimeout(() => { $('toast').style.display = 'none'; btn.textContent = 'Enregistrer l\'étoile'; btn.disabled = false; }, 3000);
+    } else {
+      btn.textContent = 'Lien de modification invalide';
+      btn.disabled = false;
+    }
+  } catch (e) {
+    btn.textContent = 'Erreur, réessayez';
+    btn.disabled = false;
+  }
+};
+
+load();
+</script>
+</body>
+</html>
