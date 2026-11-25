@@ -207,7 +207,7 @@ function render(){
     + '<div class="row"><span>Sous-total</span><span>' + eur(subtotal) + '</span></div>'
     + '<div class="row"><span>Livraison</span>' + (shipping === 0 ? '<span class="free">Offerte</span>' : '<span>' + eur(shipping) + '</span>') + '</div>'
     + '<div class="row total"><span>Total</span><span>' + eur(total) + '</span></div>'
-    + '<label class="cgv-accept"><input type="checkbox" id="cgv-accept"><span>Je comprends que les médaillons sont fabriqués sur mesure (gravure, couleurs, puce NFC) et qu\'ils ne sont donc ni repris ni remboursés, sauf produit défectueux ou non conforme. J\'ai lu et j\'accepte les <a href="cgv.html" target="_blank" rel="noopener">Conditions Générales de Vente</a>.</span></label>'
+    + '<label class="cgv-accept"><input type="checkbox" id="cgv-accept"><span>Je comprends que mes créations Doovlab sont fabriquées sur mesure (gravure, couleurs, puce NFC) et qu\'elles ne sont donc ni reprises ni remboursées, sauf produit défectueux ou non conforme. J\'ai lu et j\'accepte les <a href="cgv.html" target="_blank" rel="noopener">Conditions Générales de Vente</a>.</span></label>'
     + '<button class="pay-btn" id="pay-btn" onclick="checkout()">Commander et payer</button>'
     + '<div class="err" id="err"></div>'
     + '<p class="note">Paiement 100% sécurisé via Stripe · Adresse de livraison demandée juste après</p>'
