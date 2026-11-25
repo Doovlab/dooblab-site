@@ -15,6 +15,7 @@ const CATALOG = {
   classique:    { name: 'Médaillon Patte — Classique',    amount: 1400 }, // 14,00 €
   personnalise: { name: 'Médaillon Patte — Personnalisé', amount: 1800 }, // 18,00 €
   nfc:          { name: 'Médaillon Patte — NFC Connecté', amount: 2500 }, // 25,00 €
+  etoile:       { name: 'Étoile Souvenir',                amount: 2900 }, // 29,00 € (collection Noël)
 };
 
 // --- Réglages livraison ---------------------------------------
