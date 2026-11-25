@@ -11,12 +11,12 @@
   <meta property="og:site_name" content="Doovlab">
   <meta property="og:title" content="Doovlab — Commander l'Étoile Souvenir">
   <meta property="og:description" content="Étoile Souvenir Doovlab : une décoration de Noël en hommage à votre chien. Approchez un téléphone de l'étoile et ses plus belles photos s'affichent. Fait main en France.">
-  <meta property="og:image" content="https://doovlab.fr/etoile/etoile-bleu-marine-os.jpg">
+  <meta property="og:image" content="https://doovlab.fr/etoile/etoile-vitrine.jpg">
   <meta property="og:url" content="https://doovlab.fr/commander-etoile.html">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Doovlab — Commander l'Étoile Souvenir">
   <meta name="twitter:description" content="Étoile Souvenir Doovlab : une décoration de Noël en hommage à votre chien. Approchez un téléphone de l'étoile et ses plus belles photos s'affichent. Fait main en France.">
-  <meta name="twitter:image" content="https://doovlab.fr/etoile/etoile-bleu-marine-os.jpg">
+  <meta name="twitter:image" content="https://doovlab.fr/etoile/etoile-vitrine.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@300;400;600;700&family=Pacifico&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
 <style>
@@ -173,6 +173,11 @@
   .etoile-stage { background:linear-gradient(180deg,#EFE4D6,#E2D3C1); border-radius:24px; overflow:hidden; aspect-ratio:4/5; position:relative; }
   .etoile-stage img { width:100%; height:100%; object-fit:cover; display:block; transition:opacity .25s ease; }
   .etoile-stage img.is-fading { opacity:.35; }
+  .etoile-stage { container-type:inline-size; }
+  .etoile-txt { position:absolute; left:49.2%; transform:translate(-50%,-50%); white-space:nowrap; pointer-events:none; color:#E2AE45; text-shadow:0 0.15cqw 0 #9A6A17, 0 0.5cqw 0.9cqw rgba(0,0,0,.35); line-height:1; transition:opacity .2s; }
+  .etoile-name { top:52.08%; font-family:'Playfair Display',serif; font-weight:700; font-size:11cqw; }
+  .etoile-years { top:59.69%; font-family:'Nunito',sans-serif; font-weight:800; font-size:4.8cqw; letter-spacing:.02em; }
+  .etoile-stage.is-back .etoile-txt { opacity:0; }
   .etoile-tag { position:absolute; left:14px; bottom:14px; background:rgba(253,246,238,.92); color:var(--brown-mid); font-size:11.5px; font-weight:700; padding:6px 12px; border-radius:50px; }
   .view-switch { display:flex; gap:8px; margin-top:12px; }
   .view-switch button { flex:1; background:var(--white); border:1.5px solid var(--beige-dark); border-radius:50px; padding:9px; font:600 13px 'Nunito',sans-serif; color:var(--brown-mid); cursor:pointer; }
@@ -249,7 +254,9 @@ nav.nav-hidden{transform:translateY(-100%);}
       <p class="preview-label">Aperçu</p>
       <div class="etoile-stage">
         <img id="etoilePreview" src="etoile/etoile-bleu-marine-os.jpg" alt="Étoile Souvenir Doovlab, fond bleu marine, relief or" width="640" height="800">
-        <span class="etoile-tag" id="etoileTag">Exemple de prénom : Haka</span>
+        <span class="etoile-txt etoile-name" id="ovName" aria-hidden="true">Haka</span>
+        <span class="etoile-txt etoile-years" id="ovYears" aria-hidden="true">2012 – 2026</span>
+        <span class="etoile-tag" id="etoileTag">Aperçu de votre étoile</span>
       </div>
       <div class="view-switch" role="group" aria-label="Choisir la face">
         <button type="button" class="selected" id="viewFront">Face avant</button>
@@ -317,7 +324,7 @@ nav.nav-hidden{transform:translateY(-100%);}
   </div>
 
   <div class="info-row">
-    <div class="preview-note"><strong>Aperçu indicatif.</strong> Les images montrent un exemple de prénom. Sur votre étoile, la taille du prénom et des années est ajustée pour qu'ils tiennent parfaitement au centre.</div>
+    <div class="preview-note"><strong>Aperçu indicatif.</strong> Le prénom et les années s'affichent sur l'image au fur et à mesure que vous les tapez. Sur votre étoile, leur taille est ajustée pour qu'ils tiennent parfaitement au centre.</div>
     <div class="shipping-box reveal">
       <div class="shipping-row">🚚 Livraison 5 à 7 jours ouvrés</div>
       <div class="shipping-row">🇫🇷 Fabriquée en France</div>
@@ -374,7 +381,7 @@ let selectedMotif = 'os';
 let showBack = false;
 
 function imgPath() {
-  return showBack ? 'etoile/etoile-dos.jpg' : 'etoile/etoile-' + selectedColor.key + '-' + selectedMotif + '.jpg';
+  return showBack ? 'etoile/etoile-dos-' + selectedColor.key + '.jpg' : 'etoile/etoile-' + selectedColor.key + '-' + selectedMotif + '.jpg';
 }
 function refreshPreview() {
   const img = document.getElementById('etoilePreview');
@@ -387,8 +394,30 @@ function refreshPreview() {
   img.alt = showBack
     ? 'Dos de l\'Étoile Souvenir avec le logo Doovlab en or'
     : 'Étoile Souvenir, fond ' + selectedColor.name + ', ' + MOTIFS[selectedMotif].toLowerCase() + ' en or';
-  document.getElementById('etoileTag').textContent = showBack ? 'Logo Doovlab au dos, en or' : 'Exemple de prénom : Haka';
+  document.getElementById('etoileTag').textContent = showBack ? 'Logo Doovlab au dos, en or' : 'Aperçu de votre étoile';
+  document.querySelector('.etoile-stage').classList.toggle('is-back', showBack);
 }
+
+// Aperçu du prénom et des années, en or, posés sur l'étoile
+function updateOverlay() {
+  const raw = document.getElementById('dogName').value.trim();
+  const name = raw ? raw.charAt(0).toUpperCase() + raw.slice(1) : 'Haka';
+  const from = document.getElementById('yearFrom').value.trim();
+  const to = document.getElementById('yearTo').value.trim();
+  const years = (from || to) ? (from && to ? from + ' – ' + to : (to || from)) : '2012 – 2026';
+  const elN = document.getElementById('ovName');
+  const elY = document.getElementById('ovYears');
+  elN.textContent = name;
+  elY.textContent = years;
+  // un prénom long est gravé plus petit : même chose ici
+  const stage = document.querySelector('.etoile-stage');
+  elN.style.fontSize = '';
+  const max = stage.clientWidth * 0.5;
+  if (elN.scrollWidth > max) elN.style.fontSize = (11 * max / elN.scrollWidth).toFixed(2) + 'cqw';
+}
+['dogName','yearFrom','yearTo'].forEach(id => document.getElementById(id).addEventListener('input', updateOverlay));
+window.addEventListener('resize', updateOverlay);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(updateOverlay); else updateOverlay();
 
 (function buildColors() {
   const grid = document.getElementById('colorGrid');
@@ -405,7 +434,7 @@ function refreshPreview() {
       b.classList.add('selected');
       selectedColor = c;
       document.getElementById('colorStatus').textContent = c.name;
-      showBack = false; syncView(); refreshPreview();
+      refreshPreview();
     };
     grid.appendChild(b);
   });

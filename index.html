@@ -45,6 +45,20 @@
   .nav-cta { background:var(--sunset); color:var(--beige) !important; padding:10px 24px; border-radius:50px; transition:background .2s !important; }
   .nav-cta:hover { background:var(--sunset-dark) !important; color:var(--beige) !important; }
 
+
+  /* ===== BANDEAU NOUVEAU PRODUIT (rouge, en haut) =====
+     Nouveau produit : changer le texte et le lien du bandeau plus bas.
+     Plus de nouveauté : supprimer le bloc <a class="announce-bar"> ET ce bloc CSS. */
+  .announce-bar { position:fixed; top:0; left:0; right:0; z-index:101; height:40px; display:flex; align-items:center; justify-content:center; gap:10px; padding:0 16px; background:#9E2A22; color:#FDF6EE; font-size:13.5px; font-weight:700; letter-spacing:.3px; text-decoration:none; text-align:center; }
+  .announce-bar:hover { background:#86231C; }
+  .announce-bar .ab-tag { background:#FDF6EE; color:#9E2A22; font-size:10.5px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:3px 9px; border-radius:50px; flex:none; }
+  .announce-bar .ab-long { display:inline; }
+  .announce-bar .ab-short { display:none; }
+  body.has-announce nav { top:40px; }
+  body.has-announce .hero { padding-top:158px; }
+  body.has-announce .scroll-progress { top:40px; }
+  @media (max-width:700px){ .announce-bar .ab-long{display:none;} .announce-bar .ab-short{display:inline;} body.has-announce .hero{ padding-top:calc(40px + 96px); } }
+
   /* ===== HERO ===== */
   .hero { display:grid; grid-template-columns:1.05fr 1fr; align-items:center; gap:40px; padding:118px 64px 68px; position:relative; overflow:hidden; }
   .hero-bg { position:absolute; inset:0; background:radial-gradient(ellipse at 72% 45%, rgba(212,105,42,0.13), transparent 62%); pointer-events:none; }
@@ -239,9 +253,10 @@ nav.nav-hidden{transform:translateY(-100%);}
 }
 .hero [class*="reveal"] { transform:none !important; opacity:1 !important; }
 </style><script src="/pixel.js"></script></head>
-<body>
+<body class="has-announce">
 <div class="scroll-progress" id="scrollProgress"></div>
 
+<a class="announce-bar" href="commander-etoile.html"><span class="ab-tag">Nouveau</span><span class="ab-long">L'Étoile Souvenir est arrivée : la décoration de Noël en hommage à votre compagnon. Découvrir →</span><span class="ab-short">L'Étoile Souvenir est arrivée →</span></a>
 <nav>
   <a href="index.html" class="nav-logo">
     <img src="logo.png" alt="Doovlab logo">
@@ -329,7 +344,7 @@ nav.nav-hidden{transform:translateY(-100%);}
 </style>
 <section class="etoile-promo" id="etoile-souvenir">
   <div class="etoile-promo-inner">
-    <div class="etoile-promo-img reveal"><img src="etoile/etoile-bleu-marine-os.jpg" alt="Étoile Souvenir Doovlab bleu marine et or, suspendue à un fil rouge" loading="lazy" width="640" height="800"></div>
+    <div class="etoile-promo-img reveal"><img src="etoile/etoile-vitrine.jpg" alt="Étoile Souvenir Doovlab bleu marine et or, suspendue à un fil rouge" loading="lazy" width="640" height="800"></div>
     <div class="reveal">
       <span class="etoile-promo-label">Nouveau · Collection Noël</span>
       <h2>L'Étoile Souvenir</h2>
