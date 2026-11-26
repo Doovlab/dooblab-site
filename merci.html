@@ -65,7 +65,7 @@
     .wrap { padding-top:104px; }
   }
 </style>
-  <script src="/pixel.js"></script>
+  <script src="/pixel.js"></script><script src="/promo.js"></script>
 </head>
 <body>
 <nav>
@@ -129,7 +129,8 @@ if (Array.isArray(cart) && cart.length && window.doovlabTrackPurchase) {
   const ids = [];
   cart.forEach(it => {
     if (!it) return;
-    const p = Number(it.price) || 0;
+    // Prix réellement payé (−50 % pendant le Black Friday, cf. promo.js)
+    const p = Number(window.DoovlabPromo ? window.DoovlabPromo.unit(it.id, it.price) : it.price) || 0;
     const q = Number(it.qty) || 1;
     total += p * q;
     items += q;

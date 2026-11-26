@@ -24,6 +24,26 @@ const EU_SHIPPING_CENTS       = 1499;  // 14,99 € vers l'UE (Colissimo zone A 
 // Pays de l'Union européenne (hors France) livrés en zone UE
 const EU_COUNTRIES = ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE'];
 
+// --- BLACK FRIDAY 2026 : −50 % sur tous les médaillons ---------
+//     Vendredi 27/11/2026 de 00h00 à 23h59, heure de Paris (= UTC+1 en novembre).
+//     S'active et s'arrête tout seul. Le seuil de livraison offerte (50 €)
+//     se calcule sur le montant payé, donc APRÈS la remise.
+//     ⚠️ Mêmes dates et même pourcentage que dans promo.js (affichage du site).
+const PROMO = {
+  label:   'Black Friday −50 %',
+  start:   Date.parse('2026-11-26T23:00:00Z'), // = vendredi 27/11 00h00 (Paris)
+  end:     Date.parse('2026-11-27T23:00:00Z'), // = samedi 28/11 00h00 (Paris), exclu
+  percent: 50,
+};
+
+function promoActive(body) {
+  const now = Date.now();
+  if (now >= PROMO.start && now < PROMO.end) return true;
+  // Lien d'aperçu Vercel UNIQUEMENT (?bf=1 sur le site) : permet de tester avant le jour J.
+  // Sur le vrai site, VERCEL_ENV vaut 'production' : cette porte est fermée.
+  return process.env.VERCEL_ENV === 'preview' && !!(body && body.bfPreview === true);
+}
+
 // --- Ton domaine (sert aux pages de retour) -------------------
 const SITE = 'https://doovlab.fr';
 
@@ -50,12 +70,23 @@ module.exports = async function handler(req, res) {
       return;
     }
 
+    const promo = promoActive(body);
+
+    // Sur un lien d'aperçu Vercel, on revient sur l'aperçu (et pas sur le vrai site)
+    const host = (req.headers && req.headers.host) || '';
+    const base = (process.env.VERCEL_ENV === 'preview' && host) ? 'https://' + host : SITE;
+
     // Construit les paramètres pour Stripe
     const params = new URLSearchParams();
     params.append('mode', 'payment');
     params.append('locale', 'fr');
-    params.append('success_url', SITE + '/merci.html?session_id={CHECKOUT_SESSION_ID}');
-    params.append('cancel_url',  SITE + '/panier.html');
+    params.append('success_url', base + '/merci.html?session_id={CHECKOUT_SESSION_ID}');
+    params.append('cancel_url',  base + '/panier.html');
+    if (promo) {
+      // Page de paiement valable 1 h : une session ouverte à 23h59 ne garde pas le −50 % jusqu'au lendemain
+      params.append('expires_at', String(Math.floor(Date.now() / 1000) + 3600));
+      params.append('metadata[promo]', 'black-friday-2026');
+    }
     // On collecte l'adresse de livraison (pays selon la zone choisie) et le téléphone
     if (zone === 'UE') {
       EU_COUNTRIES.forEach((c, i) => params.append('shipping_address_collection[allowed_countries][' + i + ']', c));
@@ -72,16 +103,18 @@ module.exports = async function handler(req, res) {
       const prod = CATALOG[it && it.id];
       if (!prod) return; // identifiant inconnu → ignoré
       const qty = Math.max(1, Math.min(20, parseInt(it.qty, 10) || 1));
-      subtotal += prod.amount * qty;
+      // Prix unitaire : −50 % pendant le Black Friday (14 → 7 €, 18 → 9 €, 25 → 12,50 €)
+      const amount = promo ? Math.round(prod.amount * (100 - PROMO.percent) / 100) : prod.amount;
+      subtotal += amount * qty;
       totalUnits += qty;
 
       // Détail des options (couleurs, nom du chien…) affiché sur le reçu
       const desc = (it.options || '').toString().slice(0, 250);
 
       params.append(`line_items[${n}][price_data][currency]`, 'eur');
-      params.append(`line_items[${n}][price_data][product_data][name]`, prod.name);
+      params.append(`line_items[${n}][price_data][product_data][name]`, prod.name + (promo ? ' (' + PROMO.label + ')' : ''));
       if (desc) params.append(`line_items[${n}][price_data][product_data][description]`, desc);
-      params.append(`line_items[${n}][price_data][unit_amount]`, String(prod.amount));
+      params.append(`line_items[${n}][price_data][unit_amount]`, String(amount));
       params.append(`line_items[${n}][quantity]`, String(qty));
       n++;
     });

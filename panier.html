@@ -102,7 +102,7 @@
 nav{transition:transform .35s ease, box-shadow .3s ease;}
 nav.nav-hidden{transform:translateY(-100%);}
 </style>
-  <script src="/pixel.js"></script>
+  <script src="/pixel.js"></script><script src="/promo.js"></script>
 </head>
 <body>
 <nav>
@@ -150,19 +150,28 @@ function render(){
     return;
   }
 
+  // Black Friday : le prix de chaque ligne est recalculé depuis le catalogue (promo.js),
+  // jamais depuis le prix mémorisé au moment de l'ajout au panier.
+  const P = window.DoovlabPromo;
+  const promoOn = !!(P && P.active());
   let subtotal = 0;
+  let saved = 0;
   let html = '';
   cart.forEach((it, i) => {
-    const line = it.price * it.qty;
+    const unit  = P ? P.unit(it.id, it.price) : it.price;
+    const baseU = P ? P.base(it.id, it.price) : it.price;
+    const line = unit * it.qty;
     subtotal += line;
+    const reduced = promoOn && baseU > unit;
+    if (reduced) saved += (baseU - unit) * it.qty;
     html += '<div class="item">'
       + '<div class="item-body">'
-        + '<div class="item-name">' + it.name + '</div>'
+        + '<div class="item-name">' + it.name + (reduced ? ' <span class="bf-badge">−' + P.PERCENT + ' %</span>' : '') + '</div>'
         + (it.options ? '<div class="item-opts">' + it.options + '</div>' : '')
         + '<div class="qty"><button onclick="chQty(' + i + ',-1)">−</button><span>' + it.qty + '</span><button onclick="chQty(' + i + ',1)">+</button></div>'
         + '<button class="remove" onclick="rm(' + i + ')">Retirer</button>'
       + '</div>'
-      + '<div class="item-price">' + eur(line) + '</div>'
+      + '<div class="item-price">' + (reduced ? '<span class="bf-old">' + eur(baseU * it.qty) + '</span>' : '') + eur(line) + '</div>'
     + '</div>';
   });
 
@@ -193,8 +202,9 @@ function render(){
           + '<div class="ship-track"><div class="ship-fill" style="width:' + pct + '%"></div></div>'
           + '</div>';
     if (!freeReached){
-      if (remaining <= 14){
-        html += '<div class="nudge">Un <strong>médaillon Classique à 14€</strong> et la livraison passe offerte 😉 '
+      const cl = P ? P.unit('classique', 14) : 14;   // 7 € pendant le Black Friday
+      if (remaining <= cl){
+        html += '<div class="nudge">Un <strong>médaillon Classique à ' + (P ? P.short(cl) : '14€') + '</strong> et la livraison passe offerte 😉 '
               + '<a href="commander-classique.html">Ajouter un Classique →</a></div>';
       } else {
         html += '<div class="nudge">Il te manque <strong>' + eur(remaining) + '</strong> pour la livraison offerte. '
@@ -207,6 +217,7 @@ function render(){
     + '<div class="row"><span>Sous-total</span><span>' + eur(subtotal) + '</span></div>'
     + '<div class="row"><span>Livraison</span>' + (shipping === 0 ? '<span class="free">Offerte</span>' : '<span>' + eur(shipping) + '</span>') + '</div>'
     + '<div class="row total"><span>Total</span><span>' + eur(total) + '</span></div>'
+    + (saved > 0 ? '<div style="margin:6px 0 4px;color:#E0182D;font-weight:800;font-size:14px;">🔥 Black Friday : vous économisez ' + eur(saved) + ' sur cette commande</div>' : '')
     + '<label class="cgv-accept"><input type="checkbox" id="cgv-accept"><span>Je comprends que les médaillons sont fabriqués sur mesure (gravure, couleurs, puce NFC) et qu\'ils ne sont donc ni repris ni remboursés, sauf produit défectueux ou non conforme. J\'ai lu et j\'accepte les <a href="cgv.html" target="_blank" rel="noopener">Conditions Générales de Vente</a>.</span></label>'
     + '<button class="pay-btn" id="pay-btn" onclick="checkout()">Commander et payer</button>'
     + '<div class="err" id="err"></div>'
@@ -266,7 +277,12 @@ async function checkout(){
     const res = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ zone: getZone(), items: cart.map(it => ({ id: it.id, qty: it.qty, options: it.options })) })
+      body: JSON.stringify({
+        zone: getZone(),
+        items: cart.map(it => ({ id: it.id, qty: it.qty, options: it.options })),
+        // Aperçu Vercel uniquement (?bf=1) : le serveur l'ignore sur le vrai site
+        bfPreview: !!(window.DoovlabPromo && window.DoovlabPromo.preview())
+      })
     });
     const data = await res.json();
     if (res.ok && data.url) { window.location.href = data.url; return; }
